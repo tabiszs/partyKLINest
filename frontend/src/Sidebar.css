@@ -1,0 +1,26 @@
+.sidebar-container {
+  height: 100%;
+}
+
+.sidebar-content-container {
+  height: 100%;
+  display: flex;
+}
+
+.sidebar-buttons-container {
+  display: flex;
+  flex: 0 0 100%;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.sidebar-top-buttons-container, .sidebar-bottom-buttons-container {
+  display: flex;
+  padding: 4vh 0;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.sidebar-content-container .sidebar-button {
+  margin: 0.5em 2em;
+}
