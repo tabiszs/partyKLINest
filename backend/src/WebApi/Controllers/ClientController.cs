@@ -26,6 +26,7 @@ namespace PartyKlinest.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public IActionResult DeleteClient(int id)
         {
+            _logger.LogInformation($"Delete client {id}");
             return Ok();
         }
     }

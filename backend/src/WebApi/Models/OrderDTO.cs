@@ -1,4 +1,6 @@
-﻿namespace PartyKlinest.WebApi.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace PartyKlinest.WebApi.Models
 {
     public record OrderDTO
     {
@@ -17,7 +19,10 @@
         }
 
         public long Id { get; init; }
+
+        [Required]
         public string ClientId { get; init; }
+        [Required]
         public string CleanerId { get; init; }
         public OrderStatus Status { get; init; }
         public decimal MaxPrice { get; init; }

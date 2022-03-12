@@ -75,6 +75,11 @@ namespace PartyKlinest.WebApi.Controllers
             return Ok();
         }
 
+        /// <summary>
+        /// Gets list of <see cref="OrderDTO"/> assigned to cleaner with id <paramref name="cleanerId"/>.
+        /// </summary>
+        /// <param name="cleanerId"></param>
+        /// <returns></returns>
         [HttpGet("{cleanerId}/Orders")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
