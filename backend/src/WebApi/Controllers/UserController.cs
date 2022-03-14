@@ -5,7 +5,7 @@ using PartyKlinest.WebApi.Models;
 namespace PartyKlinest.WebApi.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class UserController : ControllerBase
     {
         private readonly ILogger<UserController> _logger;

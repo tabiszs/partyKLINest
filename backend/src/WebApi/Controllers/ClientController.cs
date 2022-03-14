@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace PartyKlinest.WebApi.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class ClientController : ControllerBase
     {
         private readonly ILogger<ClientController> _logger;
