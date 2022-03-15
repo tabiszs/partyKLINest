@@ -1,0 +1,72 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="PartyKlinest.ApplicationCore.Entities.Orders.Address">
+    <Position X="8" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAAAAAIAAgAAAAAIIAAAAAAAAAIAAAAAAAIAAAAAAAA=</HashCode>
+      <FileName>Entities\Orders\Address.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PartyKlinest.ApplicationCore.Entities.Orders.Order">
+    <Position X="5" Y="2.25" Width="1.75" />
+    <AssociationLine Name="CleanersOpinion" Type="PartyKlinest.ApplicationCore.Entities.Orders.Opinions.Opinion">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.079" Y="0.195" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="ClientsOpinion" Type="PartyKlinest.ApplicationCore.Entities.Orders.Opinions.Opinion">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-1.13" Y="0.206" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>VAAQAAAEAAAAEAAAwAAAAAAAAAAAAAAGBAAABAABCAw=</HashCode>
+      <FileName>Entities\Orders\Order.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Address" />
+      <Property Name="Cleaner" />
+      <Property Name="Client" />
+      <Property Name="CleanersOpinion" />
+      <Property Name="ClientsOpinion" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="PartyKlinest.ApplicationCore.Entities.Users.Cleaners.Cleaner">
+    <Position X="8" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAAAAAAEAAAAAAAAAAEABAAAAAQAAAAAAAAAAAAAAAg=</HashCode>
+      <FileName>Entities\Users\Cleaners\Cleaner.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="ScheduleEntries" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="PartyKlinest.ApplicationCore.Entities.Users.Client">
+    <Position X="8" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Entities\Users\Client.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PartyKlinest.ApplicationCore.Entities.Users.Cleaners.ScheduleEntry">
+    <Position X="11" Y="4.5" Width="1.5" />
+    <Members>
+      <Property Name="Cleaner" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAACAAAAAAAAAAAAAAAAAABAAAAAAEAAABAAg=</HashCode>
+      <FileName>Entities\Users\Cleaners\ScheduleEntry.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Cleaner" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="PartyKlinest.ApplicationCore.Entities.Orders.Opinions.Opinion">
+    <Position X="6.25" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAAAAAAAAAAAAAAAAAAAAAAAAAAAAAkAAAAAAAAAAAA=</HashCode>
+      <FileName>Entities\Orders\Opinions\Opinion.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
