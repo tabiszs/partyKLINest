@@ -1041,7 +1041,7 @@
 									"font": "Arial;13;1",
 									"left": 56,
 									"top": 605,
-									"width": 156.38818359375,
+									"width": 170.841796875,
 									"height": 13,
 									"text": "Opinions"
 								},
@@ -1067,7 +1067,7 @@
 											"font": "Arial;13;0",
 											"left": 61,
 											"top": 628,
-											"width": 146.38818359375,
+											"width": 160.841796875,
 											"height": 13
 										},
 										{
@@ -1082,7 +1082,7 @@
 											"font": "Arial;13;0",
 											"left": 61,
 											"top": 643,
-											"width": 146.38818359375,
+											"width": 160.841796875,
 											"height": 13
 										},
 										{
@@ -1097,22 +1097,52 @@
 											"font": "Arial;13;0",
 											"left": 61,
 											"top": 658,
-											"width": 146.38818359375,
+											"width": 160.841796875,
+											"height": 13
+										},
+										{
+											"_type": "ERDColumnView",
+											"_id": "AAAAAAF/kfhefb/hOEU=",
+											"_parent": {
+												"$ref": "AAAAAAF/dEI+4ybna94="
+											},
+											"model": {
+												"$ref": "AAAAAAF/kfhebr/e0zw="
+											},
+											"font": "Arial;13;0",
+											"left": 61,
+											"top": 673,
+											"width": 160.841796875,
+											"height": 13
+										},
+										{
+											"_type": "ERDColumnView",
+											"_id": "AAAAAAF/kfibTr/oZww=",
+											"_parent": {
+												"$ref": "AAAAAAF/dEI+4ybna94="
+											},
+											"model": {
+												"$ref": "AAAAAAF/kfibRL/lfoY="
+											},
+											"font": "Arial;13;0",
+											"left": 61,
+											"top": 688,
+											"width": 160.841796875,
 											"height": 13
 										}
 									],
 									"font": "Arial;13;0",
 									"left": 56,
 									"top": 623,
-									"width": 156.38818359375,
-									"height": 53
+									"width": 170.841796875,
+									"height": 83
 								}
 							],
 							"font": "Arial;13;0",
 							"left": 56,
 							"top": 600,
-							"width": 156.38818359375,
-							"height": 76,
+							"width": 170.841796875,
+							"height": 106,
 							"nameLabel": {
 								"$ref": "AAAAAAF/dEI+4ybmpn0="
 							},
@@ -1415,7 +1445,7 @@
 										"$ref": "AAAAAAF/dE6NcyeXPH4="
 									},
 									"font": "Arial;13;0",
-									"left": 236,
+									"left": 251,
 									"top": 624,
 									"height": 13,
 									"alpha": -0.5235987755982988,
@@ -1433,7 +1463,7 @@
 								"$ref": "AAAAAAF/dDN+giTuy0U="
 							},
 							"lineStyle": 2,
-							"points": "288:545;288:616;211:616",
+							"points": "288:545;288:616;226:616",
 							"nameLabel": {
 								"$ref": "AAAAAAF/dE6NcyeYMMQ="
 							},
@@ -1443,20 +1473,6 @@
 							"headNameLabel": {
 								"$ref": "AAAAAAF/dE6NcyeaX60="
 							}
-						},
-						{
-							"_type": "UMLNoteView",
-							"_id": "AAAAAAF/dFDh3Ce067Q=",
-							"_parent": {
-								"$ref": "AAAAAAF/dCtxfiQ3/dU="
-							},
-							"fillColor": "#ffff91",
-							"font": "Arial;13;0",
-							"left": 752,
-							"top": 672,
-							"width": 209,
-							"height": 57,
-							"text": "lepiej przechowywać średnią opinię w tabelach Cleaners i Clients, czy na bieżąco liczyć?"
 						},
 						{
 							"_type": "ERDEntityView",
@@ -2051,28 +2067,13 @@
 											"top": 395,
 											"width": 168.83984375,
 											"height": 13
-										},
-										{
-											"_type": "ERDColumnView",
-											"_id": "AAAAAAF/ke9vv276P2s=",
-											"_parent": {
-												"$ref": "AAAAAAF/ke8SFm7fvqU="
-											},
-											"model": {
-												"$ref": "AAAAAAF/ke9vtG73tfw="
-											},
-											"font": "Arial;13;0",
-											"left": 629,
-											"top": 410,
-											"width": 168.83984375,
-											"height": 13
 										}
 									],
 									"font": "Arial;13;0",
 									"left": 624,
 									"top": 375,
 									"width": 178.83984375,
-									"height": 53
+									"height": 38
 								}
 							],
 							"font": "Arial;13;0",
@@ -2095,10 +2096,10 @@
 							},
 							"font": "Arial;13;0",
 							"left": 688,
-							"top": 256,
+							"top": 296,
 							"width": 110.314453125,
-							"height": 90,
-							"text": "oczywiście w kolumnie password przechowujemy hasze"
+							"height": 49,
+							"text": "hasła trzyma Azure"
 						},
 						{
 							"_type": "ERDRelationshipView",
@@ -3283,7 +3284,30 @@
 							},
 							"name": "additionalInfo",
 							"type": "text",
-							"length": 0
+							"length": 0,
+							"nullable": true
+						},
+						{
+							"_type": "ERDColumn",
+							"_id": "AAAAAAF/kfhebr/e0zw=",
+							"_parent": {
+								"$ref": "AAAAAAF/dEI+4ibjj6U="
+							},
+							"name": "beforePhoto",
+							"type": "image",
+							"length": 0,
+							"nullable": true
+						},
+						{
+							"_type": "ERDColumn",
+							"_id": "AAAAAAF/kfibRL/lfoY=",
+							"_parent": {
+								"$ref": "AAAAAAF/dEI+4ibjj6U="
+							},
+							"name": "afterPhoto",
+							"type": "image",
+							"length": 0,
+							"nullable": true
 						}
 					]
 				},
@@ -3706,16 +3730,6 @@
 							"type": "varchar",
 							"length": "50",
 							"unique": true
-						},
-						{
-							"_type": "ERDColumn",
-							"_id": "AAAAAAF/ke9vtG73tfw=",
-							"_parent": {
-								"$ref": "AAAAAAF/ke8SFW7bZiA="
-							},
-							"name": "password",
-							"type": "varchar",
-							"length": "50"
 						}
 					]
 				}
