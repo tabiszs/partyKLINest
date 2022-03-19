@@ -18,6 +18,6 @@ namespace PartyKlinest.ApplicationCore.Entities.Users.Cleaners
         public decimal MinPrice { get; set; }
         public int MinClientRating { get; set; }
 
-
+        // for now we leave localization, it will be solved as a future task
     }
 }

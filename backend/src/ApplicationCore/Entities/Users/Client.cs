@@ -9,5 +9,6 @@ namespace PartyKlinest.ApplicationCore.Entities.Users
     public class Client
     {
         public long ClientId { get; set; }
+        public bool IsBanned { get; set; } = false;
     }
 }
