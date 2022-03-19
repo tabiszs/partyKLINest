@@ -11,7 +11,7 @@ namespace PartyKlinest.ApplicationCore.Entities.Orders.Opinions
         public long OpinionId { get; set; }
         public int Rating { get; set; }
         public string AdditionalInfo { get; set; }
-        public string BeforePhotoUri { get; set; }
-        public string AfterPhotoUri { get; set; }
+        public string? BeforePhotoUri { get; set; }
+        public string? AfterPhotoUri { get; set; }
     }
 }
