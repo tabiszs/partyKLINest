@@ -51,11 +51,19 @@ namespace PartyKlinest.WebApi.Controllers
         [HttpGet("{cleanerId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult<CleanerInfoDTO> GetCleanerInfo(int cleanerId)
         {
-            _logger.LogInformation($"Get cleaner info. CleanerId: {cleanerId}");
+            bool isExisting = cleanerId > 0 && cleanerId < _cleaners.Length;
+
+            if(!isExisting)
+            {
+                return NotFound();
+            }
             
-            return _cleaners[cleanerId];
+            _logger.LogInformation($"Get cleaner info. CleanerId: {cleanerId}");
+
+            return _cleaners[cleanerId - 1];
         }
 
         /// <summary>
@@ -68,6 +76,7 @@ namespace PartyKlinest.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IActionResult UpdateCleanerInfo(int cleanerId, [FromBody]CleanerInfoDTO cleanerInfo)
         {
             _logger.LogInformation($"Update cleaner info. CleanerId: {cleanerId}");
@@ -83,6 +92,7 @@ namespace PartyKlinest.WebApi.Controllers
         [HttpGet("{cleanerId}/Orders")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult<IEnumerable<OrderDTO>> GetAssignedOrders(int cleanerId)
         {
             return _orders;

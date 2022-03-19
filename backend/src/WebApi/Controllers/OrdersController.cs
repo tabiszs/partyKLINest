@@ -57,6 +57,7 @@ namespace PartyKlinest.WebApi.Controllers
         [HttpGet("{orderId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult<OrderDTO> GetOrderInfo(int orderId)
         {
             bool isExisting = orderId > 0 && orderId <= _orders.Length;
@@ -73,6 +74,7 @@ namespace PartyKlinest.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IActionResult ModifyOrderInfo(int orderId, [FromBody]OrderDTO order)
         {
             bool isExisting = orderId > 0 && orderId <= _orders.Length;
@@ -88,6 +90,7 @@ namespace PartyKlinest.WebApi.Controllers
         [HttpDelete(template:"{orderId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IActionResult DeleteOrder(int orderId)
         {
             bool isExisting = orderId > 0 && orderId <= _orders.Length;
