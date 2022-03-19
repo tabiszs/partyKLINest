@@ -1,8 +1,8 @@
 import Header from './Header';
 import Sidebar from './Sidebar';
 import ContentContainer from './ContentContainer';
-import PostAnnouncement from './ContentScreens/PostAnnouncement';
 import './App.css';
+import { Outlet } from 'react-router-dom';
 
 const headerHeight = '6em';
 
@@ -13,7 +13,7 @@ const App = () => {
       <div className='site-container'>
         <Sidebar headerHeight={headerHeight} />
         <ContentContainer headerHeight={headerHeight}>
-          <PostAnnouncement />
+          <Outlet/>
         </ContentContainer>
       </div>
     </div>
