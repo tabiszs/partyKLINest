@@ -23,6 +23,7 @@ const SidebarButton = (props: SidebarButtonProps) => {
 
 export interface SidebarContentProps {
   headerHeight: string;
+  logoutHandler: () => void;
 }
 
 const SidebarContent = (props: SidebarContentProps) => {
@@ -51,7 +52,7 @@ const SidebarContent = (props: SidebarContentProps) => {
           />
           <SidebarButton
             label='Wyloguj'
-            onClick={() => alert('Wyloguj')}
+            onClick={props.logoutHandler}
           />
         </div>
       </div>
@@ -61,6 +62,7 @@ const SidebarContent = (props: SidebarContentProps) => {
 
 export interface SidebarProps {
   headerHeight: string;
+  logoutHandler: () => void;
 }
 
 const Sidebar = (props: SidebarProps) => {
@@ -73,7 +75,7 @@ const Sidebar = (props: SidebarProps) => {
           height: '100%'
         }}
       >
-        <SidebarContent headerHeight={props.headerHeight} />
+        <SidebarContent headerHeight={props.headerHeight} logoutHandler={props.logoutHandler}/>
       </Box>
     </div>
   );

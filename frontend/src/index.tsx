@@ -5,13 +5,14 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import PostAnnouncement from './ContentScreens/PostAnnouncement';
+import Dashboard from './ContentScreens/Client/Dashboard';
 
 ReactDOM.render(
   <React.StrictMode>
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<App/>}>
-          <Route index element={<PostAnnouncement/>}/>
+          <Route index element={<Dashboard/>}/>
         </Route>
       </Routes>
     </BrowserRouter>
