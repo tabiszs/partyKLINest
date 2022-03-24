@@ -9,7 +9,7 @@ using PartyKlinest.Infrastructure.Data;
 
 #nullable disable
 
-namespace PartyKlinest.Infrastracture.Migrations
+namespace PartyKlinest.Infrastructure.Migrations
 {
     [DbContext(typeof(PartyKlinerDbContext))]
     [Migration("20220319215524_InitialCreate")]

@@ -8,7 +8,7 @@ using PartyKlinest.Infrastructure.Data;
 
 #nullable disable
 
-namespace PartyKlinest.Infrastracture.Migrations
+namespace PartyKlinest.Infrastructure.Migrations
 {
     [DbContext(typeof(PartyKlinerDbContext))]
     partial class PartyKlinerDbContextModelSnapshot : ModelSnapshot

@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PartyKlinest.Infrastracture
+namespace PartyKlinest.Infrastructure
 {
     public static class Dependencies
     {

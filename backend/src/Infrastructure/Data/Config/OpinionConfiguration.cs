@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PartyKlinest.Infrastracture.Data.Config
+namespace PartyKlinest.Infrastructure.Data.Config
 {
     internal class OpinionConfiguration : IEntityTypeConfiguration<Opinion>
     {
