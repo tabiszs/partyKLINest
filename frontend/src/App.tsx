@@ -11,7 +11,18 @@ const App = () => {
     <div className='App'>
       <Header height={headerHeight} />
       <div className='site-container'>
-        <Sidebar headerHeight={headerHeight} />
+        <Sidebar
+          headerHeight={headerHeight}
+          topButtons={[
+            { label: 'Pulpit', onClick: () => alert('Pulpit') },
+            { label: 'Dodaj', onClick: () => alert('Dodaj'), active: true },
+            { label: 'Historia', onClick: () => alert('Historia') },
+          ]}
+          bottomButtons={[
+            { label: 'Ustawienia', onClick: () => alert('Ustawienia') },
+            { label: 'Wyloguj', onClick: () => alert('Wyloguj') }
+          ]}
+        />
         <ContentContainer headerHeight={headerHeight}>
           <Outlet/>
         </ContentContainer>
