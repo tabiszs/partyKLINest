@@ -1,12 +1,20 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
+import AdapterDateFns from '@mui/lab/AdapterDateFns';
+import LocalizationProvider from '@mui/lab/LocalizationProvider';
+import plLocale from 'date-fns/locale/pl';
 import reportWebVitals from './reportWebVitals';
 import Router from './Router';
+import './index.css';
 
 ReactDOM.render(
   <React.StrictMode>
-    <Router />
+    <LocalizationProvider
+      dateAdapter={AdapterDateFns}
+      locale={plLocale}
+    >
+      <Router />
+    </LocalizationProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );
