@@ -1,20 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import PostAnnouncement from './ContentScreens/PostAnnouncement';
+import Router from './Router';
 
 ReactDOM.render(
   <React.StrictMode>
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<App/>}>
-          <Route index element={<PostAnnouncement/>}/>
-        </Route>
-      </Routes>
-    </BrowserRouter>
+    <Router />
   </React.StrictMode>,
   document.getElementById('root')
 );
