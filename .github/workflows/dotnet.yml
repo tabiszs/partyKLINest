@@ -7,17 +7,14 @@ on:
     branches: [ dev ]
 
 jobs:
-  pre-build:
-    defaults:
-      run:
-        shell: bash
-        working-directory: ./backend
-    runs-on: ubuntu-latest
-
   build:
+    environment: development  
     runs-on: ubuntu-latest    
 
     steps:
+    - name: Set current working directory
+      env:
+        working-directory: ./backend
     - uses: actions/checkout@v2
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
