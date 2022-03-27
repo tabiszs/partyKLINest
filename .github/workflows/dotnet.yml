@@ -8,13 +8,14 @@ on:
 
 jobs:
   build:
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./backend
     environment: development  
     runs-on: ubuntu-latest    
 
     steps:
-    - name: Set current working directory
-      env:
-        working-directory: ./backend
     - uses: actions/checkout@v2
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
