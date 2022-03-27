@@ -87,7 +87,7 @@ const Sidebar = (props: SidebarProps) => {
         sx={{
           backgroundColor: 'primary.dark',
           width: '18em',
-          height: '100%'
+          height: '100%',
         }}
       >
           <SidebarContent
