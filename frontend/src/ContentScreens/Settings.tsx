@@ -14,9 +14,14 @@ const Settings = () => {
             if (acc !== null) setAccountDetails(acc?.idTokenClaims as AccountDetails);
         });
     }
+
+    const deleteProfileHandler = () => {
+        console.log("usunięto!");
+    }
+
     switch (accountDetails.extension_AccountType) {
         case AccountType.Client:
-            return <ClientSettings accountDetails={accountDetails} editProfile={editProfileHandler}/>;
+            return <ClientSettings accountDetails={accountDetails} editProfile={editProfileHandler} deleteProfile={deleteProfileHandler}/>;
         default:
             return <></>;
     }
