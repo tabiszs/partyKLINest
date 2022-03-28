@@ -30,4 +30,4 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Build the Docker image for WebApi
-      run: docker build . --file Dockerfile --tag web-client:$(date +%s)
+      run: docker-compose up
