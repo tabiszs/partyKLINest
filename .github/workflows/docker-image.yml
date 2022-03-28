@@ -17,5 +17,5 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag backend:$(date +%s)
+    - name: Build the Docker image for WebApi
+      run: docker build . --file ./src/WebApi/Dockerfile --tag WebApi:$(date +%s)
