@@ -12,7 +12,7 @@ jobs:
     defaults:
       run:
         shell: bash
-        working-directory: ./backend/src/WebApi
+        working-directory: ./backend
     environment: development 
     runs-on: ubuntu-latest
     steps:
