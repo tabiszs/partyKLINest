@@ -19,3 +19,15 @@ jobs:
     - uses: actions/checkout@v2
     - name: Build the Docker image for WebApi
       run: docker build . --file ./src/WebApi/Dockerfile --tag web-api:$(date +%s)
+      
+  frontend-build:
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./backend
+    environment: development 
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build the Docker image for WebApi
+      run: docker build . --file Dockerfile --tag web-client:$(date +%s)
