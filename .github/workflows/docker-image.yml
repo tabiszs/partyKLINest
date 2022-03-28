@@ -24,7 +24,7 @@ jobs:
     defaults:
       run:
         shell: bash
-        working-directory: ./backend
+        working-directory: ./frontend
     environment: development 
     runs-on: ubuntu-latest
     steps:
