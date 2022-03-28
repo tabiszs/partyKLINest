@@ -4,8 +4,8 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import PostAnnouncement from './ContentScreens/PostAnnouncement';
-import Dashboard from './ContentScreens/Client/Dashboard';
+import Dashboard from './ContentScreens/Dashboard';
+import Settings from './ContentScreens/Settings';
 
 ReactDOM.render(
   <React.StrictMode>
@@ -13,6 +13,7 @@ ReactDOM.render(
       <Routes>
         <Route path="/" element={<App/>}>
           <Route index element={<Dashboard/>}/>
+          <Route path="/settings" element={<Settings/>}/>
         </Route>
       </Routes>
     </BrowserRouter>

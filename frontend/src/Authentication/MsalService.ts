@@ -1,4 +1,5 @@
 import * as msal from "@azure/msal-browser";
+import AccountDetails from "../DataClasses/AccountDetails";
 
 const msalConfig = {
     auth: {
@@ -12,36 +13,17 @@ const msalConfig = {
 const msalInstance = new msal.PublicClientApplication(msalConfig);
 
 export const RetrieveToken = () => {
-    // return msalInstance.handleRedirectPromise().then((tokenResponse) => {
-    //     if (tokenResponse === null) { console.log("undefined"); return undefined;}
-    //     else return tokenResponse.accessToken;
-    // }).catch((error) => {
-    //     console.log(error);
-    //     return undefined;
-    // });
-
-    // NIE DZIAŁA
-
     return msalInstance.acquireTokenSilent({scopes:[]}).then((tokenResponse) => {
         if (tokenResponse === null) return undefined;
         msalInstance.setActiveAccount(tokenResponse.account);
         return tokenResponse.accessToken;
     }).catch((error) => {
-        
         console.log(error);
         return undefined;
     })
 }
 
 export const B2CLogin = async () => {
-
-    // return msalInstance.handleRedirectPromise().then((tokenResponse) => {
-    //     if (tokenResponse === null) return undefined;
-    //     else return tokenResponse.accessToken;
-    // }).catch((error) => {
-    //     console.log(error);
-    //     return undefined;
-    // });
     try {
         const loginResponse = await msalInstance.loginPopup({scopes:[]});
         if (loginResponse === null) return undefined;
@@ -68,9 +50,10 @@ export const B2CEditProfile = async () => {
 }
 
 export const GetActiveAccount = () => {
-    // const accs = msalInstance.getAllAccounts();
-    // console.log(accs);
-    // return accs[0];
     return msalInstance.getActiveAccount();
+}
+
+export const GetActiveAccountDetails = () => {
+    return GetActiveAccount()?.idTokenClaims as AccountDetails;
 }
 

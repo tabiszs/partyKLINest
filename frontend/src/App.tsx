@@ -12,25 +12,21 @@ const headerHeight = '6em';
 const App = () => {
 
   const [isLogged, setIsLogged] = useState(false);
-  const [token, setToken] = useState<string | undefined>(undefined);
 
   useEffect(() => {
     RetrieveToken().then((tok) => {
-      setToken(tok);
       setIsLogged(tok !== undefined);
     })
   }, []);
 
   const login = () => {
     B2CLogin().then((tok) => {
-      setToken(tok);
       setIsLogged(tok !== undefined);
     });
   }
 
   const logout = () => {
     B2CLogout().then(() => {
-      setToken(undefined);
       setIsLogged(false);
     }).catch((error) => {
       console.log(error);
