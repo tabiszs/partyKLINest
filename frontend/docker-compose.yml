@@ -3,6 +3,7 @@ version: '3.7'
 services:
 
   developement:
+    image: web-client:$(date +%s)
     container_name: web-client
     build:
       context: .
