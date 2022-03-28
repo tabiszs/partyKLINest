@@ -56,6 +56,17 @@ export const B2CLogin = async () => {
 
 export const B2CLogout = () => msalInstance.logoutPopup();
 
+export const B2CEditProfile = async () => {
+    try {
+        const loginResponse = await msalInstance.loginPopup({scopes:[], authority:'https://partyklinest.b2clogin.com/partyklinest.onmicrosoft.com/B2C_1_EDIT_PROFILE'});
+        if (loginResponse === null) return null;
+        return loginResponse.account;
+    } catch (err) {
+        console.log(err);
+        return null;
+    }
+}
+
 export const GetActiveAccount = () => {
     // const accs = msalInstance.getAllAccounts();
     // console.log(accs);
