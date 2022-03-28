@@ -46,7 +46,7 @@ const App = () => {
       :
       <div className='site-container'>
       <ContentContainer headerHeight={headerHeight}>
-        <Button onClick={login}>Login</Button>
+        <Button onClick={login}>Zaloguj się</Button>
       </ContentContainer>
       </div> }
     </div>
