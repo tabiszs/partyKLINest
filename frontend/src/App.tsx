@@ -36,20 +36,43 @@ const App = () => {
   return (
     <div className='App'>
       <Header height={headerHeight} isLogged={isLogged} />  
-      { isLogged ?
       <div className='site-container'>
-        <Sidebar headerHeight={headerHeight} logoutHandler={logout} />
-        <ContentContainer headerHeight={headerHeight}>
-          <Outlet/>
-        </ContentContainer>
-      </div> 
-      :
-      <div className='site-container'>
-      <ContentContainer headerHeight={headerHeight}>
-        <Button onClick={login}>Zaloguj się</Button>
-      </ContentContainer>
-      </div> }
+        { isLogged ? 
+          <AfterLoginContent logout={logout}/>
+          :
+          <BeforeLoginContent login={login}/>     
+        }
+      </div>
     </div>
+  );
+}
+
+interface AfterLoginContentProps {
+  logout: () => void;
+}
+
+const AfterLoginContent = (props: AfterLoginContentProps) => {
+  return (
+    <>
+      <Sidebar headerHeight={headerHeight} logoutHandler={props.logout} />
+      <ContentContainer headerHeight={headerHeight}>
+        <Outlet/>
+      </ContentContainer>
+    </>
+  );
+}
+
+interface BeforeLoginContentProps {
+  login: () => void;
+}
+
+const BeforeLoginContent = (props: BeforeLoginContentProps) => {
+  return (
+    <>
+      <ContentContainer headerHeight={headerHeight}>
+        <Button onClick={props.login}>Zaloguj się</Button>
+      </ContentContainer>
+    </>
   );
 }
 
