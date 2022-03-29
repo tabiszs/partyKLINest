@@ -1,11 +1,11 @@
 
-const apiUrl = "https://localhost:7165/api/";
+const apiUrl = process.env.REACT_APP_API_URL;
 
-export const getCleanerAddress = (cleanerId: number) => apiUrl + "Cleaner/" + cleanerId.toString();
+export const getCleanerAddress = (cleanerId: string) => apiUrl + "Cleaner/" + cleanerId;
 
-export const getCleanerOrdersAddress = (cleanerId: number) => getCleanerAddress(cleanerId) + "Orders/";
+export const getCleanerOrdersAddress = (cleanerId: string) => getCleanerAddress(cleanerId) + "Orders/";
 
-export const getClientAddress = (clientId: number) => apiUrl + "Client/" + clientId.toString();
+export const getClientAddress = (clientId: string) => apiUrl + "Client/" + clientId;
 
 export const getCommissionAddress = () => apiUrl + "Commission/";
 
@@ -13,8 +13,8 @@ export const getOrdersUrl = () => apiUrl + "Orders/";
 
 export const getOrderUrl = (orderId: number) => getOrdersUrl() + orderId.toString();
 
-const getUserUrl = (userId: number) => apiUrl + "User/" + userId.toString()
+const getUserUrl = (userId: string) => apiUrl + "User/" + userId;
 
-export const getUserRateUrl = (userId: number) => getUserUrl(userId) + "/Rate/";
+export const getUserRateUrl = (userId: string) => getUserUrl(userId) + "/Rate/";
 
-export const getUserBanUrl = (userId: number) => getUserUrl(userId) + "/Ban/";
+export const getUserBanUrl = (userId: string) => getUserUrl(userId) + "/Ban/";
