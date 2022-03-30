@@ -49,6 +49,11 @@ export const B2CEditProfile = async () => {
     }
 }
 
+export const B2CDeleteAccount = async () => msalInstance.loginPopup({
+    scopes:[],
+    authority:'https://partyklinest.b2clogin.com/partyklinest.onmicrosoft.com/B2C_1A_DELETE_ACCOUNT'
+});
+
 export const GetActiveAccount = () => {
     return msalInstance.getActiveAccount();
 }

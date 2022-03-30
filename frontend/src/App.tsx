@@ -1,13 +1,10 @@
-import Header from './Header';
-import Sidebar from './Sidebar';
-import ContentContainer from './ContentContainer';
 import './App.css';
-import { Outlet } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import Button from '@mui/material/Button';
 import { B2CLogin, B2CLogout, RetrieveToken } from './Authentication/MsalService';
-
-const headerHeight = '6em';
+import Layout from './Layout';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import Dashboard from './ContentScreens/Dashboard';
+import Settings from './ContentScreens/Settings';
 
 const App = () => {
 
@@ -34,45 +31,14 @@ const App = () => {
   }
 
   return (
-    <div className='App'>
-      <Header height={headerHeight} isLogged={isLogged} />  
-      <div className='site-container'>
-        { isLogged ? 
-          <AfterLoginContent logout={logout}/>
-          :
-          <BeforeLoginContent login={login}/>     
-        }
-      </div>
-    </div>
-  );
-}
-
-interface AfterLoginContentProps {
-  logout: () => void;
-}
-
-const AfterLoginContent = (props: AfterLoginContentProps) => {
-  return (
-    <>
-      <Sidebar headerHeight={headerHeight} logoutHandler={props.logout} />
-      <ContentContainer headerHeight={headerHeight}>
-        <Outlet/>
-      </ContentContainer>
-    </>
-  );
-}
-
-interface BeforeLoginContentProps {
-  login: () => void;
-}
-
-const BeforeLoginContent = (props: BeforeLoginContentProps) => {
-  return (
-    <>
-      <ContentContainer headerHeight={headerHeight}>
-        <Button onClick={props.login}>Zaloguj się</Button>
-      </ContentContainer>
-    </>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Layout isLogged={isLogged} login={login} logout={logout}/>}>
+          <Route index element={<Dashboard/>}/>
+          <Route path="/settings" element={<Settings logout={() => setIsLogged(false)}/>}/>
+        </Route>
+      </Routes>
+    </BrowserRouter>
   );
 }
 

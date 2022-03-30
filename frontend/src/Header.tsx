@@ -1,4 +1,3 @@
-import Button from '@mui/material/Button';
 import AppBar from '@mui/material/AppBar';
 import './Header.css';
 

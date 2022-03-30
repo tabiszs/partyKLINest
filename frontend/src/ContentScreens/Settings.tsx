@@ -1,11 +1,15 @@
 import Button from "@mui/material/Button";
 import { useState } from "react";
-import { B2CEditProfile, GetActiveAccountDetails } from "../Authentication/MsalService";
+import { B2CDeleteAccount, B2CEditProfile, GetActiveAccountDetails } from "../Authentication/MsalService";
 import AccountDetails from "../DataClasses/AccountDetails";
 import AccountType from "../DataClasses/AccountType";
 import ClientSettings from "./Client/ClientSettings";
 
-const Settings = () => {
+interface SettingsProps {
+    logout: () => void;
+}
+
+const Settings = (props: SettingsProps) => {
 
     const [accountDetails,setAccountDetails] = useState(GetActiveAccountDetails());
 
@@ -16,7 +20,8 @@ const Settings = () => {
     }
 
     const deleteProfileHandler = () => {
-        console.log("usunięto!");
+        B2CDeleteAccount().then(() => props.logout())
+        .catch((error) => console.log(error));
     }
 
     switch (accountDetails.extension_AccountType) {
