@@ -7,7 +7,8 @@ namespace PartyKlinest.ApplicationCore.Entities.Users.Cleaners
     {
         public long CleanerId { get; set; }
 
-        public List<ScheduleEntry>? ScheduleEntries { get; set; }
+        private readonly List<ScheduleEntry> _scheduleEntries = new();
+        public IReadOnlyCollection<ScheduleEntry> ScheduleEntries => _scheduleEntries.AsReadOnly();
 
         public CleanerStatus Status { get; set; }
 

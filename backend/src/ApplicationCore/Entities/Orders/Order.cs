@@ -7,33 +7,70 @@ using System;
 
 namespace PartyKlinest.ApplicationCore.Entities.Orders
 {
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
     public record Order : IAggregateRoot
     {
-        public long OrderId { get; set; }
+        private Order()
+        {
 
-        public decimal MaxPrice { get; set; }
-        public int MinCleanerRating { get; set; }
+        }
 
-        public MessLevel MessLevel { get; set; }
-        public OrderStatus Status { get; set; }
+        public Order(decimal maxPrice, int minCleanerRating, MessLevel messLevel,
+            DateTimeOffset date, long clientId, Address address)
+        {
+            MaxPrice = maxPrice;
+            MinCleanerRating = minCleanerRating;
+            MessLevel = messLevel;
+            Date = date;
+            ClientId = clientId;
+            Address = address;
+        }
 
-        public DateTimeOffset Date { get; set; }
+        public long OrderId { get; private set; }
 
-        public long ClientId { get; set; }
-        public Client Client { get; set; }
+        public decimal MaxPrice { get; private set; }
+        public int MinCleanerRating { get; private set; }
 
-        public long? CleanerId { get; set; }
-        public Cleaner? Cleaner { get; set; }
+        public MessLevel MessLevel { get; private set; }
+        public OrderStatus Status { get; private set; }
 
-        public long AddressId { get; set; }
-        public Address Address { get; set; }
+        public DateTimeOffset Date { get; private set; }
 
-        public long? ClientsOpinionId { get; set; }
-        public Opinion? ClientsOpinion { get; set; }
+        public long ClientId { get; private set; }
+        public Client? Client { get; private set; }
 
-        public long? CleanersOpinionId { get; set; }
-        public Opinion? CleanersOpinion { get; set; }
+        public long? CleanerId { get; private set; }
+        public Cleaner? Cleaner { get; private set; }
+
+        public Address Address { get; private set; }
+
+        public Opinion? ClientsOpinion { get; private set; }
+
+        public Opinion? CleanersOpinion { get; private set; }
+
+        public void SetCleanerId(long cleanerId)
+        {
+            CleanerId = cleanerId;
+        }
+
+        public void SetClientsOpinion(Opinion clientsOpinion)
+        {
+            ClientsOpinion = clientsOpinion;
+        }
+
+        public void SetCleanersOpinion(Opinion opinion)
+        {
+            CleanersOpinion = opinion;
+        }
+
+        public void Modify(long clientId, long cleanerId, OrderStatus status, decimal maxPrice, int minRating, DateTimeOffset date, MessLevel messLevel)
+        {
+            ClientId = clientId;
+            CleanerId = cleanerId;
+            Status = status;
+            MaxPrice = maxPrice;
+            MinCleanerRating = minRating;
+            Date = date;
+            MessLevel = messLevel;
+        }
     }
-#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 }
