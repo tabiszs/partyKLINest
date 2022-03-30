@@ -9,8 +9,11 @@
   <ItemGroup>
     <Folder Include="Exceptions\" />
     <Folder Include="Extensions\" />
-    <Folder Include="Interfaces\" />
     <Folder Include="Services\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Ardalis.Specification" Version="6.0.1" />
   </ItemGroup>
 
 </Project>

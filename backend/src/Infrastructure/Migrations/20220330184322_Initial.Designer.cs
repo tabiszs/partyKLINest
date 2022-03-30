@@ -12,8 +12,8 @@ using PartyKlinest.Infrastructure.Data;
 namespace PartyKlinest.Infrastructure.Migrations
 {
     [DbContext(typeof(PartyKlinerDbContext))]
-    [Migration("20220319215524_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20220330184322_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -28,237 +28,224 @@ namespace PartyKlinest.Infrastructure.Migrations
                 {
                     b.Property<long>("AddressId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .HasColumnType("bigint")
+                        .HasColumnName("address_id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("AddressId"));
 
                     b.Property<string>("BuildingNumber")
                         .IsRequired()
                         .HasMaxLength(10)
-                        .HasColumnType("character varying(10)");
+                        .HasColumnType("character varying(10)")
+                        .HasColumnName("building_number");
 
                     b.Property<string>("City")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("city");
 
                     b.Property<string>("Country")
                         .IsRequired()
                         .HasMaxLength(90)
-                        .HasColumnType("character varying(90)");
+                        .HasColumnType("character varying(90)")
+                        .HasColumnName("country");
 
                     b.Property<int?>("FlatNumber")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("flat_number");
 
                     b.Property<string>("PostalCode")
                         .IsRequired()
                         .HasMaxLength(18)
-                        .HasColumnType("character varying(18)");
+                        .HasColumnType("character varying(18)")
+                        .HasColumnName("postal_code");
 
                     b.Property<string>("Street")
                         .IsRequired()
                         .HasMaxLength(180)
-                        .HasColumnType("character varying(180)");
+                        .HasColumnType("character varying(180)")
+                        .HasColumnName("street");
 
-                    b.HasKey("AddressId");
+                    b.HasKey("AddressId")
+                        .HasName("pk_addresses");
 
-                    b.ToTable("Addresses");
+                    b.ToTable("addresses", (string)null);
                 });
 
             modelBuilder.Entity("PartyKlinest.ApplicationCore.Entities.Orders.Opinions.Opinion", b =>
                 {
                     b.Property<long>("OpinionId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .HasColumnType("bigint")
+                        .HasColumnName("opinion_id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("OpinionId"));
 
                     b.Property<string>("AdditionalInfo")
                         .IsRequired()
                         .HasMaxLength(4096)
-                        .HasColumnType("character varying(4096)");
-
-                    b.Property<string>("AfterPhotoUri")
-                        .HasColumnType("text");
-
-                    b.Property<string>("BeforePhotoUri")
-                        .HasColumnType("text");
+                        .HasColumnType("character varying(4096)")
+                        .HasColumnName("additional_info");
 
                     b.Property<int>("Rating")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("rating");
 
-                    b.HasKey("OpinionId");
+                    b.HasKey("OpinionId")
+                        .HasName("pk_opinions");
 
-                    b.ToTable("Opinions");
+                    b.ToTable("opinions", (string)null);
                 });
 
             modelBuilder.Entity("PartyKlinest.ApplicationCore.Entities.Orders.Order", b =>
                 {
                     b.Property<long>("OrderId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .HasColumnType("bigint")
+                        .HasColumnName("order_id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("OrderId"));
 
                     b.Property<long>("AddressId")
-                        .HasColumnType("bigint");
+                        .HasColumnType("bigint")
+                        .HasColumnName("address_id");
 
                     b.Property<long?>("CleanerId")
-                        .HasColumnType("bigint");
+                        .HasColumnType("bigint")
+                        .HasColumnName("cleaner_id");
 
                     b.Property<long?>("CleanersOpinionId")
-                        .HasColumnType("bigint");
+                        .HasColumnType("bigint")
+                        .HasColumnName("cleaners_opinion_id");
 
                     b.Property<long>("ClientId")
-                        .HasColumnType("bigint");
+                        .HasColumnType("bigint")
+                        .HasColumnName("client_id");
 
                     b.Property<long?>("ClientsOpinionId")
-                        .HasColumnType("bigint");
+                        .HasColumnType("bigint")
+                        .HasColumnName("clients_opinion_id");
+
+                    b.Property<DateTimeOffset>("Date")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("date");
 
                     b.Property<decimal>("MaxPrice")
-                        .HasColumnType("money");
+                        .HasColumnType("money")
+                        .HasColumnName("max_price");
 
                     b.Property<int>("MessLevel")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("mess_level");
 
                     b.Property<int>("MinCleanerRating")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("min_cleaner_rating");
 
                     b.Property<int>("Status")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("status");
 
-                    b.Property<DateTimeOffset>("TimeFrom")
-                        .HasColumnType("timestamp with time zone");
+                    b.HasKey("OrderId")
+                        .HasName("pk_orders");
 
-                    b.Property<DateTimeOffset>("TimeTo")
-                        .HasColumnType("timestamp with time zone");
+                    b.HasIndex("AddressId")
+                        .HasDatabaseName("ix_orders_address_id");
 
-                    b.HasKey("OrderId");
+                    b.HasIndex("CleanerId")
+                        .HasDatabaseName("ix_orders_cleaner_id");
 
-                    b.HasIndex("AddressId");
+                    b.HasIndex("CleanersOpinionId")
+                        .HasDatabaseName("ix_orders_cleaners_opinion_id");
 
-                    b.HasIndex("CleanerId");
+                    b.HasIndex("ClientId")
+                        .HasDatabaseName("ix_orders_client_id");
 
-                    b.HasIndex("CleanersOpinionId");
+                    b.HasIndex("ClientsOpinionId")
+                        .HasDatabaseName("ix_orders_clients_opinion_id");
 
-                    b.HasIndex("ClientId");
-
-                    b.HasIndex("ClientsOpinionId");
-
-                    b.ToTable("Orders");
+                    b.ToTable("orders", (string)null);
                 });
 
             modelBuilder.Entity("PartyKlinest.ApplicationCore.Entities.Users.Cleaners.Cleaner", b =>
                 {
                     b.Property<long>("CleanerId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .HasColumnType("bigint")
+                        .HasColumnName("cleaner_id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("CleanerId"));
 
                     b.Property<int>("MaxMessLevel")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("max_mess_level");
 
                     b.Property<int>("MinClientRating")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("min_client_rating");
 
                     b.Property<decimal>("MinPrice")
-                        .HasColumnType("money");
+                        .HasColumnType("money")
+                        .HasColumnName("min_price");
 
                     b.Property<int>("Status")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("status");
 
-                    b.HasKey("CleanerId");
+                    b.HasKey("CleanerId")
+                        .HasName("pk_cleaners");
 
-                    b.ToTable("Cleaners");
+                    b.ToTable("cleaners", (string)null);
                 });
 
             modelBuilder.Entity("PartyKlinest.ApplicationCore.Entities.Users.Cleaners.ScheduleEntry", b =>
                 {
                     b.Property<long>("ScheduleEntryId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .HasColumnType("bigint")
+                        .HasColumnName("schedule_entry_id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("ScheduleEntryId"));
 
                     b.Property<long>("CleanerId")
-                        .HasColumnType("bigint");
+                        .HasColumnType("bigint")
+                        .HasColumnName("cleaner_id");
 
                     b.Property<int>("DayOfWeek")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("day_of_week");
 
                     b.Property<TimeOnly>("End")
-                        .HasColumnType("time without time zone");
+                        .HasColumnType("time without time zone")
+                        .HasColumnName("end");
 
                     b.Property<TimeOnly>("Start")
-                        .HasColumnType("time without time zone");
+                        .HasColumnType("time without time zone")
+                        .HasColumnName("start");
 
-                    b.HasKey("ScheduleEntryId");
+                    b.HasKey("ScheduleEntryId")
+                        .HasName("pk_schedule_entries");
 
-                    b.HasIndex("CleanerId");
+                    b.HasIndex("CleanerId")
+                        .HasDatabaseName("ix_schedule_entries_cleaner_id");
 
-                    b.ToTable("ScheduleEntries");
+                    b.ToTable("schedule_entries", (string)null);
                 });
 
             modelBuilder.Entity("PartyKlinest.ApplicationCore.Entities.Users.Client", b =>
                 {
                     b.Property<long>("ClientId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .HasColumnType("bigint")
+                        .HasColumnName("client_id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("ClientId"));
 
-                    b.Property<bool>("IsBanned")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
-                        .HasDefaultValue(false);
+                    b.HasKey("ClientId")
+                        .HasName("pk_clients");
 
-                    b.HasKey("ClientId");
-
-                    b.ToTable("Clients");
-                });
-
-            modelBuilder.Entity("PartyKlinest.ApplicationCore.Entities.Users.User", b =>
-                {
-                    b.Property<long>("UserId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("UserId"));
-
-                    b.Property<long?>("CleanerId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("ClientId")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
-
-                    b.Property<bool>("IsOrganizer")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("Login")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Surname")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("UserId");
-
-                    b.HasIndex("CleanerId");
-
-                    b.HasIndex("ClientId");
-
-                    b.ToTable("Users");
+                    b.ToTable("clients", (string)null);
                 });
 
             modelBuilder.Entity("PartyKlinest.ApplicationCore.Entities.Orders.Order", b =>
@@ -267,25 +254,30 @@ namespace PartyKlinest.Infrastructure.Migrations
                         .WithMany()
                         .HasForeignKey("AddressId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("fk_orders_addresses_address_id");
 
                     b.HasOne("PartyKlinest.ApplicationCore.Entities.Users.Cleaners.Cleaner", "Cleaner")
                         .WithMany()
-                        .HasForeignKey("CleanerId");
+                        .HasForeignKey("CleanerId")
+                        .HasConstraintName("fk_orders_cleaners_cleaner_id");
 
                     b.HasOne("PartyKlinest.ApplicationCore.Entities.Orders.Opinions.Opinion", "CleanersOpinion")
                         .WithMany()
-                        .HasForeignKey("CleanersOpinionId");
+                        .HasForeignKey("CleanersOpinionId")
+                        .HasConstraintName("fk_orders_opinions_cleaners_opinion_id");
 
                     b.HasOne("PartyKlinest.ApplicationCore.Entities.Users.Client", "Client")
                         .WithMany()
                         .HasForeignKey("ClientId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("fk_orders_clients_client_id");
 
                     b.HasOne("PartyKlinest.ApplicationCore.Entities.Orders.Opinions.Opinion", "ClientsOpinion")
                         .WithMany()
-                        .HasForeignKey("ClientsOpinionId");
+                        .HasForeignKey("ClientsOpinionId")
+                        .HasConstraintName("fk_orders_opinions_clients_opinion_id");
 
                     b.Navigation("Address");
 
@@ -304,24 +296,10 @@ namespace PartyKlinest.Infrastructure.Migrations
                         .WithMany("ScheduleEntries")
                         .HasForeignKey("CleanerId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("fk_schedule_entries_cleaners_cleaner_id");
 
                     b.Navigation("Cleaner");
-                });
-
-            modelBuilder.Entity("PartyKlinest.ApplicationCore.Entities.Users.User", b =>
-                {
-                    b.HasOne("PartyKlinest.ApplicationCore.Entities.Users.Cleaners.Cleaner", "Cleaner")
-                        .WithMany()
-                        .HasForeignKey("CleanerId");
-
-                    b.HasOne("PartyKlinest.ApplicationCore.Entities.Users.Client", "Client")
-                        .WithMany()
-                        .HasForeignKey("ClientId");
-
-                    b.Navigation("Cleaner");
-
-                    b.Navigation("Client");
                 });
 
             modelBuilder.Entity("PartyKlinest.ApplicationCore.Entities.Users.Cleaners.Cleaner", b =>

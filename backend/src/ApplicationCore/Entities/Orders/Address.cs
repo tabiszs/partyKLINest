@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using PartyKlinest.ApplicationCore.Interfaces;
 
 namespace PartyKlinest.ApplicationCore.Entities.Orders
 {
-    public class Address
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+    public record Address : IAggregateRoot
     {
         public long AddressId { get; set; }
         public string Street { get; set; }
@@ -16,4 +13,5 @@ namespace PartyKlinest.ApplicationCore.Entities.Orders
         public string PostalCode { get; set; }
         public string Country { get; set; }
     }
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 }
