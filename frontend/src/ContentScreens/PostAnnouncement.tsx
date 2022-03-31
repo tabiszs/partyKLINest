@@ -15,6 +15,7 @@ const AnnouncementFormField = (props: AnnouncementFormFieldProps) => {
 }
 
 const PostAnnouncement = () => {
+  console.log(process.env.REACT_APP_API_URL);
   return (
     <div className='announcement-screen'>
       <AnnouncementFormField label='Adres' />
