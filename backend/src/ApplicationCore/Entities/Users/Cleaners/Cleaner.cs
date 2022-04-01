@@ -5,7 +5,7 @@ namespace PartyKlinest.ApplicationCore.Entities.Users.Cleaners
 {
     public record Cleaner : IAggregateRoot
     {
-        public long CleanerId { get; set; }
+        public string CleanerId { get; set; }
 
         private readonly List<ScheduleEntry> _scheduleEntries = new();
         public IReadOnlyCollection<ScheduleEntry> ScheduleEntries => _scheduleEntries.AsReadOnly();

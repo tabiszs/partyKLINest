@@ -31,12 +31,13 @@ namespace PartyKlinest.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("OrderId"));
 
-                    b.Property<long?>("CleanerId")
-                        .HasColumnType("bigint")
+                    b.Property<string>("CleanerId")
+                        .HasColumnType("text")
                         .HasColumnName("cleaner_id");
 
-                    b.Property<long>("ClientId")
-                        .HasColumnType("bigint")
+                    b.Property<string>("ClientId")
+                        .IsRequired()
+                        .HasColumnType("text")
                         .HasColumnName("client_id");
 
                     b.Property<DateTimeOffset>("Date")
@@ -73,12 +74,9 @@ namespace PartyKlinest.Infrastructure.Migrations
 
             modelBuilder.Entity("PartyKlinest.ApplicationCore.Entities.Users.Cleaners.Cleaner", b =>
                 {
-                    b.Property<long>("CleanerId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
+                    b.Property<string>("CleanerId")
+                        .HasColumnType("text")
                         .HasColumnName("cleaner_id");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("CleanerId"));
 
                     b.Property<int>("MaxMessLevel")
                         .HasColumnType("integer")
@@ -111,8 +109,8 @@ namespace PartyKlinest.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("ScheduleEntryId"));
 
-                    b.Property<long?>("CleanerId")
-                        .HasColumnType("bigint")
+                    b.Property<string>("CleanerId")
+                        .HasColumnType("text")
                         .HasColumnName("cleaner_id");
 
                     b.Property<int>("DayOfWeek")
@@ -138,12 +136,9 @@ namespace PartyKlinest.Infrastructure.Migrations
 
             modelBuilder.Entity("PartyKlinest.ApplicationCore.Entities.Users.Client", b =>
                 {
-                    b.Property<long>("ClientId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
+                    b.Property<string>("ClientId")
+                        .HasColumnType("text")
                         .HasColumnName("client_id");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("ClientId"));
 
                     b.HasKey("ClientId")
                         .HasName("pk_clients");

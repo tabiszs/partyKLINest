@@ -15,7 +15,7 @@ namespace PartyKlinest.ApplicationCore.Entities.Orders
         }
 
         public Order(decimal maxPrice, int minCleanerRating, MessLevel messLevel,
-            DateTimeOffset date, long clientId, Address address)
+            DateTimeOffset date, string clientId, Address address)
         {
             MaxPrice = maxPrice;
             MinCleanerRating = minCleanerRating;
@@ -35,10 +35,10 @@ namespace PartyKlinest.ApplicationCore.Entities.Orders
 
         public DateTimeOffset Date { get; private set; }
 
-        public long ClientId { get; private set; }
+        public string ClientId { get; private set; }
         public Client? Client { get; private set; }
 
-        public long? CleanerId { get; private set; }
+        public string? CleanerId { get; private set; }
         public Cleaner? Cleaner { get; private set; }
 
         public Address Address { get; private set; }
@@ -47,7 +47,7 @@ namespace PartyKlinest.ApplicationCore.Entities.Orders
 
         public Opinion? CleanersOpinion { get; private set; }
 
-        public void SetCleanerId(long cleanerId)
+        public void SetCleanerId(string cleanerId)
         {
             CleanerId = cleanerId;
         }
@@ -62,7 +62,7 @@ namespace PartyKlinest.ApplicationCore.Entities.Orders
             CleanersOpinion = opinion;
         }
 
-        public void Modify(long clientId, long cleanerId, OrderStatus status, decimal maxPrice, int minRating, DateTimeOffset date, MessLevel messLevel)
+        public void Modify(string clientId, string? cleanerId, OrderStatus status, decimal maxPrice, int minRating, DateTimeOffset date, MessLevel messLevel)
         {
             ClientId = clientId;
             CleanerId = cleanerId;

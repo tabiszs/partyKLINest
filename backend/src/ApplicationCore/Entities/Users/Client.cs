@@ -2,6 +2,6 @@
 {
     public class Client
     {
-        public long ClientId { get; set; }
+        public string ClientId { get; set; }
     }
 }
