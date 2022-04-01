@@ -38,5 +38,16 @@ namespace PartyKlinest.ApplicationCore.Services
             order.SetClientsOpinion(cleanerOpinion);
             await _orderRepository.UpdateAsync(order);
         }
+
+        public async Task<Order> AddOrderAsync(Order order)
+        {
+            return await _orderRepository.AddAsync(order);
+        }
+
+        public async Task DeleteOrderAsync(long orderId)
+        {
+            var order = await GetOrderAsync(orderId);
+            await _orderRepository.DeleteAsync(order);
+        }
     }
 }
