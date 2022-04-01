@@ -24,6 +24,7 @@ namespace PartyKlinest.WebApi.Controllers
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IActionResult DeleteClient(int id)
         {
             _logger.LogInformation($"Delete client {id}");

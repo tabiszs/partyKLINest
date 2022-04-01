@@ -1,9 +1,27 @@
-using System.Text.Json.Serialization;
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-PartyKlinest.Infrastructure.Dependencies.ConfigureServices(builder.Configuration, builder.Services);
+const string CORS_POLICY_DEV = "CorsPolicyDev";
+const string CORS_POLICY_PROD = "CorsPolicyProd";
+string[] frontend_urls = new string[] { "" }; // TODO
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(CORS_POLICY_DEV,
+        builder =>
+        {
+            builder.AllowAnyOrigin(); // unsafe, okay for testing
+            builder.AllowAnyHeader();
+            builder.AllowAnyMethod();
+        });
+    options.AddPolicy(CORS_POLICY_PROD,
+        builder =>
+        {
+            builder.WithOrigins(frontend_urls);
+            builder.AllowAnyHeader();
+            builder.AllowAnyMethod();
+        });
+});
 
 builder.Services.AddControllers()
     .AddJsonOptions(j =>
@@ -26,6 +44,15 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+if (app.Environment.IsDevelopment())
+{
+    app.UseCors(CORS_POLICY_DEV);
+}
+else
+{
+    app.UseCors(CORS_POLICY_PROD);
+}
 
 app.UseAuthorization();
 
