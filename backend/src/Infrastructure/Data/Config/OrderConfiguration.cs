@@ -43,8 +43,7 @@ namespace PartyKlinest.Infrastructure.Data.Config
                 o.Property(o => o.Rating)
                     .IsRequired();
                 o.Property(o => o.AdditionalInfo)
-                    .IsRequired()
-                    .HasMaxLength(4096);
+                    .IsRequired();
             });
 
             builder.OwnsOne(x => x.ClientsOpinion, o =>
@@ -52,8 +51,7 @@ namespace PartyKlinest.Infrastructure.Data.Config
                 o.Property(o => o.Rating)
                     .IsRequired();
                 o.Property(o => o.AdditionalInfo)
-                    .IsRequired()
-                    .HasMaxLength(4096);
+                    .IsRequired();
             });
         }
     }
