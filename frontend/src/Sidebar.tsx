@@ -1,20 +1,36 @@
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import './Sidebar.css';
+import { Link } from 'react-router-dom';
 
 export interface SidebarButtonProps {
   label: string;
   active?: boolean;
-  onClick: () => void;
+  onClick?: () => void;
+  linkTo?: string;
 }
 
 const SidebarButton = (props: SidebarButtonProps) => {
+  if (props.linkTo === undefined){
+    return (
+      <Button
+      className='sidebar-button'
+      variant='contained'
+      onClick={props.onClick}
+      color={props.active ? 'secondary' : 'primary'}
+    >
+      {props.label}
+    </Button>
+    );
+  }
   return (
     <Button
       className='sidebar-button'
       variant='contained'
       onClick={props.onClick}
       color={props.active ? 'secondary' : 'primary'}
+      component={Link}
+      to={props.linkTo}
     >
       {props.label}
     </Button>
@@ -33,6 +49,7 @@ const createButtonsFromProps = (props: SidebarTopBottonButtonsProps) => {
         label={buttonProps.label}
         onClick={buttonProps.onClick}
         active={buttonProps.active}
+        linkTo={buttonProps.linkTo}
       />
     );
   }
@@ -64,6 +81,7 @@ interface SidebarContentProps {
 }
 
 const SidebarContent = (props: SidebarContentProps) => {
+
   return (
     <div className='sidebar-content-container'>
       <div className='sidebar-buttons-container' style={{marginTop: props.headerHeight}}>
