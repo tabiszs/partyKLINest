@@ -30,4 +30,11 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Build the Docker image for WebApi
-      run: docker-compose up
+      run: docker-compose up --build -d
+    - name: Get test result
+      run: |
+        # Wait for the test results, and terminate with non-zero exit code if they are bad
+    - name: Stop containers
+        # The container should be stopped regardless of the test result
+      if: always()
+      run: docker-compose down
