@@ -1,8 +1,5 @@
 import {useState} from 'react';
-import TextField, {TextFieldProps} from '@mui/material/TextField';
-import MenuItem from '@mui/material/MenuItem';
 import Button from '@mui/material/Button';
-import Rating from '@mui/material/Rating';
 import Card from '@mui/material/Card';
 import OrderStatus, {orderStatusText} from '../DataClasses/OrderStatus';
 import MessLevel, {messLevelText} from '../DataClasses/MessLevel';
@@ -53,6 +50,18 @@ const mockOrders: Order[] = [
   },
 ];
 
+const CancelButton = () => {
+  return (
+    <Button
+      variant='outlined'
+      color='error'
+      onClick={() => alert('cancel')}
+    >
+      Anuluj
+    </Button>
+  );
+}
+
 const OrderCard = (props: Order) => {
   return (
     <div className='order-card'>
@@ -68,12 +77,9 @@ const OrderCard = (props: Order) => {
             Poziom bałaganu: {messLevelText(props.messLevel)}
           </div>
           <div className='card-column'>
-            <Button
-              variant='outlined'
-              color='error'
-            >
-              Anuluj
-            </Button>
+            {props.status === OrderStatus.Active
+              ? <CancelButton />
+              : null}
           </div>
         </div>
       </Card>
