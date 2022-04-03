@@ -3,10 +3,10 @@ import AccountDetails from "../DataClasses/AccountDetails";
 
 const msalConfig = {
     auth: {
-        clientId: 'e1234a8c-f3d3-4bec-ae16-7168aeafd19c',
-        authority: 'https://partyklinest.b2clogin.com/partyklinest.onmicrosoft.com/B2C_1_PARTYKLINEST_USER_FLOW',
-        knownAuthorities: ['https://partyklinest.b2clogin.com'],
-        redirectUri: 'http://localhost:3000/'
+        clientId: process.env.REACT_APP_CLIENT_ID!,
+        authority: process.env.REACT_APP_DEFAULT_USER_FLOW!,
+        knownAuthorities: [process.env.REACT_APP_KNOWN_AUTHORITY!],
+        redirectUri: process.env.REACT_APP_REDIRECT_URI!
     }
 };
 
@@ -40,7 +40,10 @@ export const B2CLogout = () => msalInstance.logoutPopup();
 
 export const B2CEditProfile = async () => {
     try {
-        const loginResponse = await msalInstance.loginPopup({scopes:[], authority:'https://partyklinest.b2clogin.com/partyklinest.onmicrosoft.com/B2C_1_EDIT_PROFILE'});
+        const loginResponse = await msalInstance.loginPopup({
+            scopes: [], 
+            authority: process.env.REACT_APP_EDIT_PROFILE_USER_FLOW!
+        });
         if (loginResponse === null) return null;
         return loginResponse.account;
     } catch (err) {
@@ -51,7 +54,7 @@ export const B2CEditProfile = async () => {
 
 export const B2CDeleteAccount = async () => msalInstance.loginPopup({
     scopes:[],
-    authority:'https://partyklinest.b2clogin.com/partyklinest.onmicrosoft.com/B2C_1A_DELETE_ACCOUNT'
+    authority: process.env.REACT_APP_DELETE_ACCOUNT_USER_FLOW!
 });
 
 export const GetActiveAccount = () => {
