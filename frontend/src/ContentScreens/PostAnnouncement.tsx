@@ -1,5 +1,5 @@
 import {useState} from 'react';
-import TextField from '@mui/material/TextField';
+import TextField, {TextFieldProps} from '@mui/material/TextField';
 import Select from '@mui/material/Select';
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
@@ -9,7 +9,7 @@ import DateTimePicker from '@mui/lab/DateTimePicker';
 import Rating from '@mui/material/Rating';
 import Typography from '@mui/material/Typography';
 import Heading from '../Components/Heading';
-import Address from '../DataClasses/Address';
+import Address, {isAddressCorrect, emptyAddress} from '../DataClasses/Address';
 import './PostAnnouncement.css';
 
 const fieldWidth = '16em';
@@ -51,8 +51,8 @@ const AddressFields = (props: AddressFieldsProps) => {
       />
       <AnnouncementFormField
         label='Numer budynku'
-        value={props.value.buildingNumber}
-        onChange={(event: any) => props.onChange('buildingNumber', event.target.value)}
+        value={props.value.buildingNo}
+        onChange={(event: any) => props.onChange('buildingNo', event.target.value)}
       />
       <AnnouncementFormField
         label='Numer mieszkania'
@@ -62,7 +62,7 @@ const AddressFields = (props: AddressFieldsProps) => {
           const val = event.target.value;
           setFlatNumber(val);
 
-          if(val === '') {
+          if (val === '') {
             setIsFlatNumberWrong(false);
             props.onChange('flatNumber', null);
             return;
@@ -101,7 +101,7 @@ const CleaningDate = (props: CleaningDateProps) => {
   return (
     <div className='announcement-form-field'>
       <DateTimePicker
-        renderInput={(props) => <TextField
+        renderInput={(props: TextFieldProps) => <TextField
           {...props}
           sx={{
             width: fieldWidth
@@ -152,7 +152,7 @@ const PostAnnouncement = () => {
   defaultDate.setHours(defaultDate.getHours() + 12);
   defaultDate.setMinutes(0);
 
-  const [address, setAddress] = useState<Address>(new Address());
+  const [address, setAddress] = useState<Address>(emptyAddress());
   const [description, setDescription] = useState<string>('');
   const [cleaningTime, setCleaningTime] = useState<Date>(defaultDate);
   const [messLevel, setMessLevel] = useState<string>('Low');
@@ -165,8 +165,7 @@ const PostAnnouncement = () => {
       <AddressFields
         value={address}
         onChange={(field: string, value: any) => {
-          // Nadużycie JSowych głupot
-          const addressCopy: Address = {...address, isCorrect: address.isCorrect} as Address;
+          const addressCopy: Address = {...address};
           (addressCopy as any)[field] = value;
           setAddress(addressCopy);
         }}
@@ -236,7 +235,7 @@ const PostAnnouncement = () => {
 }
 
 const isFormFilledCorrectly = (address: Address, minPrice: number | null) => {
-  return address.isCorrect() && minPrice != null;
+  return isAddressCorrect(address) && minPrice != null;
 }
 
 export default PostAnnouncement;
