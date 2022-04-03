@@ -24,13 +24,13 @@ const del = (address: string) => {
   });
 }
 
-export const getCleanerInfo = (cleanerId: number) => get<CleanerInfo>(api.getCleanerAddress(cleanerId));
+export const getCleanerInfo = (cleanerId: string) => get<CleanerInfo>(api.getCleanerAddress(cleanerId));
 
-export const postCleanerInfo = (cleanerId: number, cleanerInfo: CleanerInfo) => post(api.getCleanerAddress(cleanerId), cleanerInfo);
+export const postCleanerInfo = (cleanerId: string, cleanerInfo: CleanerInfo) => post(api.getCleanerAddress(cleanerId), cleanerInfo);
 
-export const getCleanerOrders = (cleanerId: number) => get<Order[]>(api.getCleanerAddress(cleanerId));
+export const getCleanerOrders = (cleanerId: string) => get<Order[]>(api.getCleanerAddress(cleanerId));
 
-export const deleteClient = (clientId: number) => del(api.getClientAddress(clientId));
+export const deleteClient = (clientId: string) => del(api.getClientAddress(clientId));
 
 export const postCommission = (commission: Commission) => post(api.getCommissionAddress(), commission);
 
@@ -44,6 +44,6 @@ export const postOrder = (orderId: number, order: Order) => post(api.getOrderUrl
 
 export const deleteOrder = (orderId: number) => del(api.getOrderUrl(orderId));
 
-export const postRateUser = (userId: number, rating: Rating) => post(api.getUserRateUrl(userId), rating);
+export const postRateUser = (userId: string, rating: Rating) => post(api.getUserRateUrl(userId), rating);
 
-export const postBanUser = (userId: number) => post(api.getUserBanUrl(userId));
+export const postBanUser = (userId: string) => post(api.getUserBanUrl(userId));
