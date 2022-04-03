@@ -2,6 +2,7 @@
 using PartyKlinest.ApplicationCore.Entities.Orders.Opinions;
 using PartyKlinest.ApplicationCore.Exceptions;
 using PartyKlinest.ApplicationCore.Interfaces;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace PartyKlinest.ApplicationCore.Services
@@ -48,6 +49,23 @@ namespace PartyKlinest.ApplicationCore.Services
         {
             var order = await GetOrderAsync(orderId);
             await _orderRepository.DeleteAsync(order);
+        }
+
+        public async Task<List<Order>> ListOrdersAsync()
+        {
+            return await _orderRepository.ListAsync();
+        }
+
+        public async Task<List<Order>> ListAssignedOrdersAsync()
+        {
+            var spec = new Specifications.OrdersAssignedSpecification();
+            return await _orderRepository.ListAsync(spec);
+        }
+
+        public async Task<List<Order>> ListCreatedOrdersAsync()
+        {
+            var spec = new Specifications.OrdersCreatedSpecification();
+            return await _orderRepository.ListAsync(spec);
         }
     }
 }
