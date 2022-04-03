@@ -9,7 +9,10 @@ import DateTimePicker from '@mui/lab/DateTimePicker';
 import Rating from '@mui/material/Rating';
 import Typography from '@mui/material/Typography';
 import Heading from '../Components/Heading';
+import {postNewOrder} from '../Api/endpoints';
 import Address, {isAddressCorrect, emptyAddress} from '../DataClasses/Address';
+import MessLevelE from '../DataClasses/MessLevel';
+import DateTimeOffset from '../DataClasses/DateTimeOffset';
 import './PostAnnouncement.css';
 
 const fieldWidth = '16em';
@@ -64,17 +67,17 @@ const AddressFields = (props: AddressFieldsProps) => {
 
           if (val === '') {
             setIsFlatNumberWrong(false);
-            props.onChange('flatNumber', null);
+            props.onChange('flatNo', undefined);
             return;
           }
 
           const wrong = !/^[1-9]\d*$/.test(val);
           setIsFlatNumberWrong(wrong);
           if (wrong) {
-            props.onChange('flatNumber', NaN);
+            props.onChange('flatNo', NaN);
           }
           else {
-            props.onChange('flatNumber', parseInt(val));
+            props.onChange('flatNo', parseInt(val));
           }
         }}
       />
@@ -93,33 +96,51 @@ const AddressFields = (props: AddressFieldsProps) => {
 }
 
 interface CleaningDateProps {
-  value: Date;
-  onChange: (cleaningTime: Date) => void;
+  value: DateTimeOffset;
+  onChange: (start?: Date, end?: Date) => void;
 }
 
 const CleaningDate = (props: CleaningDateProps) => {
   return (
-    <div className='announcement-form-field'>
-      <DateTimePicker
-        renderInput={(props: TextFieldProps) => <TextField
-          {...props}
-          sx={{
-            width: fieldWidth
-          }}
-        />}
-        label='Czas i godzina sprzątania'
-        value={props.value}
-        onChange={(cleaningTime: Date | null) =>
-          cleaningTime != null && props.onChange(cleaningTime)}
-        minDateTime={new Date()}
-      />
-    </div>
+    <>
+      <div className='announcement-form-field'>
+        <DateTimePicker
+          renderInput={(props: TextFieldProps) => <TextField
+            {...props}
+            sx={{
+              width: fieldWidth
+            }}
+          />}
+          label='Początek zakresu czasu sprzątania'
+          value={props.value.start}
+          onChange={(cleaningTime: Date | null) =>
+            cleaningTime != null && props.onChange(cleaningTime, undefined)}
+          minDateTime={new Date()}
+          maxDateTime={props.value.end}
+        />
+      </div>
+      <div className='announcement-form-field'>
+        <DateTimePicker
+          renderInput={(props: TextFieldProps) => <TextField
+            {...props}
+            sx={{
+              width: fieldWidth
+            }}
+          />}
+          label='Koniec zakresu czasu sprzątania'
+          value={props.value.end}
+          onChange={(cleaningTime: Date | null) =>
+            cleaningTime != null && props.onChange(undefined, cleaningTime)}
+          minDateTime={props.value.start}
+        />
+      </div>
+    </>
   );
 };
 
 interface MessLevelProps {
-  value: string;
-  onChange: (messLevel: string) => void;
+  value: MessLevelE;
+  onChange: (messLevel: MessLevelE) => void;
 }
 
 const MessLevel = (props: MessLevelProps) => {
@@ -137,27 +158,37 @@ const MessLevel = (props: MessLevelProps) => {
           value={props.value}
           onChange={(event: any) => props.onChange(event.target.value)}
         >
-          <MenuItem value="Low">Niski</MenuItem>
-          <MenuItem value="Moderate">Średni</MenuItem>
-          <MenuItem value="Huge">Duży</MenuItem>
-          <MenuItem value="Disaster">Katastrofa</MenuItem>
+          <MenuItem value={MessLevelE.Low}>Niski</MenuItem>
+          <MenuItem value={MessLevelE.Moderate}>Średni</MenuItem>
+          <MenuItem value={MessLevelE.Huge}>Duży</MenuItem>
+          <MenuItem value={MessLevelE.Disaster}>Katastrofa</MenuItem>
         </Select>
       </FormControl>
     </div>
   );
 }
 
-const PostAnnouncement = () => {
-  const defaultDate = new Date();
-  defaultDate.setHours(defaultDate.getHours() + 12);
-  defaultDate.setMinutes(0);
+const getDefaultDate = () => {
+  const defaultDateStart = new Date();
+  defaultDateStart.setHours(defaultDateStart.getHours() + 12);
+  defaultDateStart.setMinutes(0);
+  const defaultDateEnd = new Date();
+  defaultDateEnd.setHours(defaultDateEnd.getHours() + 24);
+  defaultDateEnd.setMinutes(0);
 
+  return {
+    start: defaultDateStart,
+    end: defaultDateEnd
+  };
+}
+
+const PostAnnouncement = () => {
   const [address, setAddress] = useState<Address>(emptyAddress());
   const [description, setDescription] = useState<string>('');
-  const [cleaningTime, setCleaningTime] = useState<Date>(defaultDate);
-  const [messLevel, setMessLevel] = useState<string>('Low');
+  const [cleaningTime, setCleaningTime] = useState<DateTimeOffset>(getDefaultDate());
+  const [messLevel, setMessLevel] = useState<MessLevelE>(MessLevelE.Low);
   const [minRating, setMinRating] = useState<number>(0.5);
-  const [minPrice, setMinPrice] = useState<number | null>(Infinity);
+  const [maxPrice, setMaxPrice] = useState<number | null>(Infinity);
 
   return (
     <div className='announcement-screen'>
@@ -172,24 +203,31 @@ const PostAnnouncement = () => {
       />
       <CleaningDate
         value={cleaningTime}
-        onChange={setCleaningTime}
+        onChange={(start?: Date, end?: Date) => {
+          const newCleaningTime = {
+            start: start === undefined ? cleaningTime.start : start,
+            end: end === undefined ? cleaningTime.end : end,
+          };
+
+          setCleaningTime(newCleaningTime);
+        }}
       />
       <AnnouncementFormField
         label='Maksymalna cena usługi (zł)'
-        error={minPrice === null}
+        error={maxPrice === null}
         onChange={(event: any) => {
           const val = event.target.value;
           if (val === '') {
-            setMinPrice(Infinity);
+            setMaxPrice(Infinity);
             return;
           }
 
           if (/^\d+([,.]\d\d)?$/.test(val)) {
             const priceString = val.replace(',', '.');
-            setMinPrice(parseFloat(priceString) * 100);
+            setMaxPrice(parseFloat(priceString) * 100);
           }
           else {
-            setMinPrice(null);
+            setMaxPrice(null);
           }
         }}
       />
@@ -204,7 +242,7 @@ const PostAnnouncement = () => {
       />
       <MessLevel
         value={messLevel}
-        onChange={(messLevel: string) => setMessLevel(messLevel)}
+        onChange={(messLevel: MessLevelE) => setMessLevel(messLevel)}
       />
       <div className='announcement-form-field'>
         <Typography component='legend'>Minimalna ocena</Typography>
@@ -218,13 +256,22 @@ const PostAnnouncement = () => {
         <Button
           variant='contained'
           onClick={() => {
-            if (!isFormFilledCorrectly(address, minPrice)) {
+            if (!isFormFilledCorrectly(address, maxPrice, cleaningTime)) {
               alert('Formularz nie został wypełniony poprawnie!');
               return;
             }
 
-            console.log('API mock: ',
-              address, description, cleaningTime, messLevel, minRating, minPrice);
+            const newOrder = {
+              clientId: 'placeholder',
+              maxPrice: maxPrice!,
+              minRating: minRating,
+              messLevel: messLevel,
+              date: cleaningTime,
+              address: address
+            };
+
+            postNewOrder(newOrder);
+            console.log(newOrder);
           }}
         >
           Zatwierdź
@@ -234,8 +281,14 @@ const PostAnnouncement = () => {
   );
 }
 
-const isFormFilledCorrectly = (address: Address, minPrice: number | null) => {
-  return isAddressCorrect(address) && minPrice != null;
+const isFormFilledCorrectly = (
+  address: Address,
+  maxPrice: number | null,
+  cleaningTime: DateTimeOffset
+) => {
+  return isAddressCorrect(address) &&
+    maxPrice !== null && maxPrice !== Infinity &&
+    cleaningTime.start < cleaningTime.end;
 }
 
 export default PostAnnouncement;
