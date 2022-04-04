@@ -21,7 +21,7 @@ name: Build and deploy ASP.Net Core app to an Azure Web App
 
 env:
   AZURE_WEBAPP_NAME: partyklinest-backend   # set this to the name of your Azure Web App
-  AZURE_WEBAPP_PACKAGE_PATH: './backend'    # set this to the path to your web app project, defaults to the repository root
+  AZURE_WEBAPP_PACKAGE_PATH: '.'    # set this to the path to your web app project, defaults to the repository root
   DOTNET_VERSION: '6.0.x'                    # set this to the .NET Core version to use
 
 on:
@@ -66,8 +66,8 @@ jobs:
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
         with:
-          name: .PartyKlinest
-          path: ${{env.DOTNET_ROOT}}/backend
+          name: .partyklinest-backend
+          path: ${{env.DOTNET_ROOT}}
 
   deploy:
     defaults:
@@ -84,7 +84,7 @@ jobs:
       - name: Download artifact from build job
         uses: actions/download-artifact@v3
         with:
-          name: .net-app
+          name: .partyklinest-backend
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
