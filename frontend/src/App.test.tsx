@@ -7,11 +7,7 @@ jest.mock('@azure/msal-browser', () => {
     PublicClientApplication: jest.fn().mockImplementation((config: any) => {})
   };
 });
-jest.mock('./Authentication/MsalService', () => {
-  return { 
-    RetrieveToken: jest.fn().mockResolvedValue({})
-  };
-});
+
 
 test('renders learn react link', () => {
   render(<App />);
