@@ -9,6 +9,10 @@ namespace PartyKlinest.Infrastructure.Data.Config
         public void Configure(EntityTypeBuilder<Cleaner> builder)
         {
             builder
+                .Property(x => x.CleanerId)
+                .HasMaxLength(40);
+
+            builder
                 .Property(c => c.MinPrice)
                 .HasColumnType("money");
         }

@@ -8,6 +8,9 @@ namespace PartyKlinest.Infrastructure.Data.Config
     {
         public void Configure(EntityTypeBuilder<Client> builder)
         {
+            builder
+                .Property(x => x.ClientId)
+                .HasMaxLength(40);
         }
     }
 }

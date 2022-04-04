@@ -53,6 +53,14 @@ namespace PartyKlinest.Infrastructure.Data.Config
                 o.Property(o => o.AdditionalInfo)
                     .IsRequired();
             });
+
+            builder
+                .Property(x => x.ClientId)
+                .HasMaxLength(40);
+
+            builder
+                .Property(x => x.CleanerId)
+                .HasMaxLength(40);
         }
     }
 }
