@@ -4,7 +4,11 @@ import App from './App';
 
 jest.mock('@azure/msal-browser', () => {
   return {
-    PublicClientApplication: jest.fn().mockImplementation((config: any) => {})
+    PublicClientApplication: jest.fn().mockImplementation((config: any) => {
+      return {
+        acquireTokenSilent: (config: any) => Promise.resolve(null)
+      }
+    })
   };
 });
 
