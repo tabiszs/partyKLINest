@@ -1,5 +1,5 @@
 
-const apiUrl = process.env.REACT_APP_API_URL;
+const apiUrl = process.env.REACT_APP_API_URL + "/api/";
 
 export const getCleanerAddress = (cleanerId: string) => apiUrl + "Cleaner/" + cleanerId;
 
