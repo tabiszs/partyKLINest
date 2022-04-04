@@ -5,6 +5,7 @@ import Layout from './Layout';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Dashboard from './ContentScreens/Dashboard';
 import Settings from './ContentScreens/Settings';
+import PostAnnouncement from './ContentScreens/PostAnnouncement';
 
 const App = () => {
 
@@ -36,6 +37,7 @@ const App = () => {
         <Route path="/" element={<Layout isLogged={isLogged} login={login} logout={logout}/>}>
           <Route index element={<Dashboard/>}/>
           <Route path="/settings" element={<Settings logout={() => setIsLogged(false)}/>}/>
+          <Route path="/postAnnouncement" element={<PostAnnouncement/>}/>
         </Route>
       </Routes>
     </BrowserRouter>

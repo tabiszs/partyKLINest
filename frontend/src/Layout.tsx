@@ -36,7 +36,18 @@ interface AfterLoginContentProps {
 const AfterLoginContent = (props: AfterLoginContentProps) => {
   return (
     <>
-      <Sidebar headerHeight={headerHeight} logoutHandler={props.logout} />
+      <Sidebar
+          headerHeight={headerHeight}
+          topButtons={[
+            { label: 'Pulpit', linkTo: '/' },
+            { label: 'Dodaj', linkTo: '/postAnnouncement', active: true },
+            { label: 'Historia', onClick: () => alert('Historia') },
+          ]}
+          bottomButtons={[
+            { label: 'Ustawienia', linkTo: '/settings' },
+            { label: 'Wyloguj', onClick: props.logout }
+          ]}
+        />
       <ContentContainer headerHeight={headerHeight}>
         <Outlet/>
       </ContentContainer>

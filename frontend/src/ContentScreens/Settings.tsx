@@ -1,4 +1,3 @@
-import Button from "@mui/material/Button";
 import { useState } from "react";
 import { B2CDeleteAccount, B2CEditProfile, GetActiveAccountDetails } from "../Authentication/MsalService";
 import AccountDetails from "../DataClasses/AccountDetails";
