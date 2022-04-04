@@ -6,40 +6,8 @@ on:
   pull_request:
     branches: [ dev, master ]
 
-jobs:
-  
-  backend-tests:
-    defaults:
-      run:
-        shell: bash
-        working-directory: ./backend
-    environment: development 
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        dotnet-version: ['6.0.x' ]
-        
-    steps:
-      - uses: actions/checkout@v3
-      - name: Setup .NET Core SDK ${{ matrix.dotnet-version }}
-        uses: actions/setup-dotnet@v2
-        with:
-          dotnet-version: ${{ matrix.dotnet-version }}
-      - uses: actions/cache@v3
-        with:
-          path: ~/.nuget/packages
-            # Look to see if there is a cache hit for the corresponding requirements file
-          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
-          restore-keys: ${{ runner.os }}-nuget
-      - name: Install dependencies
-        run: dotnet restore
-      - name: Build
-        run: dotnet build --configuration Release --no-restore
-      - name: Test
-        run: dotnet test --no-restore --verbosity normal
-  
+jobs:  
   backend-build:
-    needs: backend-tests
     defaults:
       run:
         shell: bash
@@ -62,9 +30,6 @@ jobs:
     - uses: actions/checkout@v2
     - name: Build the Docker image for WebApi
       run: docker-compose up --build -d
-    - name: Get test result
-      run: |
-        # Wait for the test results, and terminate with non-zero exit code if they are bad
     - name: Stop containers
         # The container should be stopped regardless of the test result
       if: always()
