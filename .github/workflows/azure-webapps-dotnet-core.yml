@@ -36,6 +36,10 @@ on:
 
 jobs:
   build:
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./backend
     runs-on: ubuntu-latest
 
     steps:
