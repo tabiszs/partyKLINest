@@ -9,7 +9,7 @@ jest.mock('@azure/msal-browser', () => {
 });
 jest.mock('./Authentication/MsalService', () => {
   return { 
-    RetrieveToken: jest.fn().mockResolvedValue(undefined)
+    RetrieveToken: jest.fn().mockResolvedValue({})
   };
 });
 
