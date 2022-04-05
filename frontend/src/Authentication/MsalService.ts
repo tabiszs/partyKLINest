@@ -63,8 +63,6 @@ export const GetActiveAccount = () => {
 }
 
 export const GetActiveAccountToken = () => {
-    console.log(GetActiveAccount()?.idTokenClaims);
-    console.log(getTokenFromMsalClaims(GetActiveAccount()?.idTokenClaims as MsalTokenClaims));
     return getTokenFromMsalClaims(GetActiveAccount()?.idTokenClaims as MsalTokenClaims);
 }
 
