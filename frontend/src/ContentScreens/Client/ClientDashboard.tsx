@@ -1,15 +1,15 @@
-import AccountDetails from "../../DataClasses/AccountDetails";
+import Token from "../../DataClasses/Token";
 import ClientOrderManagement from "../ClientOrderManagement";
 
 interface ClientDashboardProps {
-    accountDetails: AccountDetails;
+    token: Token;
 }
 
 const ClientDashboard = (props: ClientDashboardProps) => {
 
     return (
         <>
-            <h1>{props.accountDetails.given_name} {props.accountDetails.family_name}, witaj!</h1>
+            <h1>{props.token.name} {props.token.surname}, witaj!</h1>
             <ClientOrderManagement/>
         </>
     );
