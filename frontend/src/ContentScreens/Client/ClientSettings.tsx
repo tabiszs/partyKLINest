@@ -1,10 +1,10 @@
 import { Dialog, DialogActions, DialogContent, DialogContentText } from "@mui/material";
 import Button from "@mui/material/Button";
 import { useState } from "react";
-import AccountDetails from "../../DataClasses/AccountDetails";
+import Token from "../../DataClasses/Token";
 
 interface ClientSettingsProps {
-    accountDetails: AccountDetails;
+    token: Token;
     editProfile: () => void;
     deleteProfile: () => void;
 }
@@ -27,11 +27,11 @@ const ClientSettings = (props: ClientSettingsProps) => {
 
     return (
         <>
-            <p><strong>Imię: </strong>{props.accountDetails.given_name}</p>
-            <p><strong>Nazwisko: </strong>{props.accountDetails.family_name}</p>
-            <p><strong>Adres: </strong>{props.accountDetails.streetAddress}, {props.accountDetails.postalCode} {props.accountDetails.city}</p>
-            <p><strong>Kraj: </strong>{props.accountDetails.country}</p>
-            <p><strong>E-mail: </strong>{props.accountDetails.emails[0]}</p>
+            <p><strong>Imię: </strong>{props.token.name}</p>
+            <p><strong>Nazwisko: </strong>{props.token.surname}</p>
+            <p><strong>Adres: </strong>{props.token.address.street}, {props.token.address.postalCode} {props.token.address.city}</p>
+            <p><strong>Kraj: </strong>{props.token.address.country}</p>
+            <p><strong>E-mail: </strong>{props.token.email}</p>
             <Button onClick={props.editProfile}>Edytuj profil</Button>
             <Button onClick={openDeleteDialog} style={{color: 'red'}}>Usuń konto</Button>
 

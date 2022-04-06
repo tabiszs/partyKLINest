@@ -1,7 +1,7 @@
 import DayOfWeek from "./DayOfWeek";
 
 interface ScheduleEntry {
-    deyOfWeek: DayOfWeek;
+    dayOfWeek: DayOfWeek;
     start: Date;
     end: Date;
 }

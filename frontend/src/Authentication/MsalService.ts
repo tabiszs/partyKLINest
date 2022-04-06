@@ -1,5 +1,6 @@
 import * as msal from "@azure/msal-browser";
-import AccountDetails from "../DataClasses/AccountDetails";
+import MsalTokenClaims from "../DataClasses/MsalTokenClaims";
+import { getTokenFromMsalClaims } from "../DataClasses/Token";
 
 const msalConfig = {
     auth: {
@@ -61,7 +62,7 @@ export const GetActiveAccount = () => {
     return msalInstance.getActiveAccount();
 }
 
-export const GetActiveAccountDetails = () => {
-    return GetActiveAccount()?.idTokenClaims as AccountDetails;
+export const GetActiveAccountToken = () => {
+    return getTokenFromMsalClaims(GetActiveAccount()?.idTokenClaims as MsalTokenClaims);
 }
 
