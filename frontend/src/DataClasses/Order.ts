@@ -14,8 +14,8 @@ interface Order {
     date: DateTimeOffset;
     messLevel: MessLevel;
     address: Address;
-    opinionFromClient: Rating;
-    opinionFromCleaner: Rating;
+    opinionFromClient?: Rating;
+    opinionFromCleaner?: Rating;
 }
 
 export default Order;
