@@ -1,7 +1,9 @@
-﻿using PartyKlinest.ApplicationCore.Entities.Orders;
+﻿using PartyKlinest.ApplicationCore.Entities;
+using PartyKlinest.ApplicationCore.Entities.Orders;
 using PartyKlinest.ApplicationCore.Entities.Orders.Opinions;
 using PartyKlinest.ApplicationCore.Exceptions;
 using PartyKlinest.ApplicationCore.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -66,6 +68,19 @@ namespace PartyKlinest.ApplicationCore.Services
         {
             var spec = new Specifications.OrdersCreatedSpecification();
             return await _orderRepository.ListAsync(spec);
+        }
+
+        public async Task ModifyOrderAsync(long orderId,
+            string newClientId, string? newCleanerId,
+            OrderStatus newOrderStatus, decimal newMaxPrice,
+            int newMinRating, DateTimeOffset newDate,
+            Address newAddress, MessLevel newMessLevel)
+        {
+            var order = await GetOrderAsync(orderId);
+            order.Modify(newClientId, newCleanerId, newOrderStatus,
+                newMaxPrice, newMinRating, newDate, newAddress,
+                newMessLevel);
+            await _orderRepository.UpdateAsync(order);
         }
     }
 }

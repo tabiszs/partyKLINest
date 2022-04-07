@@ -85,13 +85,14 @@ namespace PartyKlinest.ApplicationCore.Entities.Orders
             CleanersOpinion = opinion;
         }
 
-        public void Modify(string clientId, string? cleanerId, OrderStatus status, decimal maxPrice, int minRating, DateTimeOffset date, MessLevel messLevel)
+        public void Modify(string clientId, string? cleanerId, OrderStatus status, decimal maxPrice, int minRating, DateTimeOffset date, Address address, MessLevel messLevel)
         {
             ClientId = clientId;
             CleanerId = cleanerId;
             Status = status;
             MaxPrice = maxPrice;
             MinCleanerRating = minRating;
+            Address = address;
             Date = date;
             MessLevel = messLevel;
         }

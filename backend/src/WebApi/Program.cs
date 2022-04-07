@@ -1,3 +1,7 @@
+using PartyKlinest.ApplicationCore.Interfaces;
+using PartyKlinest.ApplicationCore.Services;
+using PartyKlinest.Infrastructure;
+using PartyKlinest.Infrastructure.Data;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -25,12 +29,19 @@ builder.Services.AddCors(options =>
         });
 });
 
+Dependencies.ConfigureServices(builder.Configuration, builder.Services);
+
+builder.Services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
+builder.Services.AddScoped(typeof(IReadRepository<>), typeof(EfRepository<>));
+builder.Services.AddScoped<OrderFacade>();
+
 builder.Services.AddControllers()
     .AddJsonOptions(j =>
     {
         // Convert C# enums (int wrappers) to strings
         j.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
     });
+
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
