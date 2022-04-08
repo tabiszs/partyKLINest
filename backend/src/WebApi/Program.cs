@@ -1,7 +1,4 @@
-using PartyKlinest.ApplicationCore.Interfaces;
-using PartyKlinest.ApplicationCore.Services;
 using PartyKlinest.Infrastructure;
-using PartyKlinest.Infrastructure.Data;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -30,10 +27,6 @@ builder.Services.AddCors(options =>
 });
 
 Dependencies.ConfigureServices(builder.Configuration, builder.Services);
-
-builder.Services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
-builder.Services.AddScoped(typeof(IReadRepository<>), typeof(EfRepository<>));
-builder.Services.AddScoped<OrderFacade>();
 
 builder.Services.AddControllers()
     .AddJsonOptions(j =>
