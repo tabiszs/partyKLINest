@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PartyKlinest.ApplicationCore.Entities.Orders;
+using PartyKlinest.ApplicationCore.Entities.Orders.Opinions;
 using PartyKlinest.ApplicationCore.Exceptions;
 using PartyKlinest.ApplicationCore.Services;
 using PartyKlinest.WebApi.Models;
@@ -34,7 +35,57 @@ namespace PartyKlinest.WebApi.Controllers
             return await _orderFacade.ListOrdersAsync();
         }
 
+        /// <summary>
+        /// Get assigned orders.
+        /// </summary>
+        /// <returns>Orders with cleaners assigned.</returns>
+        [HttpGet("Cleaner")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        public async Task<List<Order>> GetAssignedOrdersAsync()
+        {
+            _logger.LogInformation("Getting assigned orders");
 
+            return await _orderFacade.ListAssignedOrdersAsync();
+        }
+
+        /// <summary>
+        /// Get created orders.
+        /// </summary>
+        /// <returns>Orders which await for assignment.</returns>
+        [HttpGet("Client")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        public async Task<List<Order>> GetCreatedOrdersAsync()
+        {
+            _logger.LogInformation("Getting client orders");
+
+            return await _orderFacade.ListCreatedOrdersAsync();
+        }
+
+        // TODO: Missing token with id
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="orderId"></param>
+        /// <param name="opinion"></param>
+        /// <returns></returns>
+        [HttpPost("{orderId}/Rate")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        public async Task<IActionResult> RateOrderAsync(long orderId, [FromBody] Opinion opinion)
+        {
+            _logger.LogInformation("Rating order");
+            return Ok();
+        }
+
+
+        /// <summary>
+        /// Add order.
+        /// </summary>
+        /// <param name="newOrder"></param>
+        /// <returns></returns>
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -46,7 +97,15 @@ namespace PartyKlinest.WebApi.Controllers
             var orderToBeCreated = new Order(newOrder.MaxPrice, newOrder.MinRating,
                 newOrder.MessLevel, newOrder.Date, newOrder.ClientId, newOrder.Address);
 
-            await _orderFacade.AddOrderAsync(orderToBeCreated);
+            try
+            {
+                await _orderFacade.AddOrderAsync(orderToBeCreated);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Error while adding order");
+                return BadRequest();
+            }
 
             return Ok();
         }
@@ -73,6 +132,7 @@ namespace PartyKlinest.WebApi.Controllers
             }
         }
 
+        // TODO: missing specification
         //[HttpPost("{orderId}")]
         //[ProducesResponseType(StatusCodes.Status200OK)]
         //[ProducesResponseType(StatusCodes.Status400BadRequest)]
