@@ -18,13 +18,13 @@ namespace UnitTests.ApplicationCore.Specifications
 
             var result = GetTestOrdersCollection()
                 .AsQueryable()
-                .Where(spec.WhereExpressions.FirstOrDefault().Filter);
+                .Where(spec.WhereExpressions.FirstOrDefault()!.Filter);
 
             int expectedCount = 2;
             Assert.Equal(expectedCount, result.Count());
         }
 
-        public List<Order> GetTestOrdersCollection()
+        public static List<Order> GetTestOrdersCollection()
         {
             var addressFactory = new AddressFactory();
             var address = addressFactory.CreateWithDefaultValues();
