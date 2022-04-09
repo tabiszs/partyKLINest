@@ -1,5 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using PartyKlinest.ApplicationCore.Entities;
+using PartyKlinest.ApplicationCore.Entities.Orders;
 using PartyKlinest.WebApi.Models;
 
 namespace PartyKlinest.WebApi.Controllers
@@ -30,12 +31,10 @@ namespace PartyKlinest.WebApi.Controllers
             new CleanerInfoDTO(new[] {scheduleEntries[5]}, MessLevel.Low, 8, 12.0m, 5.0f),
         };
 
-        private static readonly OrderDTO[] _orders = new[]
+        private static readonly Order[] _orders = new[]
         {
-            new OrderDTO(1, "1", "1", OrderStatus.Active, 420.69m, 1, MessLevel.Disaster),
-            new OrderDTO(2, "1", "2", OrderStatus.Closed, 1500m, 4, MessLevel.Huge),
-            new OrderDTO(3, "2", "1", OrderStatus.Closed, 1501m, 6, MessLevel.Moderate),
-            new OrderDTO(4, "3", "2", OrderStatus.Closed, 1502m, 9, MessLevel.Low),
+            new Order(420.69m, 3, MessLevel.Moderate, new(2019, 2, 2, 1, 23, 12, TimeSpan.Zero), "123",
+                new Address("Poland", "Warsaw", "Krakowska", "1", "1", "1")),
         };
 
         public CleanerController(ILogger<CleanerController> logger)
@@ -56,12 +55,12 @@ namespace PartyKlinest.WebApi.Controllers
         {
             bool isExisting = cleanerId > 0 && cleanerId < _cleaners.Length;
 
-            if(!isExisting)
+            if (!isExisting)
             {
                 return NotFound();
             }
-            
-            _logger.LogInformation($"Get cleaner info. CleanerId: {cleanerId}");
+
+            _logger.LogInformation("Get cleaner info. CleanerId: {cleanerId}", cleanerId);
 
             return _cleaners[cleanerId - 1];
         }
@@ -77,15 +76,15 @@ namespace PartyKlinest.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public IActionResult UpdateCleanerInfo(int cleanerId, [FromBody]CleanerInfoDTO cleanerInfo)
+        public IActionResult UpdateCleanerInfo(long cleanerId, [FromBody] CleanerInfoDTO cleanerInfo)
         {
-            _logger.LogInformation($"Update cleaner info. CleanerId: {cleanerId}");
+            _logger.LogInformation("Update cleaner info. CleanerId: {cleanerId}", cleanerId);
 
             return Ok();
         }
 
         /// <summary>
-        /// Gets list of <see cref="OrderDTO"/> assigned to cleaner with id <paramref name="cleanerId"/>.
+        /// Gets list of <see cref="Order"/> assigned to cleaner with id <paramref name="cleanerId"/>.
         /// </summary>
         /// <param name="cleanerId"></param>
         /// <returns></returns>
@@ -93,7 +92,7 @@ namespace PartyKlinest.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult<IEnumerable<OrderDTO>> GetAssignedOrders(int cleanerId)
+        public ActionResult<IEnumerable<Order>> GetAssignedOrders(int cleanerId)
         {
             return _orders;
         }

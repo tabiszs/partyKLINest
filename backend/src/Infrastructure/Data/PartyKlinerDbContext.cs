@@ -7,7 +7,7 @@ using System.Reflection;
 
 namespace PartyKlinest.Infrastructure.Data
 {
-    public class PartyKlinerDbContext : DbContext
+    internal class PartyKlinerDbContext : DbContext
     {
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         public PartyKlinerDbContext(DbContextOptions<PartyKlinerDbContext> options) : base(options)

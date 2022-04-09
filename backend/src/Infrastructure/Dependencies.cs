@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using PartyKlinest.ApplicationCore.Interfaces;
+using PartyKlinest.ApplicationCore.Services;
 using PartyKlinest.Infrastructure.Data;
 
 namespace PartyKlinest.Infrastructure
@@ -13,6 +15,10 @@ namespace PartyKlinest.Infrastructure
                 o.UseNpgsql(configuration.GetConnectionString("PartyKlinerDbContext"))
                 .UseSnakeCaseNamingConvention()
                 );
+
+            services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
+            services.AddScoped(typeof(IReadRepository<>), typeof(EfRepository<>));
+            services.AddScoped<OrderFacade>();
         }
     }
 }

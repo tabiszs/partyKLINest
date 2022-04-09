@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Design;
 
 namespace PartyKlinest.Infrastructure.Data
 {
-    public class PartyKlinerDbContextFactory : IDesignTimeDbContextFactory<PartyKlinerDbContext>
+    internal class PartyKlinerDbContextFactory : IDesignTimeDbContextFactory<PartyKlinerDbContext>
     {
         /// <summary>
         /// For using during command line migrations.
