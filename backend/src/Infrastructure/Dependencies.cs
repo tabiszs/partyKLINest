@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using PartyKlinest.ApplicationCore.Interfaces;
 using PartyKlinest.ApplicationCore.Services;
 using PartyKlinest.Infrastructure.Data;
+using PartyKlinest.Infrastructure.Services;
 
 namespace PartyKlinest.Infrastructure
 {
@@ -19,6 +20,7 @@ namespace PartyKlinest.Infrastructure
             services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
             services.AddScoped(typeof(IReadRepository<>), typeof(EfRepository<>));
             services.AddScoped<OrderFacade>();
+            services.AddScoped<ICommissionService, CommissionService>();
         }
     }
 }
