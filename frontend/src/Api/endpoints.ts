@@ -44,7 +44,3 @@ export const deleteUser = (userId: string) => del(api.getUserUrl(userId));
 export const getAllUsers = () => get<UserInfo>(api.getUsersUrl());
 
 export const postCommission = (commission: Commission) => post(api.getCommissionAddress(), commission);
-
-
-
-
