@@ -6,6 +6,7 @@ import {BrowserRouter, Routes, Route} from 'react-router-dom';
 import Dashboard from './ContentScreens/Dashboard';
 import Settings from './ContentScreens/Settings';
 import PostAnnouncement from './ContentScreens/PostAnnouncement';
+import ComissionForm from './ContentScreens/Admin/ComissionForm';
 import OrderDeletion from './ContentScreens/Admin/OrderDeletion';
 import OrderManagement from './ContentScreens/ClientOrderManagement';
 
@@ -40,6 +41,7 @@ const App = () => {
           <Route index element={<Dashboard />} />
           <Route path="/settings" element={<Settings logout={() => setIsLogged(false)} />} />
           <Route path="/postAnnouncement" element={<PostAnnouncement />} />
+          <Route path="/comission" element={<ComissionForm />} />
           <Route path="/orderDeletion" element={<OrderDeletion />} />
           <Route path="/orderManagement" element={<OrderManagement />} />
         </Route>
