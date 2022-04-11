@@ -10,6 +10,8 @@ import ClientDashboard from './ContentScreens/Client/ClientDashboard';
 import ClientSettings from './ContentScreens/Client/ClientSettings';
 import LoginScreen from './ContentScreens/LoginScreen';
 import { AdminLayout, CleanerLayout, ClientLayout } from './Layouts';
+import OrderDeletion from './ContentScreens/Admin/OrderDeletion';
+import OrderManagement from './ContentScreens/ClientOrderManagement';
 
 const headerHeight = '6em';
 
@@ -63,6 +65,7 @@ const App = () => {
               <Route index element={<ClientDashboard token={token!} />} />
               <Route path="/settings" element={<ClientSettings token={token!} editProfile={editProfile} deleteProfile={deleteAccount} />} />
               <Route path="/postAnnouncement" element={<PostAnnouncement />} />
+              <Route path="/orderManagement" element={<OrderManagement />} />
             </Route> : ''
           }
           {token?.userType === UserType.Cleaner ?
@@ -72,7 +75,7 @@ const App = () => {
           }
           {token?.userType === UserType.Administrator ?
             <Route path="/" element={<AdminLayout headerHeight={headerHeight} logout={logout} />}>
-
+              <Route path="/orderDeletion" element={<OrderDeletion />} />
             </Route> : ''
           }
         </Route>
