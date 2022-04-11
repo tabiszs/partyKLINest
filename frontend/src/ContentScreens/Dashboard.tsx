@@ -1,14 +1,14 @@
-import { GetActiveAccountDetails } from "../Authentication/MsalService";
-import AccountType from "../DataClasses/AccountType";
+import { GetActiveAccountToken } from "../Authentication/MsalService";
+import UserType from "../DataClasses/UserType";
 import ClientDashboard from "./Client/ClientDashboard";
 
 const Dashboard = () => {
 
-    const accountDetails = GetActiveAccountDetails();
+    const token = GetActiveAccountToken();
 
-    switch (accountDetails.extension_AccountType) {
-        case AccountType.Client:
-            return <ClientDashboard accountDetails={accountDetails}/>;
+    switch (token.userType) {
+        case UserType.Client:
+            return <ClientDashboard token={token}/>;
         default:
             return <></>;
     }

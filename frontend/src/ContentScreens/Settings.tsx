@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { B2CDeleteAccount, B2CEditProfile, GetActiveAccountDetails } from "../Authentication/MsalService";
-import AccountDetails from "../DataClasses/AccountDetails";
-import AccountType from "../DataClasses/AccountType";
+import { B2CDeleteAccount, B2CEditProfile, GetActiveAccountToken } from "../Authentication/MsalService";
+import MsalTokenClaims from "../DataClasses/MsalTokenClaims";
 import ClientSettings from "./Client/ClientSettings";
+import { getTokenFromMsalClaims } from "../DataClasses/Token";
+import UserType from "../DataClasses/UserType";
 
 interface SettingsProps {
     logout: () => void;
@@ -10,11 +11,11 @@ interface SettingsProps {
 
 const Settings = (props: SettingsProps) => {
 
-    const [accountDetails,setAccountDetails] = useState(GetActiveAccountDetails());
+    const [token, setToken] = useState(GetActiveAccountToken());
 
     const editProfileHandler = () => {
         B2CEditProfile().then((acc) => {
-            if (acc !== null) setAccountDetails(acc?.idTokenClaims as AccountDetails);
+            if (acc !== null) setToken(getTokenFromMsalClaims(acc?.idTokenClaims as MsalTokenClaims));
         });
     }
 
@@ -23,9 +24,9 @@ const Settings = (props: SettingsProps) => {
         .catch((error) => console.log(error));
     }
 
-    switch (accountDetails.extension_AccountType) {
-        case AccountType.Client:
-            return <ClientSettings accountDetails={accountDetails} editProfile={editProfileHandler} deleteProfile={deleteProfileHandler}/>;
+    switch (token.userType) {
+        case UserType.Client:
+            return <ClientSettings token={token} editProfile={editProfileHandler} deleteProfile={deleteProfileHandler}/>;
         default:
             return <></>;
     }

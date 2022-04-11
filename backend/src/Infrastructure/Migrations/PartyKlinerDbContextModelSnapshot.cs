@@ -150,6 +150,22 @@ namespace PartyKlinest.Infrastructure.Migrations
                     b.ToTable("clients", (string)null);
                 });
 
+            modelBuilder.Entity("PartyKlinest.Infrastructure.Data.KeyValuePairs.DecimalKeyValuePair", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("text")
+                        .HasColumnName("id");
+
+                    b.Property<decimal>("Value")
+                        .HasColumnType("numeric")
+                        .HasColumnName("value");
+
+                    b.HasKey("Id")
+                        .HasName("pk_decimal_key_value_pairs");
+
+                    b.ToTable("decimal_key_value_pairs", (string)null);
+                });
+
             modelBuilder.Entity("PartyKlinest.ApplicationCore.Entities.Orders.Order", b =>
                 {
                     b.HasOne("PartyKlinest.ApplicationCore.Entities.Users.Cleaners.Cleaner", "Cleaner")

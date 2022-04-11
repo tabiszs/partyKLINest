@@ -5,6 +5,7 @@ import MessLevel, {messLevelText} from '../DataClasses/MessLevel';
 import Order from '../DataClasses/Order';
 import Heading from '../Components/Heading';
 import './ClientOrderManagement.css';
+import { emptyAddress } from '../DataClasses/Address';
 
 const mockOrders: Order[] = [
   {
@@ -15,7 +16,10 @@ const mockOrders: Order[] = [
     date: {
       start: new Date(),
       end: new Date()
-    }
+    },
+    address: emptyAddress(),
+    opinionFromCleaner: {rating: 1, comment: ""},
+    opinionFromClient: {rating:1, comment: ""}
   },
   {
     id: 5, clientId: 'dd', cleanerId: 'st',
@@ -25,7 +29,10 @@ const mockOrders: Order[] = [
     date: {
       start: new Date(),
       end: new Date()
-    }
+    },
+    address: emptyAddress(),
+    opinionFromCleaner: {rating: 1, comment: ""},
+    opinionFromClient: {rating:1, comment: ""}
   },
   {
     id: 5, clientId: 'dd', cleanerId: 'st',
@@ -35,7 +42,10 @@ const mockOrders: Order[] = [
     date: {
       start: new Date(),
       end: new Date()
-    }
+    },
+    address: emptyAddress(),
+    opinionFromCleaner: {rating: 1, comment: ""},
+    opinionFromClient: {rating:1, comment: ""}
   },
   {
     id: 5, clientId: 'dd', cleanerId: 'st',
@@ -45,7 +55,10 @@ const mockOrders: Order[] = [
     date: {
       start: new Date(),
       end: new Date()
-    }
+    },
+    address: emptyAddress(),
+    opinionFromCleaner: {rating: 1, comment: ""},
+    opinionFromClient: {rating:1, comment: ""}
   },
 ];
 

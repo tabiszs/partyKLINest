@@ -1,0 +1,36 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ dev, master ]
+  pull_request:
+    branches: [ dev, master ]
+
+jobs:  
+  backend-build:
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./backend
+    environment: development 
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build the Docker image for WebApi
+      run: docker build . --file ./src/WebApi/Dockerfile --tag web-api:$(date +%s)
+      
+  frontend-build:
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./frontend
+    environment: development 
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build the Docker image for WebApi
+      run: docker-compose up --build -d
+    - name: Stop containers
+        # The container should be stopped regardless of the test result
+      if: always()
+      run: docker-compose down

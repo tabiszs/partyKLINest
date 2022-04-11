@@ -1,6 +1,7 @@
 import AccountType from "./AccountType";
 
-interface AccountDetails {
+interface MsalTokenClaims {
+    oid: string;
     city: string;
     country: string;
     emails: string[];
@@ -9,6 +10,7 @@ interface AccountDetails {
     postalCode: string;
     streetAddress: string;
     extension_AccountType: AccountType;
+    extension_isBanned: boolean;
 }
 
-export default AccountDetails;
+export default MsalTokenClaims;
