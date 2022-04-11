@@ -1,7 +1,7 @@
 import {useState} from 'react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
-import Comission from '../../DataClasses/Commission';
+import Comission, {isCommissionCorrect} from '../../DataClasses/Commission';
 import {postCommission} from '../../Api/endpoints';
 import "./ComissionForm.css";
 
@@ -17,13 +17,16 @@ const ComissionForm = () => {
           onChange={(event: any) => {
             const val = event.target.value;
 
-            if (/^0[,.]\d+$/.test(val)) {
+            if (/^[01]([,.]\d+)?$/.test(val)) {
               const comissionString = val.replace(',', '.');
-              setComission({newProvision: parseFloat(comissionString)});
+              const comission = {newProvision: parseFloat(comissionString)};
+              if (isCommissionCorrect(comission)) {
+                setComission(comission);
+                return;
+              }
             }
-            else {
-              setComission(null);
-            }
+
+            setComission(null);
           }}
         />
       </div>
