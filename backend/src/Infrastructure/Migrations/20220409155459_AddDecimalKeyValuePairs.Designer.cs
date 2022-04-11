@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using PartyKlinest.Infrastructure.Data;
@@ -11,9 +12,10 @@ using PartyKlinest.Infrastructure.Data;
 namespace PartyKlinest.Infrastructure.Migrations
 {
     [DbContext(typeof(PartyKlinerDbContext))]
-    partial class PartyKlinerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220409155459_AddDecimalKeyValuePairs")]
+    partial class AddDecimalKeyValuePairs
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -32,14 +34,12 @@ namespace PartyKlinest.Infrastructure.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("OrderId"));
 
                     b.Property<string>("CleanerId")
-                        .HasMaxLength(40)
-                        .HasColumnType("character varying(40)")
+                        .HasColumnType("text")
                         .HasColumnName("cleaner_id");
 
                     b.Property<string>("ClientId")
                         .IsRequired()
-                        .HasMaxLength(40)
-                        .HasColumnType("character varying(40)")
+                        .HasColumnType("text")
                         .HasColumnName("client_id");
 
                     b.Property<DateTimeOffset>("Date")
@@ -77,8 +77,7 @@ namespace PartyKlinest.Infrastructure.Migrations
             modelBuilder.Entity("PartyKlinest.ApplicationCore.Entities.Users.Cleaners.Cleaner", b =>
                 {
                     b.Property<string>("CleanerId")
-                        .HasMaxLength(40)
-                        .HasColumnType("character varying(40)")
+                        .HasColumnType("text")
                         .HasColumnName("cleaner_id");
 
                     b.Property<int>("MaxMessLevel")
@@ -113,7 +112,7 @@ namespace PartyKlinest.Infrastructure.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("ScheduleEntryId"));
 
                     b.Property<string>("CleanerId")
-                        .HasColumnType("character varying(40)")
+                        .HasColumnType("text")
                         .HasColumnName("cleaner_id");
 
                     b.Property<int>("DayOfWeek")
@@ -140,8 +139,7 @@ namespace PartyKlinest.Infrastructure.Migrations
             modelBuilder.Entity("PartyKlinest.ApplicationCore.Entities.Users.Client", b =>
                 {
                     b.Property<string>("ClientId")
-                        .HasMaxLength(40)
-                        .HasColumnType("character varying(40)")
+                        .HasColumnType("text")
                         .HasColumnName("client_id");
 
                     b.HasKey("ClientId")

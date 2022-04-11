@@ -25,6 +25,7 @@ namespace PartyKlinest.ApplicationCore.Entities.Orders
             Date = date;
             ClientId = clientId;
             Address = address;
+            Status = OrderStatus.Active;
         }
 
         public long OrderId { get; private set; }
@@ -51,7 +52,27 @@ namespace PartyKlinest.ApplicationCore.Entities.Orders
 
         public void SetCleanerId(string cleanerId)
         {
-            CleanerId = cleanerId;
+            if (cleanerId != null && Status == OrderStatus.Active && CleanerId == null)
+            {
+                Status = OrderStatus.InProgress;
+                CleanerId = cleanerId;
+            }
+        }
+
+        public void Cancel()
+        {
+            if (Status != OrderStatus.Closed)
+            {
+                Status = OrderStatus.Cancelled;
+            }
+        }
+
+        public void Close()
+        {
+            if (Status == OrderStatus.InProgress)
+            {
+                Status = OrderStatus.Closed;
+            }
         }
 
         public void SetClientsOpinion(Opinion clientsOpinion)
@@ -64,13 +85,14 @@ namespace PartyKlinest.ApplicationCore.Entities.Orders
             CleanersOpinion = opinion;
         }
 
-        public void Modify(string clientId, string? cleanerId, OrderStatus status, decimal maxPrice, int minRating, DateTimeOffset date, MessLevel messLevel)
+        public void Modify(string clientId, string? cleanerId, OrderStatus status, decimal maxPrice, int minRating, DateTimeOffset date, Address address, MessLevel messLevel)
         {
             ClientId = clientId;
             CleanerId = cleanerId;
             Status = status;
             MaxPrice = maxPrice;
             MinCleanerRating = minRating;
+            Address = address;
             Date = date;
             MessLevel = messLevel;
         }

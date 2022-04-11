@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using PartyKlinest.ApplicationCore.Entities;
+using System.ComponentModel.DataAnnotations;
 
 namespace PartyKlinest.WebApi.Models
 {
@@ -7,7 +8,7 @@ namespace PartyKlinest.WebApi.Models
     /// </summary>
     public record CleanerInfoDTO
     {
-        public CleanerInfoDTO(ScheduleEntryDTO[] scheduleEntries, 
+        public CleanerInfoDTO(ScheduleEntryDTO[] scheduleEntries,
             MessLevel maxMess, int minClientRating, decimal minPrice,
             float maxLocationRange)
         {
@@ -22,11 +23,11 @@ namespace PartyKlinest.WebApi.Models
         public ScheduleEntryDTO[] ScheduleEntries { get; init; }
 
         public MessLevel MaxMess { get; init; }
-        
+
         public int MinClientRating { get; init; }
-        
+
         public decimal MinPrice { get; init; }
-        
+
         public float MaxLocationRange { get; init; }
 
     }
