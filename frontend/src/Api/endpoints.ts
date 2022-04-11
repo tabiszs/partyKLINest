@@ -7,22 +7,22 @@ import UserInfo from '../DataClasses/UserInfo';
 import * as api from './urlProvider';
 
 const get = <T>(address: string) => {
-  return fetch(address)
-    .then((response) => response.json())
-    .then((data) => data as T);
+    return fetch(address)
+        .then((response) => response.json())
+        .then((data) => data as T);
 }
 
 const post = (address: string, data?: any) => {
-  return fetch(address, {
-    method: "POST",
-    body: JSON.stringify(data)
-  });
+    return fetch(address, {
+        method: "POST",
+        body: JSON.stringify(data)
+    });
 }
 
 const del = (address: string) => {
-  return fetch(address, {
-    method: "DELETE"
-  });
+    return fetch(address, {
+        method: "DELETE"
+    });
 }
 
 export const getAllOrders = () => get<Order[]>(api.getOrdersUrl());

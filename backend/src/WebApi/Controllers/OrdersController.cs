@@ -1,4 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using PartyKlinest.ApplicationCore.Entities.Orders;
+using PartyKlinest.ApplicationCore.Entities.Orders.Opinions;
+using PartyKlinest.ApplicationCore.Exceptions;
+using PartyKlinest.ApplicationCore.Services;
 using PartyKlinest.WebApi.Models;
 
 namespace PartyKlinest.WebApi.Controllers
@@ -9,18 +13,12 @@ namespace PartyKlinest.WebApi.Controllers
     public class OrdersController : ControllerBase
     {
         private readonly ILogger<OrdersController> _logger;
+        private readonly OrderFacade _orderFacade;
 
-        private static readonly OrderDTO[] _orders = new[]
-        {
-            new OrderDTO(1, "1", "1", OrderStatus.Active, 420.69m, 1, MessLevel.Disaster),
-            new OrderDTO(2, "1", "2", OrderStatus.Closed, 1500m, 4, MessLevel.Huge),
-            new OrderDTO(3, "2", "1", OrderStatus.Closed, 1501m, 6, MessLevel.Moderate),
-            new OrderDTO(4, "3", "2", OrderStatus.Closed, 1502m, 9, MessLevel.Low),
-        };
-
-        public OrdersController(ILogger<OrdersController> logger)
+        public OrdersController(ILogger<OrdersController> logger, OrderFacade orderFacade)
         {
             _logger = logger;
+            _orderFacade = orderFacade;
         }
 
         /// <summary>
@@ -30,21 +28,84 @@ namespace PartyKlinest.WebApi.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        public IEnumerable<OrderDTO> GetOrders()
+        public async Task<List<Order>> GetOrdersAsync()
         {
             _logger.LogInformation("Getting orders");
 
-            return _orders;
+            return await _orderFacade.ListOrdersAsync();
+        }
+
+        /// <summary>
+        /// Get assigned orders.
+        /// </summary>
+        /// <returns>Orders with cleaners assigned.</returns>
+        [HttpGet("Cleaner")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        public async Task<List<Order>> GetAssignedOrdersAsync()
+        {
+            _logger.LogInformation("Getting assigned orders");
+
+            return await _orderFacade.ListAssignedOrdersAsync();
+        }
+
+        /// <summary>
+        /// Get created orders.
+        /// </summary>
+        /// <returns>Orders which await for assignment.</returns>
+        [HttpGet("Client")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        public async Task<List<Order>> GetCreatedOrdersAsync()
+        {
+            _logger.LogInformation("Getting client orders");
+
+            return await _orderFacade.ListCreatedOrdersAsync();
+        }
+
+        // TODO: Missing token with id
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="orderId"></param>
+        /// <param name="opinion"></param>
+        /// <returns></returns>
+        [HttpPost("{orderId}/Rate")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        public async Task<IActionResult> RateOrderAsync(long orderId, [FromBody] Opinion opinion)
+        {
+            _logger.LogInformation("Rating order");
+            return Ok();
         }
 
 
+        /// <summary>
+        /// Add order.
+        /// </summary>
+        /// <param name="newOrder"></param>
+        /// <returns></returns>
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        public IActionResult AddOrder([FromBody]NewOrderDTO newOrder)
+        public async Task<IActionResult> AddOrderAsync([FromBody] NewOrderDTO newOrder)
         {
             _logger.LogInformation("Added new order", newOrder);
+
+            var orderToBeCreated = new Order(newOrder.MaxPrice, newOrder.MinRating,
+                newOrder.MessLevel, newOrder.Date, newOrder.ClientId, newOrder.Address);
+
+            try
+            {
+                await _orderFacade.AddOrderAsync(orderToBeCreated);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Error while adding order");
+                return BadRequest();
+            }
 
             return Ok();
         }
@@ -58,49 +119,52 @@ namespace PartyKlinest.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult<OrderDTO> GetOrderInfo(int orderId)
+        public async Task<ActionResult<Order>> GetOrderInfoAsync(long orderId)
         {
-            bool isExisting = orderId > 0 && orderId <= _orders.Length;
-
-            if(!isExisting)
+            try
+            {
+                var order = await _orderFacade.GetOrderAsync(orderId);
+                return order;
+            }
+            catch (OrderNotFoundException)
             {
                 return NotFound();
             }
-
-            return _orders[orderId - 1];
         }
 
-        [HttpPost("{orderId}")]
+        // TODO: missing specification
+        //[HttpPost("{orderId}")]
+        //[ProducesResponseType(StatusCodes.Status200OK)]
+        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
+        //[ProducesResponseType(StatusCodes.Status403Forbidden)]
+        //[ProducesResponseType(StatusCodes.Status404NotFound)]
+        //public IActionResult ModifyOrderInfo(int orderId, [FromBody]OrderDTO order)
+        //{
+        //    bool isExisting = orderId > 0 && orderId <= _orders.Length;
+
+        //    if (!isExisting)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    return Ok();
+        //}
+
+        [HttpDelete(template: "{orderId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public IActionResult ModifyOrderInfo(int orderId, [FromBody]OrderDTO order)
+        public async Task<IActionResult> DeleteOrderAsync(long orderId)
         {
-            bool isExisting = orderId > 0 && orderId <= _orders.Length;
-
-            if (!isExisting)
+            try
+            {
+                await _orderFacade.DeleteOrderAsync(orderId);
+                return Ok();
+            }
+            catch (OrderNotFoundException)
             {
                 return NotFound();
             }
-
-            return Ok();
-        }
-
-        [HttpDelete(template:"{orderId}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public IActionResult DeleteOrder(int orderId)
-        {
-            bool isExisting = orderId > 0 && orderId <= _orders.Length;
-
-            if (!isExisting)
-            {
-                return NotFound();
-            }
-
-            return Ok();
         }
     }
 }

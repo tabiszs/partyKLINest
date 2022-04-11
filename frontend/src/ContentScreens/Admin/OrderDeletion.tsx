@@ -1,11 +1,11 @@
-import OrderStatus from '../DataClasses/OrderStatus';
-import MessLevel from '../DataClasses/MessLevel';
-import Order from '../DataClasses/Order';
-import Heading from '../Components/Heading';
-import OrderList from '../Components/OrderList';
-import {deleteOrder, getClientOrders} from '../Api/endpoints';
-import './ClientOrderManagement.css';
-import {emptyAddress} from '../DataClasses/Address';
+import Order from '../../DataClasses/Order';
+import MessLevel from '../../DataClasses/MessLevel';
+import OrderStatus from '../../DataClasses/OrderStatus';
+import {emptyAddress} from '../../DataClasses/Address';
+import Heading from '../../Components/Heading';
+import OrderList from '../../Components/OrderList';
+import {getAllOrders, deleteOrder} from '../../Api/endpoints';
+import './OrderDeletion.css';
 
 const mockOrders: Order[] = [
   {
@@ -62,21 +62,21 @@ const mockOrders: Order[] = [
   },
 ];
 
-const OrderManagement = () => {
-  // TODO: gdy będzie gotowe API to zamienić
-  // const orders = getClientOrders();
+const OrderDeletion = () => {
+  // TODO: zamienić gdy będzie działać API
+  // const orders = getAllOrders();
   const orders = mockOrders;
   return (
-    <div className='order-management-screen'>
-      <Heading content='Twoje ogłoszenia' />
+    <div>
+      <Heading content='Wszystkie ogłoszenia' />
       <OrderList
         orders={orders}
-        buttonLabel='Anuluj'
+        buttonLabel='Usuń'
         onButtonClick={async (order: Order) => {await deleteOrder(order.id)}}
-        shouldDisplayButton={(order: Order) => order.status === OrderStatus.Active}
+        shouldDisplayButton={(_: Order) => true}
       />
     </div>
   );
-};
+}
 
-export default OrderManagement;
+export default OrderDeletion;

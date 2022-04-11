@@ -1,3 +1,4 @@
+using PartyKlinest.Infrastructure;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -25,12 +26,15 @@ builder.Services.AddCors(options =>
         });
 });
 
+Dependencies.ConfigureServices(builder.Configuration, builder.Services);
+
 builder.Services.AddControllers()
     .AddJsonOptions(j =>
     {
         // Convert C# enums (int wrappers) to strings
         j.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
     });
+
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
