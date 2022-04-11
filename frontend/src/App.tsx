@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Dashboard from './ContentScreens/Dashboard';
 import Settings from './ContentScreens/Settings';
 import PostAnnouncement from './ContentScreens/PostAnnouncement';
+import UserBanning from './ContentScreens/Admin/UserBanning';
 
 const App = () => {
 
@@ -38,6 +39,7 @@ const App = () => {
           <Route index element={<Dashboard/>}/>
           <Route path="/settings" element={<Settings logout={() => setIsLogged(false)}/>}/>
           <Route path="/postAnnouncement" element={<PostAnnouncement/>}/>
+          <Route path="/banUser" element={<UserBanning/>}/>
         </Route>
       </Routes>
     </BrowserRouter>

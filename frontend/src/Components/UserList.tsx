@@ -51,9 +51,9 @@ const UserCard = (props: UserCardProps) => {
             <Card variant='outlined'>
                 <div className='card-content'>
                     <div className='card-column'>
-                        <strong>{props.user.name} {props.user.surname}</strong>
+                        <strong>{props.user.isBanned ? "(zablokowany) " : ""}{props.user.name} {props.user.surname}</strong>
                         <br />
-                        Typ: {props.user.accountType}{props.user.isBanned ? " (zablokowany)" : ""}
+                        Typ: {props.user.accountType}
                         <br />
                         Email: {props.user.email}
                     </div>
@@ -90,12 +90,9 @@ const UserList = (props: UserListProps) => {
     const userCards = props.users.map((user) => <UserCard user={user} banUser={async () => await postBanUser(user.oid)} />)
 
     return (
-        <>
-            <h3>Lista użytkowników</h3>
-            <div className='user-list-container'>
-                {userCards}
-            </div>
-        </>
+        <div className='user-list-container'>
+            {userCards}
+        </div>
     );
 }
 
