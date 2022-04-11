@@ -10,6 +10,7 @@ import ClientDashboard from './ContentScreens/Client/ClientDashboard';
 import ClientSettings from './ContentScreens/Client/ClientSettings';
 import LoginScreen from './ContentScreens/LoginScreen';
 import { AdminLayout, CleanerLayout, ClientLayout } from './Layouts';
+import ComissionForm from './ContentScreens/Admin/ComissionForm';
 import OrderDeletion from './ContentScreens/Admin/OrderDeletion';
 import OrderManagement from './ContentScreens/ClientOrderManagement';
 
@@ -76,6 +77,7 @@ const App = () => {
           {token?.userType === UserType.Administrator ?
             <Route path="/" element={<AdminLayout headerHeight={headerHeight} logout={logout} />}>
               <Route path="/orderDeletion" element={<OrderDeletion />} />
+              <Route path="/comission" element={<ComissionForm />} />
             </Route> : ''
           }
         </Route>
