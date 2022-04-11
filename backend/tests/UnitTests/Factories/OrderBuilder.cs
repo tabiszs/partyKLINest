@@ -2,6 +2,7 @@
 using PartyKlinest.ApplicationCore.Entities.Orders;
 using PartyKlinest.ApplicationCore.Entities.Orders.Opinions;
 using System;
+using System.Collections.Generic;
 
 namespace UnitTests.Factories
 {
@@ -17,6 +18,7 @@ namespace UnitTests.Factories
         public string TestCleanerId = "xD123456789";
         public Opinion TestOpinion => new Opinion(4, "Test opinion");
         private readonly AddressFactory _addressFactory = new AddressFactory();
+        private static int counter = 0;
 
         public OrderBuilder(AddressFactory addressFactory)
         {
@@ -45,6 +47,16 @@ namespace UnitTests.Factories
             _order.SetCleanerId(TestCleanerId);
         }
 
+        public void WithCleanerId(string cleanerId)
+        {
+            _order.SetCleanerId(cleanerId);
+        }
+
+        public void WithStaus(OrderStatus orderStatus)
+        {
+            _order.SetOrderStatus(orderStatus);
+        }
+
         public void WithClientsOpinion()
         {
             _order.SetClientsOpinion(TestOpinion);
@@ -56,5 +68,18 @@ namespace UnitTests.Factories
         }
 
         public Order Build() => _order;
+
+        public List<Order> GenerateOrdersWith(int noOfOrders, string cleanerId)
+        {
+            var address = _addressFactory.CreateWithDefaultValues();
+            List<Order> orders = new List<Order>();
+            for (int i=0; i<noOfOrders; ++i)
+            {
+                var order1 = new Order(TestMaxPrice, TestMinCleanerRating, TestMessLevel, TestDate, TestClientId, address);
+                order1.SetCleanerId(cleanerId);
+                orders.Add(order1);
+            }
+            return orders;
+        }
     }
 }
