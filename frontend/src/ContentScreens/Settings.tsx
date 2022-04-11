@@ -15,7 +15,7 @@ const Settings = (props: SettingsProps) => {
 
     const editProfileHandler = () => {
         B2CEditProfile().then((acc) => {
-            if (acc !== null) setToken(getTokenFromMsalClaims(acc?.idTokenClaims as MsalTokenClaims));
+            if (acc !== null) setToken(acc);
         });
     }
 

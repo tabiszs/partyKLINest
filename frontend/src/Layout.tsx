@@ -17,7 +17,7 @@ const Layout = (props: LayoutProps) => {
 
   return (
     <div className='App'>
-      <Header height={headerHeight} isLogged={props.isLogged} />  
+      <Header height={headerHeight} />  
       <div className='site-container'>
         { props.isLogged ? 
           <AfterLoginContent logout={props.logout}/>
