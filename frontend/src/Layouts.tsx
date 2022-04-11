@@ -1,5 +1,5 @@
 import ContentContainer from "./ContentContainer";
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import Sidebar, { SidebarButtonProps } from "./Sidebar";
 import './App.css';
 
@@ -13,8 +13,7 @@ export const ClientLayout = (props: LayoutProps) => (
         {...props}
         topButtons={[
             { label: 'Pulpit', linkTo: '/' },
-            { label: 'Dodaj', linkTo: '/postAnnouncement', active: true },
-            { label: 'Historia', onClick: () => alert('Historia') },
+            { label: 'Dodaj', linkTo: '/postAnnouncement' },
         ]}
         bottomButtons={[
             { label: 'Ustawienia', linkTo: '/settings' },
@@ -28,7 +27,7 @@ export const CleanerLayout = (props: LayoutProps) => (
         {...props}
         topButtons={[
             { label: 'Pulpit', linkTo: '/' },
-            { label: 'Dodaj', linkTo: '/postAnnouncement', active: true },
+            { label: 'Dodaj', linkTo: '/postAnnouncement' },
             { label: 'Historia', onClick: () => alert('Historia') },
         ]}
         bottomButtons={[
@@ -43,7 +42,7 @@ export const AdminLayout = (props: LayoutProps) => (
         {...props}
         topButtons={[
             { label: 'Pulpit', linkTo: '/' },
-            { label: 'Dodaj', linkTo: '/postAnnouncement', active: true },
+            { label: 'Dodaj', linkTo: '/postAnnouncement' },
             { label: 'Historia', onClick: () => alert('Historia') },
         ]}
         bottomButtons={[
@@ -59,12 +58,17 @@ interface BaseLayoutProps extends LayoutProps {
 }
 
 export const BaseLayout = (props: BaseLayoutProps) => {
+
+    const location = useLocation();
+
+    const mapButtons = (buttons: SidebarButtonProps[]) => buttons.map((button) => ({...button, active: location.pathname === button.linkTo }));
+
     return (
         <>
             <Sidebar
                 headerHeight={props.headerHeight}
-                topButtons={props.topButtons}
-                bottomButtons={props.bottomButtons}
+                topButtons={mapButtons(props.topButtons)}
+                bottomButtons={mapButtons(props.bottomButtons)}
             />
             <ContentContainer headerHeight={props.headerHeight}>
                 <Outlet />

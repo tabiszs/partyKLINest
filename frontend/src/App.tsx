@@ -1,10 +1,7 @@
 import './App.css';
 import { useEffect, useState } from 'react';
 import { B2CDeleteAccount, B2CEditProfile, B2CLogin, B2CLogout, RetrieveToken } from './Authentication/MsalService';
-import Layout from './Layout';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Dashboard from './ContentScreens/Dashboard';
-import Settings from './ContentScreens/Settings';
 import PostAnnouncement from './ContentScreens/PostAnnouncement';
 import Header from './Header';
 import Token from './DataClasses/Token';
@@ -18,7 +15,6 @@ const headerHeight = '6em';
 
 const App = () => {
 
-  //const [isLogged, setIsLogged] = useState(false);
   const [token, setToken] = useState<Token | null>(null);
 
   useEffect(() => {
@@ -43,7 +39,7 @@ const App = () => {
 
   const editProfile = () => {
     B2CEditProfile().then((tok) => {
-      if (token !== null) setToken(tok);
+      if (tok !== null) setToken(tok);
     });
   }
 
@@ -53,24 +49,15 @@ const App = () => {
     }).catch((error) => console.log(error));
   }
 
-
-  // return (
-  //   <BrowserRouter>
-  //     <Routes>
-  //       <Route path="/" element={<Layout isLogged={isLogged} login={login} logout={logout}/>}>
-  //         <Route index element={<Dashboard/>}/>
-  //         <Route path="/settings" element={<Settings logout={() => setIsLogged(false)}/>}/>
-  //         <Route path="/postAnnouncement" element={<PostAnnouncement/>}/>
-  //       </Route>
-  //     </Routes>
-  //   </BrowserRouter>
-  // );
-
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Header height={headerHeight} />}>
-          {token === null ? <Route path="*" element={<LoginScreen headerHeight={headerHeight} login={login} />} /> : ''}
+          {token === null ?
+            <>
+              <Route index element={<LoginScreen headerHeight={headerHeight} login={login} />} />
+              <Route path="*" element={<LoginScreen headerHeight={headerHeight} login={login} />} />
+            </> : ''}
           {token?.userType === UserType.Client ?
             <Route path="/" element={<ClientLayout headerHeight={headerHeight} logout={logout} />}>
               <Route index element={<ClientDashboard token={token!} />} />
