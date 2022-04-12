@@ -43,9 +43,7 @@ const OrderCard = (props: OrderCardProps) => {
             <br />
             Poziom bałaganu: {messLevelText(props.order.messLevel)}
             <br />
-            Od: {props.order.date.start.toLocaleString()}
-            <br />
-            Do: {props.order.date.end.toLocaleString()}
+            Data: {props.order.date.toLocaleString()}
           </div>
           <div className='card-column'>
             {props.displayButton
