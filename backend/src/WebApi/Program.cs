@@ -1,4 +1,5 @@
 using PartyKlinest.Infrastructure;
+using PartyKlinest.WebApi.Extensions;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -6,25 +7,26 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 const string CORS_POLICY_DEV = "CorsPolicyDev";
 const string CORS_POLICY_PROD = "CorsPolicyProd";
-string[] frontend_urls = new string[] { "" }; // TODO
+string[] allowedOrigins = builder.Configuration.GetAllowedOrigins();
 
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(CORS_POLICY_DEV,
-        builder =>
+        corsBuilder =>
         {
-            builder.AllowAnyOrigin(); // unsafe, okay for testing
-            builder.AllowAnyHeader();
-            builder.AllowAnyMethod();
+            corsBuilder.AllowAnyOrigin(); // unsafe, okay for testing
+            corsBuilder.AllowAnyHeader();
+            corsBuilder.AllowAnyMethod();
         });
     options.AddPolicy(CORS_POLICY_PROD,
-        builder =>
+        corsBuilder =>
         {
-            builder.WithOrigins(frontend_urls);
-            builder.AllowAnyHeader();
-            builder.AllowAnyMethod();
+            corsBuilder.WithOrigins(allowedOrigins);
+            corsBuilder.AllowAnyHeader();
+            corsBuilder.AllowAnyMethod();
         });
 });
+
 
 Dependencies.ConfigureServices(builder.Configuration, builder.Services);
 
@@ -51,7 +53,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-if (true) // app.Environment.IsDevelopment()
+if (app.Environment.IsDevelopment())
 {
     app.UseCors(CORS_POLICY_DEV);
 }
