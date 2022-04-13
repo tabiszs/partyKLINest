@@ -13,46 +13,20 @@ using PartyKlinest.ApplicationCore.Entities.Orders.Opinions;
 
 namespace UnitTests.ApplicationCore.Services.CleanerFacadeTests
 {
-    public class ConfirmOrderCompleted
+    public  class CheckCleanersPriviliges
     {
         private readonly Mock<IRepository<Order>> _mockOrderRepo = new();
         private readonly Mock<IRepository<Cleaner>> _mockCleanerRepo = new();
 
         [Fact]
-        public async Task ThrowsCleanerNotFoundExceptionWhenThereIsNoCleanerWithGivenId()
-        {
-            // Arrange
-            var orderBuilder = new OrderBuilder();
-            var order = orderBuilder.Build();
-            Cleaner? returnedCleaner = null;
-            _mockCleanerRepo
-                .Setup(x => x.GetByIdAsync(It.IsAny<string>(), default))
-                .ReturnsAsync(returnedCleaner);
-            var cleanerFacade = new CleanerFacade(_mockCleanerRepo.Object, _mockOrderRepo.Object);
-
-            // Act & Assert
-            await Assert.ThrowsAsync<CleanerNotFoundException>(
-                () => cleanerFacade.ConfirmOrderCompleted(
-                    orderBuilder.TestCleanerId, 
-                    orderBuilder.TestOrderId, 
-                    orderBuilder.TestOpinion));
-        }
-
-        [Theory(DisplayName = "Not Acceptable previous OrderStatus while order changed as Closed")]
-        [InlineData(OrderStatus.Active)]
-        [InlineData(OrderStatus.Cancelled)]
-        [InlineData(OrderStatus.Closed)]
-        public async Task ThrowsNotCorrectCurrentOrderStateExceptionWhileChangingToCloseState(OrderStatus status)
+        public async Task ThrowsWithoutPriviligesExceptionWhenCleanerIsBanned()
         {
             // Arrange
             var cleanerBuilder = new CleanerBuilder();
             var returnedCleaner = cleanerBuilder.Build();
-            returnedCleaner.SetCleanerStatus(CleanerStatus.Active);
-
+            returnedCleaner.SetCleanerStatus(CleanerStatus.Banned);
             var orderBuilder = new OrderBuilder();
-            orderBuilder.WithCleanerId("it is not returnedCleaner Id");
-            orderBuilder.WithStaus(status);
-            
+            orderBuilder.WithCleanerId();
             var expected = orderBuilder.Build();
             var newOpinion = new Opinion(4, "New Opinion");
             var cleanerFacade = SetMockRepos(returnedCleaner, expected);
@@ -66,29 +40,24 @@ namespace UnitTests.ApplicationCore.Services.CleanerFacadeTests
         }
 
         [Fact]
-        public async Task VerifyUpdateOfOrder()
+        public async Task ThrowsWithoutPriviligesExceptionWhenCleanerRateNotOwnOrder()
         {
             // Arrange
             var cleanerBuilder = new CleanerBuilder();
             var returnedCleaner = cleanerBuilder.Build();
             returnedCleaner.SetCleanerStatus(CleanerStatus.Active);
-
             var orderBuilder = new OrderBuilder();
-            orderBuilder.WithCleanerId(returnedCleaner.CleanerId);
-            orderBuilder.WithStaus(OrderStatus.InProgress);
+            orderBuilder.WithCleanerId("it is not returnedCleaner Id");
             var expected = orderBuilder.Build();
-
             var newOpinion = new Opinion(4, "New Opinion");
             var cleanerFacade = SetMockRepos(returnedCleaner, expected);
 
-            // Act
-            await cleanerFacade.ConfirmOrderCompleted(
+            // Act & Assert
+            await Assert.ThrowsAsync<UserWithoutPriviligesException>(
+                () => cleanerFacade.ConfirmOrderCompleted(
                     returnedCleaner.CleanerId,
                     expected.OrderId,
-                    newOpinion);
-
-            // Assert
-            _mockOrderRepo.Verify(x => x.UpdateAsync(It.IsAny<Order>(), default), Times.Once);
+                    newOpinion));
         }
 
         private CleanerFacade SetMockRepos(Cleaner returnedCleaner, Order expected)

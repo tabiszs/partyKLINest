@@ -18,7 +18,6 @@ namespace UnitTests.Factories
         public string TestCleanerId = "xD123456789";
         public Opinion TestOpinion => new Opinion(4, "Test opinion");
         private readonly AddressFactory _addressFactory = new AddressFactory();
-        private static int counter = 0;
 
         public OrderBuilder(AddressFactory addressFactory)
         {
@@ -47,7 +46,7 @@ namespace UnitTests.Factories
             _order.SetCleanerId(TestCleanerId);
         }
 
-        public void WithCleanerId(string cleanerId)
+        public void WithCleanerId(string? cleanerId)
         {
             _order.SetCleanerId(cleanerId);
         }

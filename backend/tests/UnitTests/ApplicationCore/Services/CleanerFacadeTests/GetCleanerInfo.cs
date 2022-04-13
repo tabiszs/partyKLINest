@@ -4,15 +4,13 @@ using PartyKlinest.ApplicationCore.Entities.Users.Cleaners;
 using PartyKlinest.ApplicationCore.Exceptions;
 using PartyKlinest.ApplicationCore.Interfaces;
 using PartyKlinest.ApplicationCore.Services;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnitTests.Factories;
 using Xunit;
-using Ardalis.Specification;
 
 namespace UnitTests.ApplicationCore.Services.CleanerFacadeTests
 {
-    public class GetAssignedOrders
+    public class GetCleanerInfo
     {
         private readonly Mock<IRepository<Order>> _mockOrderRepo = new();
         private readonly Mock<IRepository<Cleaner>> _mockCleanerRepo = new();
@@ -33,28 +31,21 @@ namespace UnitTests.ApplicationCore.Services.CleanerFacadeTests
         }
 
         [Fact]
-        public async Task ReturnsOrdersWhichAreAssignedToGivenCleaner()
+        public async Task GetCleanerWithGivenIdFromRepository()
         {
             // Arrange
             var cleanerBuilder = new CleanerBuilder();
-            Cleaner returnedCleaner = cleanerBuilder.Build();
-            string cleanerId = returnedCleaner.CleanerId;
+            var expectedCleaner = cleanerBuilder.Build();
             _mockCleanerRepo
                 .Setup(x => x.GetByIdAsync(It.IsAny<string>(), default))
-                .ReturnsAsync(returnedCleaner);
-
-            var ordersBuilder = new OrderBuilder();
-            List<Order> expected = ordersBuilder.GenerateOrdersWith(3, cleanerId);
-            _mockOrderRepo
-                .Setup(x => x.ListAsync(It.IsAny<Specification<Order>>(), default))
-                .ReturnsAsync(expected);
+                .ReturnsAsync(expectedCleaner);
+            var cleanerFacade = new CleanerFacade(_mockCleanerRepo.Object, _mockOrderRepo.Object);
 
             // Act
-            var cleanerFacade = new CleanerFacade(_mockCleanerRepo.Object, _mockOrderRepo.Object);
-            var results = await cleanerFacade.GetAssignedOrdersAsync(cleanerId);
+            var returnedCleaner = await cleanerFacade.GetCleanerInfo(expectedCleaner.CleanerId);
 
             // Assert
-            Assert.Equal(expected, results);
+            Assert.Equal(expectedCleaner, returnedCleaner);
         }
     }
 }

@@ -41,14 +41,23 @@ namespace PartyKlinest.ApplicationCore.Services
             return cleaner;
         }
 
+        public async Task ConfirmOrderCompleted(string cleanerId, long orderId, Opinion opinion)
+        {
+            var cleaner = await GetCleanerInfo(cleanerId);
+            var order = await GetOrderAsync(orderId);
+            CheckCleanersPriviliges(cleaner, order);
+
+            order.SetCleanersOpinion(opinion);
+            CloseOrder(order);            
+            await _orderRepository.UpdateAsync(order);
+        }
         private void CheckCleanersPriviliges(Cleaner cleaner, Order order)
         {
-            if (cleaner.Status == CleanerStatus.Banned || order.CleanerId != cleaner.CleanerId)
+            if (cleaner.Status == CleanerStatus.Banned || (order.CleanerId != cleaner.CleanerId && order.CleanerId != null))
             {
                 throw new UserWithoutPriviligesException(cleaner.CleanerId);
             }
         }
-
         private async Task<Order> GetOrderAsync(long orderId)
         {
             var order = await _orderRepository.GetByIdAsync(orderId);
@@ -58,24 +67,125 @@ namespace PartyKlinest.ApplicationCore.Services
             }
             return order;
         }
-
         private void CloseOrder(Order order)
         {
             if (order.Status != OrderStatus.InProgress)
             {
-                throw new NotCorrectNewOrderStateException(order.Status, OrderStatus.Closed);
+                throw new NotCorrectOrderStatusException(order.Status, OrderStatus.Closed);
             }
             order.SetOrderStatus(closedOrder);
         }
 
-        public async Task ConfirmOrderCompleted(string cleanerId, long orderId, Opinion opinion)
+        public async Task AcceptRejectOrder(string cleanerId, Order sentOrder)
         {
             var cleaner = await GetCleanerInfo(cleanerId);
-            var order = await GetOrderAsync(orderId);
-            CheckCleanersPriviliges(cleaner, order);
-            order.SetCleanersOpinion(opinion);
-            CloseOrder(order);            
-            await _orderRepository.UpdateAsync(order);
+            var localOrder = await GetOrderAsync(sentOrder.OrderId);
+            CheckCleanersPriviliges(cleaner, sentOrder);
+
+            bool wasAsssigned = WasAssignedButNotConfirmed(localOrder, cleanerId);
+            bool isAccepted = IsAccepted(sentOrder, cleanerId);
+            bool isRejected = IsRejected(sentOrder);
+
+            if ( wasAsssigned && (isAccepted || isRejected))
+            {
+                await _orderRepository.UpdateAsync(sentOrder);
+            }
+            else
+            {
+                throw new NotCorrectOrderStatusException(localOrder.Status, sentOrder.Status);
+            }
+        }
+        private bool WasAssignedButNotConfirmed(Order order, string cleanerId)
+        {
+            return order.Status == OrderStatus.Active && order.CleanerId == cleanerId;
+        }
+        private bool IsAccepted(Order order, string cleanerId)
+        {
+            return order.Status == OrderStatus.InProgress && order.CleanerId == cleanerId;
+        }
+        private bool IsRejected(Order order)
+        {
+            return order.Status == OrderStatus.Active && order.CleanerId == null;
+        }
+
+        public async Task UpdateCleanerAsync(Cleaner updateCleaner)
+        {
+            var cleaner = await GetCleanerInfo(updateCleaner.CleanerId);
+
+            if (NeedUpdateStatus(cleaner, updateCleaner))
+            {
+                await UpdateStatus(cleaner, updateCleaner);
+            }
+
+            if (NeedUpdateOrderFilter(cleaner, updateCleaner))
+            {
+                await UpdateOrderFilter(cleaner, updateCleaner);
+            }
+
+            if (NeedUpdateSchedule(cleaner, updateCleaner))
+            {
+                await UpdateSchedule(cleaner, updateCleaner);
+            }
+
+            // TODO -> update rest of cleaner info via azure.
+        }
+        private async Task UpdateStatus(Cleaner localCleaner, Cleaner updateCleaner)
+        {
+            localCleaner.SetCleanerStatus(updateCleaner.Status);
+            await _cleanerRepository.UpdateAsync(localCleaner);
+        }
+        private async Task UpdateOrderFilter(Cleaner localCleaner, Cleaner updateCleaner)
+        {
+            if(localCleaner.Status == CleanerStatus.Active)
+            {
+                var orderFilter = updateCleaner.GetOrderFilter();
+                localCleaner.UpdateOrderFilter(orderFilter);
+                await _cleanerRepository.UpdateAsync(localCleaner);
+            }
+            else
+            {
+                throw new UserNotActiveException(localCleaner);
+            }
+        }
+        private async Task UpdateSchedule(Cleaner localCleaner, Cleaner updateCleaner)
+        {
+            if (localCleaner.Status == CleanerStatus.Active)
+            {
+                localCleaner.UpdateSchedule(updateCleaner.ScheduleEntries);
+                await _cleanerRepository.UpdateAsync(localCleaner);
+            }
+            else
+            {
+                throw new UserNotActiveException(localCleaner);
+            }
+        }
+        private bool NeedUpdateStatus(Cleaner localCleaner, Cleaner updateCleaner)
+        {
+            if(localCleaner.Status == CleanerStatus.Banned ||
+                updateCleaner.Status == CleanerStatus.Banned)
+            {
+                throw new CleanerCannotChangeBannedStatusException(localCleaner, updateCleaner);
+            }
+            return localCleaner.Status != updateCleaner.Status;
+        }
+        private bool NeedUpdateOrderFilter(Cleaner localCleaner, Cleaner sentCleaner)
+        {
+            return localCleaner.MinPrice != sentCleaner.MinPrice
+                || localCleaner.MinClientRating != sentCleaner.MinClientRating
+                || localCleaner.MaxMessLevel != sentCleaner.MaxMessLevel;
+        }
+        private bool NeedUpdateSchedule(Cleaner localCleaner, Cleaner updateCleaner)
+        {
+            if (localCleaner.ScheduleEntries.Count != updateCleaner.ScheduleEntries.Count)
+                return true;
+            for(int i=0; i<localCleaner.ScheduleEntries.Count; i++)
+            {
+                if (localCleaner.ScheduleEntries.ElementAt(i) != updateCleaner.ScheduleEntries.ElementAt(i))
+                {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }

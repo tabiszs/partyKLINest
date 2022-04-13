@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace PartyKlinest.ApplicationCore.Exceptions
 {
-    public class NotCorrectNewOrderStateException : Exception
+    public class NotCorrectOrderStatusException : Exception
     {
-        public NotCorrectNewOrderStateException(OrderStatus currentStatus, OrderStatus newStatus)
+        public NotCorrectOrderStatusException(OrderStatus currentStatus, OrderStatus newStatus)
             : base($"Not approprieate to change status from {currentStatus} to {newStatus}")
         {
             CurrentStatus = currentStatus;

@@ -5,6 +5,24 @@ namespace PartyKlinest.ApplicationCore.Entities.Users.Cleaners
 {
     public record Cleaner : IAggregateRoot
     {
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+        private Cleaner()
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+        {
+
+        }
+
+        public Cleaner(string cleanerId, CleanerStatus cleanerStatus, 
+            IEnumerable<ScheduleEntry> scheduleEntries, OrderFilter orderFilter)
+        {
+            CleanerId = cleanerId;
+            Status = cleanerStatus;
+            _scheduleEntries.AddRange(_scheduleEntries);
+            MaxMessLevel = orderFilter.MaxMessLevel;
+            MinPrice = orderFilter.MinPrice;
+            MinClientRating = orderFilter.MinClientRating;
+        }
+
         public string CleanerId { get; set; }
 
         private readonly List<ScheduleEntry> _scheduleEntries = new();
@@ -12,10 +30,9 @@ namespace PartyKlinest.ApplicationCore.Entities.Users.Cleaners
 
         public CleanerStatus Status { get; private set; }
 
-        // Order Filter
-        public MessLevel MaxMessLevel { get; private set; }
-        public decimal MinPrice { get; private set; }
-        public int MinClientRating { get; private set; }
+        public MessLevel MaxMessLevel { get; set; }
+        public decimal MinPrice { get; set; }
+        public int MinClientRating { get; set; }
 
         public void SetCleanerStatus(CleanerStatus status)
         {
@@ -23,24 +40,25 @@ namespace PartyKlinest.ApplicationCore.Entities.Users.Cleaners
             if(status == CleanerStatus.Banned)
             {
                 _scheduleEntries.Clear();
-                // TODO -> powiadom o potrzebie ponownego przypisania
             }
         }
 
-        public void SetMaxMessLevel(MessLevel messLevel)
+        public void UpdateOrderFilter(OrderFilter orderFilter)
         {
-            MaxMessLevel = messLevel;
+            MaxMessLevel = orderFilter.MaxMessLevel;
+            MinPrice = orderFilter.MinPrice;
+            MinClientRating = orderFilter.MinClientRating;
         }
 
-        public void SetMinPrice(decimal price)
+        public void UpdateSchedule(IEnumerable<ScheduleEntry> scheduleEntries)
         {
-            MinPrice = price;
+            _scheduleEntries.Clear();
+            _scheduleEntries.AddRange(scheduleEntries);
         }
 
-        public void SetMinCientRating(int rating)
+        public OrderFilter GetOrderFilter()
         {
-            MinClientRating = rating;
+            return new OrderFilter(MaxMessLevel, MinClientRating, MinPrice);
         }
-
     }
 }
