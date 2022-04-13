@@ -12,7 +12,6 @@ import Heading from '../Components/Heading';
 import {postNewOrder} from '../Api/endpoints';
 import Address, {isAddressCorrect, emptyAddress} from '../DataClasses/Address';
 import MessLevelE from '../DataClasses/MessLevel';
-import DateTimeOffset from '../DataClasses/DateTimeOffset';
 import './PostAnnouncement.css';
 
 const fieldWidth = '16em';
@@ -96,8 +95,8 @@ const AddressFields = (props: AddressFieldsProps) => {
 }
 
 interface CleaningDateProps {
-  value: DateTimeOffset;
-  onChange: (start?: Date, end?: Date) => void;
+  value: Date;
+  onChange: (time: Date) => void;
 }
 
 const CleaningDate = (props: CleaningDateProps) => {
@@ -111,27 +110,11 @@ const CleaningDate = (props: CleaningDateProps) => {
               width: fieldWidth
             }}
           />}
-          label='Początek zakresu czasu sprzątania'
-          value={props.value.start}
+          label='Czas sprzątania'
+          value={props.value}
           onChange={(cleaningTime: Date | null) =>
-            cleaningTime != null && props.onChange(cleaningTime, undefined)}
+            cleaningTime != null && props.onChange(cleaningTime)}
           minDateTime={new Date()}
-          maxDateTime={props.value.end}
-        />
-      </div>
-      <div className='announcement-form-field'>
-        <DateTimePicker
-          renderInput={(props: TextFieldProps) => <TextField
-            {...props}
-            sx={{
-              width: fieldWidth
-            }}
-          />}
-          label='Koniec zakresu czasu sprzątania'
-          value={props.value.end}
-          onChange={(cleaningTime: Date | null) =>
-            cleaningTime != null && props.onChange(undefined, cleaningTime)}
-          minDateTime={props.value.start}
         />
       </div>
     </>
@@ -169,23 +152,17 @@ const MessLevel = (props: MessLevelProps) => {
 }
 
 const getDefaultDate = () => {
-  const defaultDateStart = new Date();
-  defaultDateStart.setHours(defaultDateStart.getHours() + 12);
-  defaultDateStart.setMinutes(0);
-  const defaultDateEnd = new Date();
-  defaultDateEnd.setHours(defaultDateEnd.getHours() + 24);
-  defaultDateEnd.setMinutes(0);
+  const defaultDate = new Date();
+  defaultDate.setHours(defaultDate.getHours() + 12);
+  defaultDate.setMinutes(0);
 
-  return {
-    start: defaultDateStart,
-    end: defaultDateEnd
-  };
+  return defaultDate;
 }
 
 const PostAnnouncement = () => {
   const [address, setAddress] = useState<Address>(emptyAddress());
   const [description, setDescription] = useState<string>('');
-  const [cleaningTime, setCleaningTime] = useState<DateTimeOffset>(getDefaultDate());
+  const [cleaningTime, setCleaningTime] = useState<Date>(getDefaultDate());
   const [messLevel, setMessLevel] = useState<MessLevelE>(MessLevelE.Low);
   const [minRating, setMinRating] = useState<number>(0.5);
   const [maxPrice, setMaxPrice] = useState<number | null>(Infinity);
@@ -203,13 +180,8 @@ const PostAnnouncement = () => {
       />
       <CleaningDate
         value={cleaningTime}
-        onChange={(start?: Date, end?: Date) => {
-          const newCleaningTime = {
-            start: start === undefined ? cleaningTime.start : start,
-            end: end === undefined ? cleaningTime.end : end,
-          };
-
-          setCleaningTime(newCleaningTime);
+        onChange={(cleaningTime: Date) => {
+          setCleaningTime(cleaningTime);
         }}
       />
       <AnnouncementFormField
@@ -284,11 +256,10 @@ const PostAnnouncement = () => {
 const isFormFilledCorrectly = (
   address: Address,
   maxPrice: number | null,
-  cleaningTime: DateTimeOffset
+  cleaningTime: Date
 ) => {
   return isAddressCorrect(address) &&
-    maxPrice !== null && maxPrice !== Infinity &&
-    cleaningTime.start < cleaningTime.end;
+    maxPrice !== null && maxPrice !== Infinity;
 }
 
 export default PostAnnouncement;
