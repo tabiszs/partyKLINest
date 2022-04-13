@@ -1,19 +1,17 @@
 ﻿using Moq;
 using PartyKlinest.ApplicationCore.Entities.Orders;
+using PartyKlinest.ApplicationCore.Entities.Orders.Opinions;
 using PartyKlinest.ApplicationCore.Entities.Users.Cleaners;
 using PartyKlinest.ApplicationCore.Exceptions;
 using PartyKlinest.ApplicationCore.Interfaces;
 using PartyKlinest.ApplicationCore.Services;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnitTests.Factories;
 using Xunit;
-using Ardalis.Specification;
-using PartyKlinest.ApplicationCore.Entities.Orders.Opinions;
 
 namespace UnitTests.ApplicationCore.Services.CleanerFacadeTests
 {
-    public  class CheckCleanersPriviliges
+    public class CheckCleanersPriviliges
     {
         private readonly Mock<IRepository<Order>> _mockOrderRepo = new();
         private readonly Mock<IRepository<Cleaner>> _mockCleanerRepo = new();
@@ -32,7 +30,7 @@ namespace UnitTests.ApplicationCore.Services.CleanerFacadeTests
             var cleanerFacade = SetMockRepos(returnedCleaner, expected);
 
             // Act & Assert
-            await Assert.ThrowsAsync<UserWithoutPriviligesException>(
+            await Assert.ThrowsAsync<UserWithoutPrivilegesException>(
                 () => cleanerFacade.ConfirmOrderCompleted(
                     returnedCleaner.CleanerId,
                     expected.OrderId,
@@ -53,7 +51,7 @@ namespace UnitTests.ApplicationCore.Services.CleanerFacadeTests
             var cleanerFacade = SetMockRepos(returnedCleaner, expected);
 
             // Act & Assert
-            await Assert.ThrowsAsync<UserWithoutPriviligesException>(
+            await Assert.ThrowsAsync<UserWithoutPrivilegesException>(
                 () => cleanerFacade.ConfirmOrderCompleted(
                     returnedCleaner.CleanerId,
                     expected.OrderId,

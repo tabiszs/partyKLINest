@@ -1,15 +1,13 @@
 ﻿using Moq;
 using PartyKlinest.ApplicationCore.Entities.Orders;
+using PartyKlinest.ApplicationCore.Entities.Orders.Opinions;
 using PartyKlinest.ApplicationCore.Entities.Users.Cleaners;
 using PartyKlinest.ApplicationCore.Exceptions;
 using PartyKlinest.ApplicationCore.Interfaces;
 using PartyKlinest.ApplicationCore.Services;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnitTests.Factories;
 using Xunit;
-using Ardalis.Specification;
-using PartyKlinest.ApplicationCore.Entities.Orders.Opinions;
 
 namespace UnitTests.ApplicationCore.Services.CleanerFacadeTests
 {
@@ -33,8 +31,8 @@ namespace UnitTests.ApplicationCore.Services.CleanerFacadeTests
             // Act & Assert
             await Assert.ThrowsAsync<CleanerNotFoundException>(
                 () => cleanerFacade.ConfirmOrderCompleted(
-                    orderBuilder.TestCleanerId, 
-                    orderBuilder.TestOrderId, 
+                    orderBuilder.TestCleanerId,
+                    orderBuilder.TestOrderId,
                     orderBuilder.TestOpinion));
         }
 
@@ -52,13 +50,13 @@ namespace UnitTests.ApplicationCore.Services.CleanerFacadeTests
             var orderBuilder = new OrderBuilder();
             orderBuilder.WithCleanerId("it is not returnedCleaner Id");
             orderBuilder.WithStaus(status);
-            
+
             var expected = orderBuilder.Build();
             var newOpinion = new Opinion(4, "New Opinion");
             var cleanerFacade = SetMockRepos(returnedCleaner, expected);
 
             // Act & Assert
-            await Assert.ThrowsAsync<UserWithoutPriviligesException>(
+            await Assert.ThrowsAsync<UserWithoutPrivilegesException>(
                 () => cleanerFacade.ConfirmOrderCompleted(
                     returnedCleaner.CleanerId,
                     expected.OrderId,

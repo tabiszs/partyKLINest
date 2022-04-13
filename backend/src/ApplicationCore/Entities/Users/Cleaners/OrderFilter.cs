@@ -1,7 +1,6 @@
-﻿
-namespace PartyKlinest.ApplicationCore.Entities
+﻿namespace PartyKlinest.ApplicationCore.Entities.Users.Cleaners
 {
-    public class OrderFilter
+    public record OrderFilter
     {
         public MessLevel MaxMessLevel { get; private set; }
         public int MinClientRating { get; private set; }

@@ -1,4 +1,5 @@
-﻿using Moq;
+﻿using Ardalis.Specification;
+using Moq;
 using PartyKlinest.ApplicationCore.Entities.Orders;
 using PartyKlinest.ApplicationCore.Entities.Users.Cleaners;
 using PartyKlinest.ApplicationCore.Exceptions;
@@ -8,7 +9,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnitTests.Factories;
 using Xunit;
-using Ardalis.Specification;
 
 namespace UnitTests.ApplicationCore.Services.CleanerFacadeTests
 {

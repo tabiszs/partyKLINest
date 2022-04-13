@@ -12,15 +12,13 @@ namespace PartyKlinest.ApplicationCore.Entities.Users.Cleaners
 
         }
 
-        public Cleaner(string cleanerId, CleanerStatus cleanerStatus, 
+        public Cleaner(string cleanerId, CleanerStatus cleanerStatus,
             IEnumerable<ScheduleEntry> scheduleEntries, OrderFilter orderFilter)
         {
             CleanerId = cleanerId;
             Status = cleanerStatus;
-            _scheduleEntries.AddRange(_scheduleEntries);
-            MaxMessLevel = orderFilter.MaxMessLevel;
-            MinPrice = orderFilter.MinPrice;
-            MinClientRating = orderFilter.MinClientRating;
+            _scheduleEntries.AddRange(scheduleEntries);
+            OrderFilter = orderFilter;
         }
 
         public string CleanerId { get; set; }
@@ -30,14 +28,12 @@ namespace PartyKlinest.ApplicationCore.Entities.Users.Cleaners
 
         public CleanerStatus Status { get; private set; }
 
-        public MessLevel MaxMessLevel { get; set; }
-        public decimal MinPrice { get; set; }
-        public int MinClientRating { get; set; }
+        public OrderFilter OrderFilter { get; private set; }
 
         public void SetCleanerStatus(CleanerStatus status)
         {
             Status = status;
-            if(status == CleanerStatus.Banned)
+            if (status == CleanerStatus.Banned)
             {
                 _scheduleEntries.Clear();
             }
@@ -45,20 +41,13 @@ namespace PartyKlinest.ApplicationCore.Entities.Users.Cleaners
 
         public void UpdateOrderFilter(OrderFilter orderFilter)
         {
-            MaxMessLevel = orderFilter.MaxMessLevel;
-            MinPrice = orderFilter.MinPrice;
-            MinClientRating = orderFilter.MinClientRating;
+            OrderFilter = orderFilter;
         }
 
         public void UpdateSchedule(IEnumerable<ScheduleEntry> scheduleEntries)
         {
             _scheduleEntries.Clear();
             _scheduleEntries.AddRange(scheduleEntries);
-        }
-
-        public OrderFilter GetOrderFilter()
-        {
-            return new OrderFilter(MaxMessLevel, MinClientRating, MinPrice);
         }
     }
 }

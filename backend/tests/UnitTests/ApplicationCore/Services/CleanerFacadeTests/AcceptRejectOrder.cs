@@ -4,12 +4,9 @@ using PartyKlinest.ApplicationCore.Entities.Users.Cleaners;
 using PartyKlinest.ApplicationCore.Exceptions;
 using PartyKlinest.ApplicationCore.Interfaces;
 using PartyKlinest.ApplicationCore.Services;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnitTests.Factories;
 using Xunit;
-using Ardalis.Specification;
-using PartyKlinest.ApplicationCore.Entities.Orders.Opinions;
 
 namespace UnitTests.ApplicationCore.Services.CleanerFacadeTests
 {
@@ -19,7 +16,7 @@ namespace UnitTests.ApplicationCore.Services.CleanerFacadeTests
         private readonly Mock<IRepository<Cleaner>> _mockCleanerRepo = new();
 
         [Theory(DisplayName = "Accept Order")]
-        [InlineData("localCleanerId22", OrderStatus.Active,  "localCleanerId22", OrderStatus.InProgress, "localCleanerId22")]
+        [InlineData("localCleanerId22", OrderStatus.Active, "localCleanerId22", OrderStatus.InProgress, "localCleanerId22")]
         public async Task AcceptOrder(
             string personalCleanerId, OrderStatus localStatus, string localCleanerId, OrderStatus sentStatus, string? sentCleanerId)
         {
@@ -81,41 +78,41 @@ namespace UnitTests.ApplicationCore.Services.CleanerFacadeTests
         [Theory(DisplayName = "Errors when change order status")]
         // accept [InlineData("localCleanerId22", OrderStatus.Active,     "localCleanerId22", OrderStatus.InProgress, "localCleanerId22")]
         [InlineData("localCleanerId22", OrderStatus.InProgress, "localCleanerId22", OrderStatus.InProgress, "localCleanerId22")]
-        [InlineData("localCleanerId22", OrderStatus.Closed,     "localCleanerId22", OrderStatus.InProgress, "localCleanerId22")]
-        [InlineData("localCleanerId22", OrderStatus.Cancelled,  "localCleanerId22", OrderStatus.InProgress, "localCleanerId22")]
+        [InlineData("localCleanerId22", OrderStatus.Closed, "localCleanerId22", OrderStatus.InProgress, "localCleanerId22")]
+        [InlineData("localCleanerId22", OrderStatus.Cancelled, "localCleanerId22", OrderStatus.InProgress, "localCleanerId22")]
 
-        [InlineData("localCleanerId22", OrderStatus.Active,     "localCleanerId22", OrderStatus.Active,     "localCleanerId22")]
-        [InlineData("localCleanerId22", OrderStatus.Cancelled,  "localCleanerId22", OrderStatus.Active,     "localCleanerId22")]
-        [InlineData("localCleanerId22", OrderStatus.Closed,     "localCleanerId22", OrderStatus.Active,     "localCleanerId22")]
-        [InlineData("localCleanerId22", OrderStatus.InProgress, "localCleanerId22", OrderStatus.Active,     "localCleanerId22")]
+        [InlineData("localCleanerId22", OrderStatus.Active, "localCleanerId22", OrderStatus.Active, "localCleanerId22")]
+        [InlineData("localCleanerId22", OrderStatus.Cancelled, "localCleanerId22", OrderStatus.Active, "localCleanerId22")]
+        [InlineData("localCleanerId22", OrderStatus.Closed, "localCleanerId22", OrderStatus.Active, "localCleanerId22")]
+        [InlineData("localCleanerId22", OrderStatus.InProgress, "localCleanerId22", OrderStatus.Active, "localCleanerId22")]
 
-        [InlineData("localCleanerId22", OrderStatus.Active,     "localCleanerId22", OrderStatus.Closed,     "localCleanerId22")]
-        [InlineData("localCleanerId22", OrderStatus.Cancelled,  "localCleanerId22", OrderStatus.Closed,     "localCleanerId22")]
-        [InlineData("localCleanerId22", OrderStatus.Closed,     "localCleanerId22", OrderStatus.Closed,     "localCleanerId22")]
-        [InlineData("localCleanerId22", OrderStatus.InProgress, "localCleanerId22", OrderStatus.Closed,     "localCleanerId22")]
+        [InlineData("localCleanerId22", OrderStatus.Active, "localCleanerId22", OrderStatus.Closed, "localCleanerId22")]
+        [InlineData("localCleanerId22", OrderStatus.Cancelled, "localCleanerId22", OrderStatus.Closed, "localCleanerId22")]
+        [InlineData("localCleanerId22", OrderStatus.Closed, "localCleanerId22", OrderStatus.Closed, "localCleanerId22")]
+        [InlineData("localCleanerId22", OrderStatus.InProgress, "localCleanerId22", OrderStatus.Closed, "localCleanerId22")]
 
-        [InlineData("localCleanerId22", OrderStatus.Active,     "localCleanerId22", OrderStatus.Cancelled,  "localCleanerId22")]
-        [InlineData("localCleanerId22", OrderStatus.Cancelled,  "localCleanerId22", OrderStatus.Cancelled,  "localCleanerId22")]
-        [InlineData("localCleanerId22", OrderStatus.Closed,     "localCleanerId22", OrderStatus.Cancelled,  "localCleanerId22")]
-        [InlineData("localCleanerId22", OrderStatus.InProgress, "localCleanerId22", OrderStatus.Cancelled,  "localCleanerId22")]
+        [InlineData("localCleanerId22", OrderStatus.Active, "localCleanerId22", OrderStatus.Cancelled, "localCleanerId22")]
+        [InlineData("localCleanerId22", OrderStatus.Cancelled, "localCleanerId22", OrderStatus.Cancelled, "localCleanerId22")]
+        [InlineData("localCleanerId22", OrderStatus.Closed, "localCleanerId22", OrderStatus.Cancelled, "localCleanerId22")]
+        [InlineData("localCleanerId22", OrderStatus.InProgress, "localCleanerId22", OrderStatus.Cancelled, "localCleanerId22")]
 
         [InlineData("localCleanerId22", OrderStatus.InProgress, "localCleanerId22", OrderStatus.InProgress, null)]
-        [InlineData("localCleanerId22", OrderStatus.Closed,     "localCleanerId22", OrderStatus.InProgress, null)]
+        [InlineData("localCleanerId22", OrderStatus.Closed, "localCleanerId22", OrderStatus.InProgress, null)]
         [InlineData("localCleanerId22", OrderStatus.Cancelled, "localCleanerId22", OrderStatus.InProgress, null)]
 
         // reject [InlineData("localCleanerId22", OrderStatus.Active,     "localCleanerId22", OrderStatus.Active, null)]
         [InlineData("localCleanerId22", OrderStatus.Cancelled, "localCleanerId22", OrderStatus.Active, null)]
-        [InlineData("localCleanerId22", OrderStatus.Closed,     "localCleanerId22", OrderStatus.Active, null)]
+        [InlineData("localCleanerId22", OrderStatus.Closed, "localCleanerId22", OrderStatus.Active, null)]
         [InlineData("localCleanerId22", OrderStatus.InProgress, "localCleanerId22", OrderStatus.Active, null)]
 
-        [InlineData("localCleanerId22", OrderStatus.Active,     "localCleanerId22", OrderStatus.Closed, null)]
+        [InlineData("localCleanerId22", OrderStatus.Active, "localCleanerId22", OrderStatus.Closed, null)]
         [InlineData("localCleanerId22", OrderStatus.Cancelled, "localCleanerId22", OrderStatus.Closed, null)]
-        [InlineData("localCleanerId22", OrderStatus.Closed,     "localCleanerId22", OrderStatus.Closed, null)]
+        [InlineData("localCleanerId22", OrderStatus.Closed, "localCleanerId22", OrderStatus.Closed, null)]
         [InlineData("localCleanerId22", OrderStatus.InProgress, "localCleanerId22", OrderStatus.Closed, null)]
 
-        [InlineData("localCleanerId22", OrderStatus.Active,     "localCleanerId22", OrderStatus.Cancelled, null)]
+        [InlineData("localCleanerId22", OrderStatus.Active, "localCleanerId22", OrderStatus.Cancelled, null)]
         [InlineData("localCleanerId22", OrderStatus.Cancelled, "localCleanerId22", OrderStatus.Cancelled, null)]
-        [InlineData("localCleanerId22", OrderStatus.Closed,     "localCleanerId22", OrderStatus.Cancelled, null)]
+        [InlineData("localCleanerId22", OrderStatus.Closed, "localCleanerId22", OrderStatus.Cancelled, null)]
         [InlineData("localCleanerId22", OrderStatus.InProgress, "localCleanerId22", OrderStatus.Cancelled, null)]
         public async Task ThrowsNotCorrectCurrentOrderStateExceptionWhileChangingToCloseState(
             string personalCleanerId, OrderStatus localStatus, string localCleanerId, OrderStatus sentStatus, string? sentCleanerId)
@@ -141,7 +138,7 @@ namespace UnitTests.ApplicationCore.Services.CleanerFacadeTests
             // Act & Assert
             await Assert.ThrowsAsync<NotCorrectOrderStatusException>(
                 () => cleanerFacade.AcceptRejectOrder(personalCleanerId, sentOrder));
-           
+
 
         }
 

@@ -3,7 +3,7 @@ using System;
 
 namespace PartyKlinest.ApplicationCore.Exceptions
 {
-    public class CleanerCannotChangeBannedStatusException: Exception
+    public class CleanerCannotChangeBannedStatusException : Exception
     {
         public CleanerCannotChangeBannedStatusException(Cleaner local, Cleaner sent)
             : base($"Cleaner {local.CleanerId} cannot change status from {local.Status} to {sent.Status}")

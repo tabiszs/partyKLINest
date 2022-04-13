@@ -3,10 +3,8 @@ using PartyKlinest.ApplicationCore.Entities.Orders.Opinions;
 using PartyKlinest.ApplicationCore.Entities.Users.Cleaners;
 using PartyKlinest.ApplicationCore.Exceptions;
 using PartyKlinest.ApplicationCore.Interfaces;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace PartyKlinest.ApplicationCore.Services
@@ -45,18 +43,19 @@ namespace PartyKlinest.ApplicationCore.Services
         {
             var cleaner = await GetCleanerInfo(cleanerId);
             var order = await GetOrderAsync(orderId);
-            CheckCleanersPriviliges(cleaner, order);
+
+            if (CleanerWithoutPrivileges(cleaner, order))
+            {
+                throw new UserWithoutPrivilegesException(cleaner.CleanerId);
+            }
 
             order.SetCleanersOpinion(opinion);
-            CloseOrder(order);            
+            CloseOrder(order);
             await _orderRepository.UpdateAsync(order);
         }
-        private void CheckCleanersPriviliges(Cleaner cleaner, Order order)
+        private bool CleanerWithoutPrivileges(Cleaner cleaner, Order order)
         {
-            if (cleaner.Status == CleanerStatus.Banned || (order.CleanerId != cleaner.CleanerId && order.CleanerId != null))
-            {
-                throw new UserWithoutPriviligesException(cleaner.CleanerId);
-            }
+            return cleaner.Status == CleanerStatus.Banned || (order.CleanerId != cleaner.CleanerId && order.CleanerId != null);
         }
         private async Task<Order> GetOrderAsync(long orderId)
         {
@@ -80,13 +79,16 @@ namespace PartyKlinest.ApplicationCore.Services
         {
             var cleaner = await GetCleanerInfo(cleanerId);
             var localOrder = await GetOrderAsync(sentOrder.OrderId);
-            CheckCleanersPriviliges(cleaner, sentOrder);
+            if (CleanerWithoutPrivileges(cleaner, sentOrder))
+            {
+                throw new UserWithoutPrivilegesException(cleaner.CleanerId);
+            }
 
             bool wasAsssigned = WasAssignedButNotConfirmed(localOrder, cleanerId);
             bool isAccepted = IsAccepted(sentOrder, cleanerId);
             bool isRejected = IsRejected(sentOrder);
 
-            if ( wasAsssigned && (isAccepted || isRejected))
+            if (wasAsssigned && (isAccepted || isRejected))
             {
                 await _orderRepository.UpdateAsync(sentOrder);
             }
@@ -136,10 +138,9 @@ namespace PartyKlinest.ApplicationCore.Services
         }
         private async Task UpdateOrderFilter(Cleaner localCleaner, Cleaner updateCleaner)
         {
-            if(localCleaner.Status == CleanerStatus.Active)
+            if (localCleaner.Status == CleanerStatus.Active)
             {
-                var orderFilter = updateCleaner.GetOrderFilter();
-                localCleaner.UpdateOrderFilter(orderFilter);
+                localCleaner.UpdateOrderFilter(updateCleaner.OrderFilter);
                 await _cleanerRepository.UpdateAsync(localCleaner);
             }
             else
@@ -161,7 +162,7 @@ namespace PartyKlinest.ApplicationCore.Services
         }
         private bool NeedUpdateStatus(Cleaner localCleaner, Cleaner updateCleaner)
         {
-            if(localCleaner.Status == CleanerStatus.Banned ||
+            if (localCleaner.Status == CleanerStatus.Banned ||
                 updateCleaner.Status == CleanerStatus.Banned)
             {
                 throw new CleanerCannotChangeBannedStatusException(localCleaner, updateCleaner);
@@ -170,15 +171,13 @@ namespace PartyKlinest.ApplicationCore.Services
         }
         private bool NeedUpdateOrderFilter(Cleaner localCleaner, Cleaner sentCleaner)
         {
-            return localCleaner.MinPrice != sentCleaner.MinPrice
-                || localCleaner.MinClientRating != sentCleaner.MinClientRating
-                || localCleaner.MaxMessLevel != sentCleaner.MaxMessLevel;
+            return localCleaner.OrderFilter != sentCleaner.OrderFilter;
         }
         private bool NeedUpdateSchedule(Cleaner localCleaner, Cleaner updateCleaner)
         {
             if (localCleaner.ScheduleEntries.Count != updateCleaner.ScheduleEntries.Count)
                 return true;
-            for(int i=0; i<localCleaner.ScheduleEntries.Count; i++)
+            for (int i = 0; i < localCleaner.ScheduleEntries.Count; i++)
             {
                 if (localCleaner.ScheduleEntries.ElementAt(i) != updateCleaner.ScheduleEntries.ElementAt(i))
                 {

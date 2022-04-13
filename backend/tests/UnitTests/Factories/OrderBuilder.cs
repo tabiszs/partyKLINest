@@ -72,7 +72,7 @@ namespace UnitTests.Factories
         {
             var address = _addressFactory.CreateWithDefaultValues();
             List<Order> orders = new List<Order>();
-            for (int i=0; i<noOfOrders; ++i)
+            for (int i = 0; i < noOfOrders; ++i)
             {
                 var order1 = new Order(TestMaxPrice, TestMinCleanerRating, TestMessLevel, TestDate, TestClientId, address);
                 order1.SetCleanerId(cleanerId);

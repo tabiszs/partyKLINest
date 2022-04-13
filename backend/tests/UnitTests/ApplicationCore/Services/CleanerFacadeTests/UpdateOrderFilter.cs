@@ -52,7 +52,7 @@ namespace UnitTests.ApplicationCore.Services.CleanerFacadeTests
             var orderFilter = new OrderFilter(MessLevel.Moderate, 1, 10);
             var cleanerBuilder = new CleanerBuilder();
             cleanerBuilder.WithStatus(localStatus);
-            cleanerBuilder.WithOrderFilter(orderFilter);    
+            cleanerBuilder.WithOrderFilter(orderFilter);
             Cleaner localCleaner = cleanerBuilder.Build();
 
             orderFilter = new OrderFilter(MessLevel.Huge, 4, 100);
