@@ -27,11 +27,9 @@ export const CleanerLayout = (props: LayoutProps) => (
         {...props}
         topButtons={[
             { label: 'Pulpit', linkTo: '/' },
-            { label: 'Dodaj', linkTo: '/postAnnouncement' },
-            { label: 'Historia', onClick: () => alert('Historia') },
         ]}
         bottomButtons={[
-            { label: 'Ustawienia', linkTo: '/settings' },
+            //{ label: 'Ustawienia', linkTo: '/settings' }, TODO
             { label: 'Wyloguj', onClick: props.logout }
         ]}
     />
@@ -42,11 +40,11 @@ export const AdminLayout = (props: LayoutProps) => (
         {...props}
         topButtons={[
             { label: 'Pulpit', linkTo: '/' },
-            { label: 'Dodaj', linkTo: '/postAnnouncement' },
-            { label: 'Historia', onClick: () => alert('Historia') },
+            { label: 'Usuń zamówienia', linkTo: '/orderDeletion' },
+            { label: 'Ustaw prowizję', linkTo: '/comission' },
         ]}
         bottomButtons={[
-            { label: 'Ustawienia', linkTo: '/settings' },
+            //{ label: 'Ustawienia', linkTo: '/settings' }, TODO
             { label: 'Wyloguj', onClick: props.logout }
         ]}
     />
