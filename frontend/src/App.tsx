@@ -10,6 +10,7 @@ import UserBanning from './ContentScreens/Admin/UserBanning';
 import ComissionForm from './ContentScreens/Admin/ComissionForm';
 import OrderDeletion from './ContentScreens/Admin/OrderDeletion';
 import OrderManagement from './ContentScreens/ClientOrderManagement';
+import Schedule from './ContentScreens/Cleaner/Schedule';
 
 const App = () => {
 
@@ -38,14 +39,15 @@ const App = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Layout isLogged={isLogged} login={login} logout={logout}/>}>
-          <Route index element={<Dashboard/>}/>
-          <Route path="/settings" element={<Settings logout={() => setIsLogged(false)}/>}/>
-          <Route path="/postAnnouncement" element={<PostAnnouncement/>}/>
-          <Route path="/banUser" element={<UserBanning/>}/>
+        <Route path="/" element={<Layout isLogged={isLogged} login={login} logout={logout} />}>
+          <Route index element={<Dashboard />} />
+          <Route path="/settings" element={<Settings logout={() => setIsLogged(false)} />} />
+          <Route path="/postAnnouncement" element={<PostAnnouncement />} />
+          <Route path="/banUser" element={<UserBanning />} />
           <Route path="/comission" element={<ComissionForm />} />
           <Route path="/orderDeletion" element={<OrderDeletion />} />
           <Route path="/orderManagement" element={<OrderManagement />} />
+          <Route path="/schedule" element={<Schedule />} />
         </Route>
       </Routes>
     </BrowserRouter>
