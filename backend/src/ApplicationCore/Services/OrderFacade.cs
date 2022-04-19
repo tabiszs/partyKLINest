@@ -64,6 +64,12 @@ namespace PartyKlinest.ApplicationCore.Services
             return await _orderRepository.ListAsync(spec);
         }
 
+        public async Task<List<Order>> ListAssignedOrdersToAsync(string cleanerId)
+        {
+            var spec = new Specifications.OrdersAssignedToSpecification(cleanerId);
+            return await _orderRepository.ListAsync(spec);
+        }
+
         public async Task<List<Order>> ListCreatedOrdersAsync()
         {
             var spec = new Specifications.OrdersCreatedSpecification();
@@ -80,6 +86,11 @@ namespace PartyKlinest.ApplicationCore.Services
             order.Modify(newClientId, newCleanerId, newOrderStatus,
                 newMaxPrice, newMinRating, newDate, newAddress,
                 newMessLevel);
+            await _orderRepository.UpdateAsync(order);
+        }
+
+        public async Task UpdateAsync(Order order)
+        {
             await _orderRepository.UpdateAsync(order);
         }
     }

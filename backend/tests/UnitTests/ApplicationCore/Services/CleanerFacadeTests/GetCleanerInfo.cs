@@ -23,7 +23,8 @@ namespace UnitTests.ApplicationCore.Services.CleanerFacadeTests
             _mockCleanerRepo
                 .Setup(x => x.GetByIdAsync(It.IsAny<string>(), default))
                 .ReturnsAsync(returnedCleaner);
-            var cleanerFacade = new CleanerFacade(_mockCleanerRepo.Object, _mockOrderRepo.Object);
+            OrderFacade orderFacade = new(_mockOrderRepo.Object);
+            var cleanerFacade = new CleanerFacade(_mockCleanerRepo.Object, orderFacade);
 
             // Act & Assert
             await Assert.ThrowsAsync<CleanerNotFoundException>(
@@ -39,7 +40,8 @@ namespace UnitTests.ApplicationCore.Services.CleanerFacadeTests
             _mockCleanerRepo
                 .Setup(x => x.GetByIdAsync(It.IsAny<string>(), default))
                 .ReturnsAsync(expectedCleaner);
-            var cleanerFacade = new CleanerFacade(_mockCleanerRepo.Object, _mockOrderRepo.Object);
+            OrderFacade orderFacade = new(_mockOrderRepo.Object);
+            var cleanerFacade = new CleanerFacade(_mockCleanerRepo.Object, orderFacade);
 
             // Act
             var returnedCleaner = await cleanerFacade.GetCleanerInfo(expectedCleaner.CleanerId);

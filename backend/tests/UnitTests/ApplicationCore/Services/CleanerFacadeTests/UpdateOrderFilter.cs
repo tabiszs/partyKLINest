@@ -37,7 +37,8 @@ namespace UnitTests.ApplicationCore.Services.CleanerFacadeTests
             _mockCleanerRepo
                 .Setup(x => x.GetByIdAsync(It.IsAny<string>(), default))
                 .ReturnsAsync(localCleaner);
-            var cleanerFacade = new CleanerFacade(_mockCleanerRepo.Object, _mockOrderRepo.Object);
+            OrderFacade orderFacade = new(_mockOrderRepo.Object);
+            var cleanerFacade = new CleanerFacade(_mockCleanerRepo.Object, orderFacade);
 
             // Act & Assert
             await Assert.ThrowsAsync<UserNotActiveException>(
@@ -64,7 +65,8 @@ namespace UnitTests.ApplicationCore.Services.CleanerFacadeTests
             _mockCleanerRepo
                 .Setup(x => x.GetByIdAsync(It.IsAny<string>(), default))
                 .ReturnsAsync(localCleaner);
-            var cleanerFacade = new CleanerFacade(_mockCleanerRepo.Object, _mockOrderRepo.Object);
+            OrderFacade orderFacade = new(_mockOrderRepo.Object);
+            var cleanerFacade = new CleanerFacade(_mockCleanerRepo.Object, orderFacade);
 
             // Act
             await cleanerFacade.UpdateCleanerAsync(sentCleaner);
@@ -93,7 +95,8 @@ namespace UnitTests.ApplicationCore.Services.CleanerFacadeTests
             _mockCleanerRepo
                 .Setup(x => x.GetByIdAsync(It.IsAny<string>(), default))
                 .ReturnsAsync(localCleaner);
-            var cleanerFacade = new CleanerFacade(_mockCleanerRepo.Object, _mockOrderRepo.Object);
+            OrderFacade orderFacade = new(_mockOrderRepo.Object);
+            var cleanerFacade = new CleanerFacade(_mockCleanerRepo.Object, orderFacade);
 
             // Act
             await cleanerFacade.UpdateCleanerAsync(sentCleaner);

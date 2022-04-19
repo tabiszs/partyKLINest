@@ -13,20 +13,19 @@ namespace PartyKlinest.ApplicationCore.Services
     {
         private const OrderStatus closedOrder = OrderStatus.Closed;
 
-        public CleanerFacade(IRepository<Cleaner> cleanerRepository, IRepository<Order> orderRepository)
+        public CleanerFacade(IRepository<Cleaner> cleanerRepository, OrderFacade orderFacade)
         {
             _cleanerRepository = cleanerRepository;
-            _orderRepository = orderRepository;
+            _orderFacade = orderFacade;
         }
 
         private readonly IRepository<Cleaner> _cleanerRepository;
-        private readonly IRepository<Order> _orderRepository;
+        private readonly OrderFacade _orderFacade;
 
         public async Task<List<Order>> GetAssignedOrdersAsync(string cleanerId)
         {
             var cleaner = await GetCleanerInfo(cleanerId);
-            var spec = new Specifications.OrdersAssignedToSpecification(cleaner.CleanerId);
-            return await _orderRepository.ListAsync(spec);
+            return await _orderFacade.ListAssignedOrdersToAsync(cleaner.CleanerId);
         }
 
         public async Task<Cleaner> GetCleanerInfo(string cleanerId)
@@ -42,7 +41,7 @@ namespace PartyKlinest.ApplicationCore.Services
         public async Task ConfirmOrderCompleted(string cleanerId, long orderId, Opinion opinion)
         {
             var cleaner = await GetCleanerInfo(cleanerId);
-            var order = await GetOrderAsync(orderId);
+            var order = await _orderFacade.GetOrderAsync(orderId);
 
             if (CleanerWithoutPrivileges(cleaner, order))
             {
@@ -51,20 +50,11 @@ namespace PartyKlinest.ApplicationCore.Services
 
             order.SetCleanersOpinion(opinion);
             CloseOrder(order);
-            await _orderRepository.UpdateAsync(order);
+            await _orderFacade.UpdateAsync(order);
         }
         private bool CleanerWithoutPrivileges(Cleaner cleaner, Order order)
         {
             return cleaner.Status == CleanerStatus.Banned || (order.CleanerId != cleaner.CleanerId && order.CleanerId != null);
-        }
-        private async Task<Order> GetOrderAsync(long orderId)
-        {
-            var order = await _orderRepository.GetByIdAsync(orderId);
-            if (order is null)
-            {
-                throw new OrderNotFoundException(orderId);
-            }
-            return order;
         }
         private void CloseOrder(Order order)
         {
@@ -78,7 +68,7 @@ namespace PartyKlinest.ApplicationCore.Services
         public async Task AcceptRejectOrder(string cleanerId, Order sentOrder)
         {
             var cleaner = await GetCleanerInfo(cleanerId);
-            var localOrder = await GetOrderAsync(sentOrder.OrderId);
+            var localOrder = await _orderFacade.GetOrderAsync(sentOrder.OrderId);
             if (CleanerWithoutPrivileges(cleaner, sentOrder))
             {
                 throw new UserWithoutPrivilegesException(cleaner.CleanerId);
@@ -90,7 +80,7 @@ namespace PartyKlinest.ApplicationCore.Services
 
             if (wasAsssigned && (isAccepted || isRejected))
             {
-                await _orderRepository.UpdateAsync(sentOrder);
+                await _orderFacade.UpdateAsync(sentOrder);
             }
             else
             {
