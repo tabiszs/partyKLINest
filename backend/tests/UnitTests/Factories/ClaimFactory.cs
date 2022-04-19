@@ -1,7 +1,5 @@
-﻿using PartyKlinest.ApplicationCore.Entities;
-using PartyKlinest.ApplicationCore.Entities.Orders;
-using PartyKlinest.ApplicationCore.Entities.b2c;
-using System.Collections.Specialized;
+﻿using PartyKlinest.ApplicationCore.Entities.Orders;
+using PartyKlinest.Infrastructure.Identity;
 
 namespace UnitTests.Factories
 {
@@ -10,23 +8,22 @@ namespace UnitTests.Factories
         public AddressFactory AddressFactory => new AddressFactory();
         public string TestAccountType => "Client";
         public string TestEmail => "xyz@gmail.com";
-        private StringCollection TestEmailCollection => new StringCollection{ TestEmail };
+        private string[] TestEmails => new string[] { TestEmail };
         public string TestObjectID => "dsfadsfdasfdasfasdfadsfadsfdsafa";
         public string TestGivenName => "Jan";
         public string TestSurname => "Kowalski";
         public bool TestIsBanned => false;
-        public string TestProvince => "Mazowiecki";
-
+        // public string TestProvince => "Mazowieckie";
 
         public Claim CreateWithDefaultValues()
         {
             Address testAddress = AddressFactory.CreateWithDefaultValues();
 
-            return new Claim(accountType: TestAccountType, email: TestEmailCollection, objectID: TestObjectID, givenName: TestGivenName, surname: TestSurname, isBanned: TestIsBanned,
-                city: testAddress.City, country: testAddress.Country, postalCode: testAddress.PostalCode, province: TestProvince, streetAddress: AddressConverter.AddressToStreetInfo(testAddress));
+            return new Claim(extenstion_accountType: TestAccountType, emails: TestEmails, oid: TestObjectID, given_name: TestGivenName, family_name: TestSurname, extension_isBanned: TestIsBanned,
+                city: testAddress.City, country: testAddress.Country, postalCode: testAddress.PostalCode, /*province: TestProvince,*/ streetAddress: AddressConverter.AddressToStreetInfo(testAddress));
         }
 
-        
+
 
     }
 }

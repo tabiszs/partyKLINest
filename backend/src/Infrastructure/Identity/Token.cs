@@ -1,6 +1,6 @@
 ﻿using PartyKlinest.ApplicationCore.Entities.Orders;
 
-namespace PartyKlinest.ApplicationCore.Entities
+namespace PartyKlinest.Infrastructure.Identity
 {
     /// <summary>
     /// fields that are included in the Azure AD B2C claims that will be necessary to process requests
@@ -20,13 +20,13 @@ namespace PartyKlinest.ApplicationCore.Entities
 
         public Token(Claim claim)
         {
-            OID = claim.ObjectID;
-            UserType = b2c.UserTypeConverter.StringToEnum(claim.AccountType);
+            OID = claim.oid;
+            UserType = UserTypeConverter.StringToEnum(claim.extension_AccountType);
             Email = claim.GetEmail();
-            Name = claim.GivenName;
-            Surname = claim.Surname;
+            Name = claim.given_name;
+            Surname = claim.family_name;
             Address = claim.GetAddress();
-            IsBanned = claim.IsBanned;
+            IsBanned = claim.extension_isBanned;
         }
 
         public Token(string oID, UserType userType, string email, string name, string surname, Address address, bool isBanned)

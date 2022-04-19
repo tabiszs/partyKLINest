@@ -1,5 +1,4 @@
-﻿using PartyKlinest.ApplicationCore.Entities;
-using PartyKlinest.ApplicationCore.Entities.b2c;
+﻿using PartyKlinest.Infrastructure.Identity;
 using Xunit;
 
 namespace UnitTests.ApplicationCore.Entities.b2c
@@ -12,7 +11,7 @@ namespace UnitTests.ApplicationCore.Entities.b2c
         public ConvertUserType()
         {
             _stringUserType = "Client";
-            _enumUserType = UserType.Client;
+            _enumUserType = PartyKlinest.Infrastructure.Identity.UserType.Client;
         }
 
         [Fact]

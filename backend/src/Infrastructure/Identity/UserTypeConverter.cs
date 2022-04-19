@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace PartyKlinest.ApplicationCore.Entities.b2c
+﻿namespace PartyKlinest.Infrastructure.Identity
 {
     public static class UserTypeConverter
     {
@@ -21,7 +19,7 @@ namespace PartyKlinest.ApplicationCore.Entities.b2c
 
         public static string EnumToString(UserType userType)
         {
-            switch(userType)
+            switch (userType)
             {
                 case UserType.Client:
                     return "Client";

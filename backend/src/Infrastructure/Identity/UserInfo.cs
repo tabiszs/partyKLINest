@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace PartyKlinest.ApplicationCore.Entities.b2c
+﻿namespace PartyKlinest.Infrastructure.Identity
 {
     public class UserInfo
     {
-        public string OID { get; set; }       
+        public string OID { get; set; }
         public string Name { get; set; }
         public string Surname { get; set; }
         public string Email { get; set; }
@@ -21,7 +15,7 @@ namespace PartyKlinest.ApplicationCore.Entities.b2c
             Name = token.Name;
             Surname = token.Surname;
             Email = token.Email;
-            AccountType = b2c.UserTypeConverter.EnumToString(token.UserType);
+            AccountType = UserTypeConverter.EnumToString(token.UserType);
             IsBanned = token.IsBanned;
         }
 

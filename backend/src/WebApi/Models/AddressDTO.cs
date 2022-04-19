@@ -29,13 +29,13 @@ namespace PartyKlinest.WebApi.Models
         public string BuildingNo { get; init; }
 
         public int? FlatNo { get; init; }
-        
+
         [Required]
         public string City { get; init; }
 
         [Required]
         public string PostalCode { get; init; }
-    
+
         [Required]
         public string Country { get; init; }
     }

@@ -1,4 +1,4 @@
-﻿namespace PartyKlinest.ApplicationCore.Entities
+﻿namespace PartyKlinest.Infrastructure.Identity
 {
     public enum UserType
     {

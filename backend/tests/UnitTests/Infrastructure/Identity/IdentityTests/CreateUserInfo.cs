@@ -1,5 +1,4 @@
-﻿using PartyKlinest.ApplicationCore.Entities;
-using PartyKlinest.ApplicationCore.Entities.b2c;
+﻿using PartyKlinest.Infrastructure.Identity;
 using UnitTests.Factories;
 using Xunit;
 

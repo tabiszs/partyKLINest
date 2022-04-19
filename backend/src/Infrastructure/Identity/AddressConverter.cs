@@ -1,6 +1,6 @@
 ﻿using PartyKlinest.ApplicationCore.Entities.Orders;
 
-namespace PartyKlinest.ApplicationCore.Entities.b2c
+namespace PartyKlinest.Infrastructure.Identity
 {
     public static class AddressConverter
     {
