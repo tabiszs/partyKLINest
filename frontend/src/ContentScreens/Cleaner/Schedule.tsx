@@ -86,7 +86,7 @@ const AvailabilityTable = () => {
   // TODO: gdy będzie API to podmienić
   // const cleanerInfo = getCleanerInfo(/* Jakoś dostać swoje ID */);
   // Mock
-  const cleanerInfo: CleanerInfo = {
+  let cleanerInfo: CleanerInfo | null = {
     scheduleEntries: [
       {dayOfWeek: DayOfWeek.Monday, start: '21:00', end: '22:35'},
       {dayOfWeek: DayOfWeek.Tuesday, start: '08:00', end: '12:35'},
@@ -98,6 +98,16 @@ const AvailabilityTable = () => {
     minPrice: 0,
     maxLocationRange: 100,
   };
+
+  if(cleanerInfo === null) {
+    cleanerInfo = {
+      scheduleEntries: [],
+      maxMess: MessLevel.Disaster,
+      minClientRating: 0,
+      minPrice: 0,
+      maxLocationRange: 100000,
+    };
+  }
 
   const [scheduleText, setScheduleText] = useState<string>(generateScheduleText(cleanerInfo.scheduleEntries));
   const [schedule, setSchedule] = useState<ScheduleEntry[] | null>(cleanerInfo.scheduleEntries);
