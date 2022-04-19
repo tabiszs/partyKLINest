@@ -1,5 +1,5 @@
 ﻿using PartyKlinest.ApplicationCore.Entities.Orders;
-using PartyKlinest.Infrastructure.Identity;
+using PartyKlinest.Infrastructure.Data.Identity;
 using UnitTests.Factories;
 using Xunit;
 

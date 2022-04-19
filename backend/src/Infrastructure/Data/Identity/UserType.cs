@@ -1,4 +1,4 @@
-﻿namespace PartyKlinest.Infrastructure.Identity
+﻿namespace PartyKlinest.Infrastructure.Data.Identity
 {
     public enum UserType
     {

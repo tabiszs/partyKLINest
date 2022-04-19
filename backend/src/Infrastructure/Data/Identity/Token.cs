@@ -1,6 +1,6 @@
 ﻿using PartyKlinest.ApplicationCore.Entities.Orders;
 
-namespace PartyKlinest.Infrastructure.Identity
+namespace PartyKlinest.Infrastructure.Data.Identity
 {
     /// <summary>
     /// fields that are included in the Azure AD B2C claims that will be necessary to process requests

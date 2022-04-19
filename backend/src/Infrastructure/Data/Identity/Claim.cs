@@ -1,6 +1,6 @@
 ﻿using PartyKlinest.ApplicationCore.Entities.Orders;
 
-namespace PartyKlinest.Infrastructure.Identity
+namespace PartyKlinest.Infrastructure.Data.Identity
 {
     /// <summary>
     /// represents Azure AD B2C claims token
