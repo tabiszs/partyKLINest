@@ -17,6 +17,8 @@
 # For more information on the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # For more samples to get started with GitHub Action workflows to deploy to Azure: https://github.com/Azure/actions-workflow-samples
 
+name: Build and deploy React app to an Azure Web App
+
 on:
   push:
     branches:
@@ -27,7 +29,7 @@ on:
   workflow_dispatch:
 
 env:
-  AZURE_WEBAPP_NAME: partyklinest    # set this to your application's name
+  AZURE_WEBAPP_NAME: partyklinest     # set this to your application's name
   AZURE_WEBAPP_PACKAGE_PATH: '.'      # set this to the path to your web app project, defaults to the repository root
   NODE_VERSION: '12.x'                # set this to the node version to use
 
@@ -47,11 +49,10 @@ jobs:
         node-version: ${{ env.NODE_VERSION }}
         cache: 'npm'
         cache-dependency-path: frontend/package-lock.json
-    - name: npm install, build, and test
+    - name: npm install, build
       run: |
         npm install
-        npm run build --if-present
-        npm run test --if-present
+        npm run build
 
     - name: Upload artifact for deployment job
       uses: actions/upload-artifact@v3
