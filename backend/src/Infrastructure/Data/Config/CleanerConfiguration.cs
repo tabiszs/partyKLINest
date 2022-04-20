@@ -13,7 +13,7 @@ namespace PartyKlinest.Infrastructure.Data.Config
                 .HasMaxLength(40);
 
             builder
-                .Property(c => c.MinPrice)
+                .Property(c => c.OrderFilter.MinPrice)
                 .HasColumnType("money");
         }
     }
