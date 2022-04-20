@@ -14,6 +14,7 @@ import UserBanning from './ContentScreens/Admin/UserBanning';
 import ComissionForm from './ContentScreens/Admin/ComissionForm';
 import OrderDeletion from './ContentScreens/Admin/OrderDeletion';
 import OrderManagement from './ContentScreens/ClientOrderManagement';
+import Schedule from './ContentScreens/Cleaner/Schedule';
 
 const headerHeight = '6em';
 
@@ -72,7 +73,7 @@ const App = () => {
           }
           {token?.userType === UserType.Cleaner ?
             <Route path="/" element={<CleanerLayout headerHeight={headerHeight} logout={logout} />}>
-
+              <Route path="/schedule" element={<Schedule />} />
             </Route> : ''
           }
           {token?.userType === UserType.Administrator ?
