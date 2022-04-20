@@ -1,22 +1,25 @@
 import Order from '../../DataClasses/Order';
 import MessLevel from '../../DataClasses/MessLevel';
 import OrderStatus from '../../DataClasses/OrderStatus';
-import {emptyAddress} from '../../DataClasses/Address';
+import { emptyAddress } from '../../DataClasses/Address';
 import Heading from '../../Components/Heading';
-import OrderList from '../../Components/OrderList';
-import {getAllOrders, deleteOrder} from '../../Api/endpoints';
+import OrderList from '../../Components/AdminOrderList';
+import { getAllOrders, deleteOrder, postOrder } from '../../Api/endpoints';
 import './OrderDeletion.css';
+import Dialog from '@mui/material/Dialog';
+import { useEffect, useState } from 'react';
+import { DialogTitle, List, ListItem, ListItemText } from '@mui/material';
 
 const mockOrders: Order[] = [
   {
-    id: 5, clientId: 'dd', cleanerId: 'st',
+    id: 5, clientId: 'dd',
     maxPrice: 10, minRating: 5.0,
     messLevel: MessLevel.Disaster,
     status: OrderStatus.Cancelled,
     date: new Date(),
     address: emptyAddress(),
-    opinionFromCleaner: {rating: 1, comment: ""},
-    opinionFromClient: {rating: 1, comment: ""}
+    opinionFromCleaner: { rating: 1, comment: "" },
+    opinionFromClient: { rating: 1, comment: "" }
   },
   {
     id: 5, clientId: 'dd', cleanerId: 'st',
@@ -25,8 +28,8 @@ const mockOrders: Order[] = [
     status: OrderStatus.InProgress,
     date: new Date(),
     address: emptyAddress(),
-    opinionFromCleaner: {rating: 1, comment: ""},
-    opinionFromClient: {rating: 1, comment: ""}
+    opinionFromCleaner: { rating: 1, comment: "" },
+    opinionFromClient: { rating: 1, comment: "" }
   },
   {
     id: 5, clientId: 'dd', cleanerId: 'st',
@@ -35,8 +38,8 @@ const mockOrders: Order[] = [
     status: OrderStatus.Active,
     date: new Date(),
     address: emptyAddress(),
-    opinionFromCleaner: {rating: 1, comment: ""},
-    opinionFromClient: {rating: 1, comment: ""}
+    opinionFromCleaner: { rating: 1, comment: "" },
+    opinionFromClient: { rating: 1, comment: "" }
   },
   {
     id: 5, clientId: 'dd', cleanerId: 'st',
@@ -45,12 +48,40 @@ const mockOrders: Order[] = [
     status: OrderStatus.Closed,
     date: new Date(),
     address: emptyAddress(),
-    opinionFromCleaner: {rating: 1, comment: ""},
-    opinionFromClient: {rating: 1, comment: ""}
+    opinionFromCleaner: { rating: 1, comment: "" },
+    opinionFromClient: { rating: 1, comment: "" }
   },
 ];
 
+const mockMatching = ['aaa', 'bbb', 'ccc'];
+
 const OrderDeletion = () => {
+
+  const [open, setOpen] = useState(false);
+  const [currentOrder, setCurrentOrder] = useState<Order | null>(null);
+  const [matching, setMatching] = useState<string[]>([]);
+  
+  const openAssignDialog = (order: Order) => {
+    setOpen(true);
+    setCurrentOrder(order);
+  }
+  const cancelAssignDialog = () => {
+    setOpen(false);
+    setCurrentOrder(null);
+  }
+  const confirmAssignDialog = (order: Order, cleanerId: string) => {
+    postOrder(order.id, { ...order, cleanerId: cleanerId });
+    setOpen(false);
+    setCurrentOrder(null);
+  }
+
+  useEffect(() => {
+    if (currentOrder !== null)
+      setMatching(mockMatching); // setMatching(getMatchingCleanerIdsForOrder(currentOrder?.id)); TODO
+    else
+      setMatching([]);
+  }, [currentOrder])
+
   // TODO: zamienić gdy będzie działać API
   // const orders = getAllOrders();
   const orders = mockOrders;
@@ -59,10 +90,21 @@ const OrderDeletion = () => {
       <Heading content='Wszystkie ogłoszenia' />
       <OrderList
         orders={orders}
-        buttonLabel='Usuń'
-        onButtonClick={async (order: Order) => {await deleteOrder(order.id)}}
-        shouldDisplayButton={(_: Order) => true}
+        deleteButtonLabel='Usuń'
+        onDeleteButtonClick={async (order: Order) => { await deleteOrder(order.id) }}
+        assignButtonLabel='Przyporządkuj'
+        onAssignButtonClick={openAssignDialog}
       />
+      <Dialog open={open} onClose={cancelAssignDialog}>
+        <DialogTitle>Wybierz osobę sprzątającą do zamówienia</DialogTitle>
+        <List>
+          {matching.map((cleanerId) => (
+            <ListItem button onClick={() => confirmAssignDialog(currentOrder!, cleanerId)} key={cleanerId}>
+              <ListItemText primary={cleanerId} />
+            </ListItem>
+          ))}
+        </List>
+      </Dialog>
     </div>
   );
 }
