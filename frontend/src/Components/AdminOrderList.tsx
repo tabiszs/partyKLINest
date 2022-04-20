@@ -2,19 +2,20 @@ import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import Order from '../DataClasses/Order';
 import {messLevelText} from '../DataClasses/MessLevel';
-import {orderStatusText} from '../DataClasses/OrderStatus';
+import OrderStatus, {orderStatusText} from '../DataClasses/OrderStatus';
 import './OrderList.css';
 
 interface CardButtonProps {
   label: string;
   onClick: () => void;
+  color: "inherit" | "primary" | "secondary" | "success" | "error" | "info" | "warning" | undefined;
 }
 
 const CardButton = (props: CardButtonProps) => {
   return (
     <Button
       variant='outlined'
-      color='error'
+      color={props.color}
       onClick={props.onClick}
     >
       {props.label}
@@ -49,10 +50,10 @@ const OrderCard = (props: OrderCardProps) => {
             {props.order.cleanerId ? "ID sprzątającego: " + props.order.cleanerId! : null}
           </div>
           <div className='card-column'>
-            <CardButton label={props.deleteButtonLabel} onClick={props.onDeleteButtonClick} />
+            <CardButton label={props.deleteButtonLabel} onClick={props.onDeleteButtonClick} color="error" />
             {
-              props.order.cleanerId ? null
-              : <CardButton label={props.assignButtonLabel} onClick={props.onAssignButtonClick} />
+              props.order.cleanerId !== undefined || props.order.status !== OrderStatus.Active ? null
+              : <CardButton label={props.assignButtonLabel} onClick={props.onAssignButtonClick} color="primary" />
             }
           </div>
         </div>

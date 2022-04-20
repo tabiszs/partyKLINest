@@ -32,7 +32,7 @@ const mockOrders: Order[] = [
     opinionFromClient: { rating: 1, comment: "" }
   },
   {
-    id: 5, clientId: 'dd', cleanerId: 'st',
+    id: 5, clientId: 'dd',
     maxPrice: 500, minRating: 2.0,
     messLevel: MessLevel.Huge,
     status: OrderStatus.Active,
