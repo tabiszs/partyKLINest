@@ -15,6 +15,7 @@ import ComissionForm from './ContentScreens/Admin/ComissionForm';
 import OrderDeletion from './ContentScreens/Admin/OrderDeletion';
 import Schedule from './ContentScreens/Cleaner/Schedule';
 import AdminDashboard from './ContentScreens/Admin/AdminDashboard';
+import CleanerDashboard from './ContentScreens/Cleaner/CleanerDashboard';
 
 const headerHeight = '6em';
 
@@ -72,6 +73,7 @@ const App = () => {
           }
           {token?.userType === UserType.Cleaner ?
             <Route path="/" element={<CleanerLayout headerHeight={headerHeight} logout={logout} />}>
+              <Route index element={<CleanerDashboard token={token!} />} />
               <Route path="/schedule" element={<Schedule />} />
             </Route> : ''
           }
