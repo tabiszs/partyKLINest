@@ -27,6 +27,7 @@ export const CleanerLayout = (props: LayoutProps) => (
         {...props}
         topButtons={[
             { label: 'Pulpit', linkTo: '/' },
+            { label: 'Szczegóły', linkTo: '/schedule' }
         ]}
         bottomButtons={[
             //{ label: 'Ustawienia', linkTo: '/settings' }, TODO
@@ -40,11 +41,11 @@ export const AdminLayout = (props: LayoutProps) => (
         {...props}
         topButtons={[
             { label: 'Pulpit', linkTo: '/' },
-            { label: 'Usuń zamówienia', linkTo: '/orderDeletion' },
+            { label: 'Zamówienia', linkTo: '/orderDeletion' },
             { label: 'Ustaw prowizję', linkTo: '/comission' },
+            { label: 'Użytkownicy', linkTo: '/banUser' },
         ]}
         bottomButtons={[
-            //{ label: 'Ustawienia', linkTo: '/settings' }, TODO
             { label: 'Wyloguj', onClick: props.logout }
         ]}
     />
