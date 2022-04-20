@@ -140,9 +140,9 @@ const AvailabilityTable = () => {
             return;
           }
 
-          cleanerInfo.scheduleEntries = schedule;
+          cleanerInfo!.scheduleEntries = schedule;
           console.log(cleanerInfo);
-          postCleanerInfo('moje ID', cleanerInfo) // TODO: Jakoś dostać swoje ID
+          postCleanerInfo('moje ID', cleanerInfo!) // TODO: Jakoś dostać swoje ID
         }}
       >
         Zatwierdź
