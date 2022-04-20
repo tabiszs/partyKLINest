@@ -11,8 +11,6 @@ namespace PartyKlinest.ApplicationCore.Services
 {
     public class CleanerFacade
     {
-        private const OrderStatus closedOrder = OrderStatus.Closed;
-
         public CleanerFacade(IRepository<Cleaner> cleanerRepository, OrderFacade orderFacade)
         {
             _cleanerRepository = cleanerRepository;
@@ -49,21 +47,13 @@ namespace PartyKlinest.ApplicationCore.Services
             }
 
             order.SetCleanersOpinion(opinion);
-            CloseOrder(order);
-            await _orderFacade.UpdateAsync(order);
+            _orderFacade.CloseOrder(order);            
         }
         private bool CleanerWithoutPrivileges(Cleaner cleaner, Order order)
         {
             return cleaner.Status == CleanerStatus.Banned || (order.CleanerId != cleaner.CleanerId && order.CleanerId != null);
         }
-        private void CloseOrder(Order order)
-        {
-            if (order.Status != OrderStatus.InProgress)
-            {
-                throw new NotCorrectOrderStatusException(order.Status, OrderStatus.Closed);
-            }
-            order.SetOrderStatus(closedOrder);
-        }
+
 
         public async Task AcceptRejectOrder(string cleanerId, Order sentOrder)
         {

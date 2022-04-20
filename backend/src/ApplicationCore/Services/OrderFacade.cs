@@ -17,6 +17,7 @@ namespace PartyKlinest.ApplicationCore.Services
         }
 
         private readonly IRepository<Order> _orderRepository;
+        private const OrderStatus closedOrder = OrderStatus.Closed;
 
         public async Task<Order> GetOrderAsync(long orderId)
         {
@@ -92,6 +93,16 @@ namespace PartyKlinest.ApplicationCore.Services
         public async Task UpdateAsync(Order order)
         {
             await _orderRepository.UpdateAsync(order);
+        }
+
+        public async void CloseOrder(Order order)
+        {
+            if (order.Status != OrderStatus.InProgress)
+            {
+                throw new NotCorrectOrderStatusException(order.Status, OrderStatus.Closed);
+            }
+            order.SetOrderStatus(closedOrder);
+            await UpdateAsync(order);
         }
     }
 }
