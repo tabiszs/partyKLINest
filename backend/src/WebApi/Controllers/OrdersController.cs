@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PartyKlinest.ApplicationCore.Entities.Orders;
 using PartyKlinest.ApplicationCore.Entities.Orders.Opinions;
+using PartyKlinest.ApplicationCore.Entities.Users.Cleaners;
 using PartyKlinest.ApplicationCore.Exceptions;
 using PartyKlinest.ApplicationCore.Services;
 using PartyKlinest.WebApi.Models;
@@ -14,11 +15,13 @@ namespace PartyKlinest.WebApi.Controllers
     {
         private readonly ILogger<OrdersController> _logger;
         private readonly OrderFacade _orderFacade;
+        private readonly CleanerFacade _cleanerFacade;
 
-        public OrdersController(ILogger<OrdersController> logger, OrderFacade orderFacade)
+        public OrdersController(ILogger<OrdersController> logger, OrderFacade orderFacade, CleanerFacade cleanerFacade)
         {
             _logger = logger;
             _orderFacade = orderFacade;
+            _cleanerFacade = cleanerFacade;
         }
 
         /// <summary>
@@ -92,7 +95,7 @@ namespace PartyKlinest.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> AddOrderAsync([FromBody] NewOrderDTO newOrder)
         {
-            _logger.LogInformation("Added new order", newOrder);
+            _logger.LogInformation("Adding new order {newOrder}", newOrder);
 
             var orderToBeCreated = new Order(newOrder.MaxPrice, newOrder.MinRating,
                 newOrder.MessLevel, newOrder.Date, newOrder.ClientId, newOrder.Address);
@@ -107,6 +110,7 @@ namespace PartyKlinest.WebApi.Controllers
                 return BadRequest();
             }
 
+            _logger.LogInformation("Added new order {newOrder}", newOrder);
             return Ok();
         }
 
@@ -166,5 +170,23 @@ namespace PartyKlinest.WebApi.Controllers
                 return NotFound();
             }
         }
+
+        [HttpGet("{orderId}/Matching")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<List<Cleaner>>> ListCleanersMatchingOrder(long orderId)
+        {
+            try
+            {
+                var cleaners = await _cleanerFacade.ListCleanersMatchingOrderAsync(orderId);
+                return cleaners;
+            }
+            catch (OrderNotFoundException)
+            {
+                return NotFound("Order with given id not found");
+            }
+        }
+
     }
 }
