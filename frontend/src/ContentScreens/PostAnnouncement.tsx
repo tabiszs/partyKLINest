@@ -1,9 +1,5 @@
 import {useState} from 'react';
 import TextField, {TextFieldProps} from '@mui/material/TextField';
-import Select from '@mui/material/Select';
-import InputLabel from '@mui/material/InputLabel';
-import FormControl from '@mui/material/FormControl';
-import MenuItem from '@mui/material/MenuItem';
 import Button from '@mui/material/Button';
 import DateTimePicker from '@mui/lab/DateTimePicker';
 import Rating from '@mui/material/Rating';
@@ -12,6 +8,7 @@ import Heading from '../Components/Heading';
 import {postNewOrder} from '../Api/endpoints';
 import Address, {isAddressCorrect, emptyAddress} from '../DataClasses/Address';
 import MessLevelE from '../DataClasses/MessLevel';
+import MessSelector from '../Components/MessSelector';
 import './PostAnnouncement.css';
 
 const fieldWidth = '16em';
@@ -121,36 +118,6 @@ const CleaningDate = (props: CleaningDateProps) => {
   );
 };
 
-interface MessLevelProps {
-  value: MessLevelE;
-  onChange: (messLevel: MessLevelE) => void;
-}
-
-const MessLevel = (props: MessLevelProps) => {
-  return (
-    <div className='announcement-form-field'>
-      <FormControl>
-        <InputLabel id='mess-level'>Poziom bałaganu</InputLabel>
-        <Select
-          sx={{
-            width: fieldWidth
-          }}
-          labelId='mess-level-label'
-          id='mess-level'
-          label='Poziom bałaganu'
-          value={props.value}
-          onChange={(event: any) => props.onChange(event.target.value)}
-        >
-          <MenuItem value={MessLevelE.Low}>Niski</MenuItem>
-          <MenuItem value={MessLevelE.Moderate}>Średni</MenuItem>
-          <MenuItem value={MessLevelE.Huge}>Duży</MenuItem>
-          <MenuItem value={MessLevelE.Disaster}>Katastrofa</MenuItem>
-        </Select>
-      </FormControl>
-    </div>
-  );
-}
-
 const getDefaultDate = () => {
   const defaultDate = new Date();
   defaultDate.setHours(defaultDate.getHours() + 12);
@@ -212,7 +179,7 @@ const PostAnnouncement = () => {
           width: fieldWidth
         }}
       />
-      <MessLevel
+      <MessSelector
         value={messLevel}
         onChange={(messLevel: MessLevelE) => setMessLevel(messLevel)}
       />
@@ -228,7 +195,7 @@ const PostAnnouncement = () => {
         <Button
           variant='contained'
           onClick={() => {
-            if (!isFormFilledCorrectly(address, maxPrice, cleaningTime)) {
+            if (!isFormFilledCorrectly(address, maxPrice)) {
               alert('Formularz nie został wypełniony poprawnie!');
               return;
             }
@@ -255,8 +222,7 @@ const PostAnnouncement = () => {
 
 const isFormFilledCorrectly = (
   address: Address,
-  maxPrice: number | null,
-  cleaningTime: Date
+  maxPrice: number | null
 ) => {
   return isAddressCorrect(address) &&
     maxPrice !== null && maxPrice !== Infinity;

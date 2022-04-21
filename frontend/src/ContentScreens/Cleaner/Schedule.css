@@ -10,3 +10,8 @@
 .schedule-instructions {
     margin-bottom: 2em;
 }
+
+.field-container {
+    padding: 1em 0;
+    margin: 0;
+}
