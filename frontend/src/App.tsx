@@ -13,8 +13,9 @@ import { AdminLayout, CleanerLayout, ClientLayout } from './Layouts';
 import UserBanning from './ContentScreens/Admin/UserBanning';
 import ComissionForm from './ContentScreens/Admin/ComissionForm';
 import OrderDeletion from './ContentScreens/Admin/OrderDeletion';
-import OrderManagement from './ContentScreens/ClientOrderManagement';
 import Schedule from './ContentScreens/Cleaner/Schedule';
+import AdminDashboard from './ContentScreens/Admin/AdminDashboard';
+import CleanerDashboard from './ContentScreens/Cleaner/CleanerDashboard';
 
 const headerHeight = '6em';
 
@@ -68,16 +69,17 @@ const App = () => {
               <Route index element={<ClientDashboard token={token!} />} />
               <Route path="/settings" element={<ClientSettings token={token!} editProfile={editProfile} deleteProfile={deleteAccount} />} />
               <Route path="/postAnnouncement" element={<PostAnnouncement />} />
-              <Route path="/orderManagement" element={<OrderManagement />} />
             </Route> : ''
           }
           {token?.userType === UserType.Cleaner ?
             <Route path="/" element={<CleanerLayout headerHeight={headerHeight} logout={logout} />}>
+              <Route index element={<CleanerDashboard token={token!} />} />
               <Route path="/schedule" element={<Schedule />} />
             </Route> : ''
           }
           {token?.userType === UserType.Administrator ?
             <Route path="/" element={<AdminLayout headerHeight={headerHeight} logout={logout} />}>
+              <Route index element={<AdminDashboard token={token!} editProfile={editProfile} deleteProfile={deleteAccount} />} />
               <Route path="/orderDeletion" element={<OrderDeletion />} />
               <Route path="/comission" element={<ComissionForm />} />
               <Route path="/banUser" element={<UserBanning />} />
