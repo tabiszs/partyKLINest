@@ -6,7 +6,7 @@ import Rating from "./Rating";
 interface Order {
     id: number;
     clientId: string;
-    cleanerId: string;
+    cleanerId?: string;
     status: OrderStatus;
     maxPrice: number;
     minRating: number;
