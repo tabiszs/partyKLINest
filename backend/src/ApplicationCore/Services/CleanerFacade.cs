@@ -6,6 +6,7 @@ using PartyKlinest.ApplicationCore.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using PartyKlinest.ApplicationCore.Specifications;
 
 namespace PartyKlinest.ApplicationCore.Services
 {
@@ -165,6 +166,16 @@ namespace PartyKlinest.ApplicationCore.Services
                 }
             }
             return false;
+        }
+
+        public async Task<List<Cleaner>> ListCleanersMatchingOrderAsync(long orderId)
+        {
+            var order = await _orderFacade.GetOrderAsync(orderId);
+
+            var date = order.Date;
+            var spec = new CleanersMatchingOrderSpecification(date);
+
+            return await _cleanerRepository.ListAsync(spec);
         }
     }
 }
