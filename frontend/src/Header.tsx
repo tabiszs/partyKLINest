@@ -1,20 +1,26 @@
 import AppBar from '@mui/material/AppBar';
+import { Outlet } from 'react-router-dom';
 import './Header.css';
+import './App.css';
 
 export interface HeaderProps {
   height: string;
-  isLogged: boolean;
 }
 
 const Header = (props: HeaderProps) => {
 
 
   return (
-    <AppBar>
-      <div className='header-content' style={{height: props.height}}>
-        <h1 className='website-name'>PartyKLINer</h1>
+    <div className='App'>
+      <AppBar>
+        <div className='header-content' style={{ height: props.height }}>
+          <h1 className='website-name'>PartyKLINer</h1>
+        </div>
+      </AppBar>
+      <div className='site-container'>
+        <Outlet/>
       </div>
-    </AppBar>
+    </div>
   );
 }
 

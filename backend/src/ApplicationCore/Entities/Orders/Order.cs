@@ -50,7 +50,7 @@ namespace PartyKlinest.ApplicationCore.Entities.Orders
 
         public Opinion? CleanersOpinion { get; private set; }
 
-        public void SetCleanerId(string cleanerId)
+        public void SetCleanerId(string? cleanerId)
         {
             if (cleanerId != null && Status == OrderStatus.Active && CleanerId == null)
             {
@@ -95,6 +95,11 @@ namespace PartyKlinest.ApplicationCore.Entities.Orders
             Address = address;
             Date = date;
             MessLevel = messLevel;
+        }
+
+        public void SetOrderStatus(OrderStatus status)
+        {
+            Status = status;
         }
     }
 }

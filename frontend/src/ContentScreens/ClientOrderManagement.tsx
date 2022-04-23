@@ -13,10 +13,7 @@ const mockOrders: Order[] = [
     maxPrice: 10, minRating: 5.0,
     messLevel: MessLevel.Disaster,
     status: OrderStatus.Cancelled,
-    date: {
-      start: new Date(),
-      end: new Date()
-    },
+    date: new Date(),
     address: emptyAddress(),
     opinionFromCleaner: {rating: 1, comment: ""},
     opinionFromClient: {rating: 1, comment: ""}
@@ -26,10 +23,7 @@ const mockOrders: Order[] = [
     maxPrice: 10000, minRating: 8.0,
     messLevel: MessLevel.Moderate,
     status: OrderStatus.InProgress,
-    date: {
-      start: new Date(),
-      end: new Date()
-    },
+    date: new Date(),
     address: emptyAddress(),
     opinionFromCleaner: {rating: 1, comment: ""},
     opinionFromClient: {rating: 1, comment: ""}
@@ -39,10 +33,7 @@ const mockOrders: Order[] = [
     maxPrice: 500, minRating: 2.0,
     messLevel: MessLevel.Huge,
     status: OrderStatus.Active,
-    date: {
-      start: new Date(),
-      end: new Date()
-    },
+    date: new Date(),
     address: emptyAddress(),
     opinionFromCleaner: {rating: 1, comment: ""},
     opinionFromClient: {rating: 1, comment: ""}
@@ -52,10 +43,7 @@ const mockOrders: Order[] = [
     maxPrice: 2000, minRating: 5.5,
     messLevel: MessLevel.Low,
     status: OrderStatus.Closed,
-    date: {
-      start: new Date(),
-      end: new Date()
-    },
+    date: new Date(),
     address: emptyAddress(),
     opinionFromCleaner: {rating: 1, comment: ""},
     opinionFromClient: {rating: 1, comment: ""}

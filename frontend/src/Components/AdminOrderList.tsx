@@ -2,19 +2,20 @@ import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import Order from '../DataClasses/Order';
 import {messLevelText} from '../DataClasses/MessLevel';
-import {orderStatusText} from '../DataClasses/OrderStatus';
+import OrderStatus, {orderStatusText} from '../DataClasses/OrderStatus';
 import './OrderList.css';
 
 interface CardButtonProps {
   label: string;
   onClick: () => void;
+  color: "inherit" | "primary" | "secondary" | "success" | "error" | "info" | "warning" | undefined;
 }
 
 const CardButton = (props: CardButtonProps) => {
   return (
     <Button
       variant='outlined'
-      color='error'
+      color={props.color}
       onClick={props.onClick}
     >
       {props.label}
@@ -23,10 +24,11 @@ const CardButton = (props: CardButtonProps) => {
 }
 
 interface OrderCardProps {
-  buttonLabel: string;
-  onButtonClick: () => void;
+  deleteButtonLabel: string;
+  assignButtonLabel: string;
+  onDeleteButtonClick: () => void;
+  onAssignButtonClick: () => void;
   order: Order;
-  displayButton: boolean;
 }
 
 const OrderCard = (props: OrderCardProps) => {
@@ -44,11 +46,15 @@ const OrderCard = (props: OrderCardProps) => {
             Poziom bałaganu: {messLevelText(props.order.messLevel)}
             <br />
             Data: {props.order.date.toLocaleString()}
+            <br />
+            {props.order.cleanerId ? "ID sprzątającego: " + props.order.cleanerId! : null}
           </div>
           <div className='card-column'>
-            {props.displayButton
-              ? <CardButton label={props.buttonLabel} onClick={props.onButtonClick} />
-              : null}
+            <CardButton label={props.deleteButtonLabel} onClick={props.onDeleteButtonClick} color="error" />
+            {
+              props.order.cleanerId !== undefined || props.order.status !== OrderStatus.Active ? null
+              : <CardButton label={props.assignButtonLabel} onClick={props.onAssignButtonClick} color="primary" />
+            }
           </div>
         </div>
       </Card>
@@ -57,19 +63,21 @@ const OrderCard = (props: OrderCardProps) => {
 }
 
 export interface OrderListProps {
-  buttonLabel: string;
-  onButtonClick: (order: Order) => void;
+  deleteButtonLabel: string;
+  assignButtonLabel: string;
+  onDeleteButtonClick: (order: Order) => void;
+  onAssignButtonClick: (order: Order) => void;
   orders: Order[];
-  shouldDisplayButton: (order: Order) => boolean;
 }
 
 const OrderList = (props: OrderListProps) => {
   const orderCards = [];
   for (const order of props.orders) {
     orderCards.push(<OrderCard
-      buttonLabel={props.buttonLabel}
-      onButtonClick={() => props.onButtonClick(order)}
-      displayButton={props.shouldDisplayButton(order)}
+      deleteButtonLabel={props.deleteButtonLabel}
+      assignButtonLabel={props.assignButtonLabel}
+      onDeleteButtonClick={() => props.onDeleteButtonClick(order)}
+      onAssignButtonClick={() => props.onAssignButtonClick(order)}
       order={order}
     />);
   }
