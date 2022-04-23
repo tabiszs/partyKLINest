@@ -15,6 +15,7 @@ namespace UnitTests.ApplicationCore.Services.CleanerFacadeTests
     {
         private readonly Mock<IRepository<Order>> _mockOrderRepo = new();
         private readonly Mock<IRepository<Cleaner>> _mockCleanerRepo = new();
+        private readonly Mock<IClientService> _mockClientService = new();
 
         [Fact]
         public async Task ThrowsCleanerNotFoundExceptionWhenThereIsNoCleanerWithGivenId()
@@ -27,7 +28,7 @@ namespace UnitTests.ApplicationCore.Services.CleanerFacadeTests
                 .Setup(x => x.GetByIdAsync(It.IsAny<string>(), default))
                 .ReturnsAsync(returnedCleaner);
             OrderFacade orderFacade = new(_mockOrderRepo.Object);
-            var cleanerFacade = new CleanerFacade(_mockCleanerRepo.Object, orderFacade);
+            var cleanerFacade = new CleanerFacade(_mockCleanerRepo.Object, orderFacade, _mockClientService.Object);
 
             // Act & Assert
             await Assert.ThrowsAsync<CleanerNotFoundException>(
@@ -101,7 +102,7 @@ namespace UnitTests.ApplicationCore.Services.CleanerFacadeTests
                 .ReturnsAsync(expected);
 
             OrderFacade orderFacade = new(_mockOrderRepo.Object);
-            return new CleanerFacade(_mockCleanerRepo.Object, orderFacade);
+            return new CleanerFacade(_mockCleanerRepo.Object, orderFacade, _mockClientService.Object);
         }
     }
 }

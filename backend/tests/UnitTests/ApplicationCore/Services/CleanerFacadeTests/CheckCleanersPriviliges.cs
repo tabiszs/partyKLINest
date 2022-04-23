@@ -15,6 +15,7 @@ namespace UnitTests.ApplicationCore.Services.CleanerFacadeTests
     {
         private readonly Mock<IRepository<Order>> _mockOrderRepo = new();
         private readonly Mock<IRepository<Cleaner>> _mockCleanerRepo = new();
+        private readonly Mock<IClientService> _mockClientService = new();
 
         [Fact]
         public async Task ThrowsWithoutPriviligesExceptionWhenCleanerIsBanned()
@@ -69,7 +70,7 @@ namespace UnitTests.ApplicationCore.Services.CleanerFacadeTests
                 .ReturnsAsync(expected);
 
             OrderFacade orderFacade = new(_mockOrderRepo.Object);
-            return new CleanerFacade(_mockCleanerRepo.Object, orderFacade);
+            return new CleanerFacade(_mockCleanerRepo.Object, orderFacade, _mockClientService.Object);
         }
     }
 }

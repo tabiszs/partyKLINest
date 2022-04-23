@@ -14,6 +14,7 @@ namespace UnitTests.ApplicationCore.Services.CleanerFacadeTests
     {
         private readonly Mock<IRepository<Order>> _mockOrderRepo = new();
         private readonly Mock<IRepository<Cleaner>> _mockCleanerRepo = new();
+        private readonly Mock<IClientService> _mockClientService = new();
 
         [Theory(DisplayName = "Accept Order")]
         [InlineData("localCleanerId22", OrderStatus.Active, "localCleanerId22", OrderStatus.InProgress, "localCleanerId22")]
@@ -153,7 +154,7 @@ namespace UnitTests.ApplicationCore.Services.CleanerFacadeTests
                 .ReturnsAsync(expected);
 
             OrderFacade orderFacade = new(_mockOrderRepo.Object);
-            return new CleanerFacade(_mockCleanerRepo.Object, orderFacade);
+            return new CleanerFacade(_mockCleanerRepo.Object, orderFacade, _mockClientService.Object);
         }
     }
 }
