@@ -27,13 +27,15 @@ public class CleanersMatchingOrderSpecification : Specification<Cleaner>
             .Include(o => o.ScheduleEntries)
             .Where(c => 
                 c.ScheduleEntries.Any(s => 
-                    s.DayOfWeek == date.DayOfWeek && s.Start >= time && s.End <= time)
+                    s.DayOfWeek == date.DayOfWeek && s.Start <= time && s.End >= time)
                 &&
                 c.OrderFilter.MinPrice <= maxPrice
                 &&
                 c.OrderFilter.MaxMessLevel >= messLevel
                 &&
                 c.OrderFilter.MinClientRating <= rating
+                &&
+                c.Status != CleanerStatus.Banned
             );
     }
 }
