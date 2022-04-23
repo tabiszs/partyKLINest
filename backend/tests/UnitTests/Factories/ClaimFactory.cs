@@ -13,14 +13,13 @@ namespace UnitTests.Factories
         public string TestGivenName => "Jan";
         public string TestSurname => "Kowalski";
         public bool TestIsBanned => false;
-        // public string TestProvince => "Mazowieckie";
 
         public Claim CreateWithDefaultValues()
         {
             Address testAddress = AddressFactory.CreateWithDefaultValues();
 
-            return new Claim(extenstion_accountType: TestAccountType, emails: TestEmails, oid: TestObjectID, given_name: TestGivenName, family_name: TestSurname, extension_isBanned: TestIsBanned,
-                city: testAddress.City, country: testAddress.Country, postalCode: testAddress.PostalCode, /*province: TestProvince,*/ streetAddress: AddressConverter.AddressToStreetInfo(testAddress));
+            return new Claim(extension_accountType: TestAccountType, emails: TestEmails, oid: TestObjectID, given_name: TestGivenName, family_name: TestSurname, extension_isBanned: TestIsBanned,
+                city: testAddress.City, country: testAddress.Country, postalCode: testAddress.PostalCode, streetAddress: AddressConverter.AddressToStreetInfo(testAddress));
         }
 
 

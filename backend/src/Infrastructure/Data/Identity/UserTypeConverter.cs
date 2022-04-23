@@ -26,7 +26,7 @@
                 case UserType.Cleaner:
                     return "Cleaner";
                 case UserType.Administrator:
-                    return "Organizer";
+                    return "Administrator";
                 default:
                     throw new ArgumentException("invalid user type");
             }

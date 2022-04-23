@@ -7,16 +7,15 @@ namespace PartyKlinest.Infrastructure.Data.Identity
     /// </summary>
     public class Claim
     {
-        public Claim(string extenstion_accountType, string city, string country, string[] emails, string given_name, bool extension_isBanned, string postalCode, /*string province,*/ string streetAddress, string family_name, string oid)
+        public Claim(string extension_accountType, string city, string country, string[] emails, string given_name, bool extension_isBanned, string postalCode, string streetAddress, string family_name, string oid)
         {
-            this.extension_AccountType = extenstion_accountType;
+            this.extension_AccountType = extension_accountType;
             this.city = city;
             this.country = country;
             this.emails = emails;
             this.given_name = given_name;
             this.extension_isBanned = extension_isBanned;
             this.postalCode = postalCode;
-            //this.province = province;
             this.streetAddress = streetAddress;
             this.family_name = family_name;
             this.oid = oid;
@@ -29,7 +28,6 @@ namespace PartyKlinest.Infrastructure.Data.Identity
         public string given_name { get; }
         public bool extension_isBanned { get; }
         public string postalCode { get; }
-        //public string province { get; }
         public string streetAddress { get; }
         public string family_name { get; }
         public string oid { get; }
