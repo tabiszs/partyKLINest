@@ -1,10 +1,10 @@
 ﻿using Moq;
 using PartyKlinest.ApplicationCore.Entities.Users.Clients;
+using PartyKlinest.ApplicationCore.Exceptions;
 using PartyKlinest.ApplicationCore.Interfaces;
 using PartyKlinest.ApplicationCore.Services;
-using PartyKlinest.ApplicationCore.Exceptions;
-using UnitTests.Factories;
 using System.Threading.Tasks;
+using UnitTests.Factories;
 using Xunit;
 
 namespace UnitTests.ApplicationCore.Services.ClientFacadeTests

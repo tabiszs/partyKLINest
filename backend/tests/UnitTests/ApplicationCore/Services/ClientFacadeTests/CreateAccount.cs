@@ -15,7 +15,7 @@ namespace UnitTests.ApplicationCore.Services.OrderFacadeTests
 
         [Fact]
         public async Task CreatesAccount()
-        { 
+        {
 
             var clientBuilder = new ClientBuilder();
             Client client = clientBuilder.Build();

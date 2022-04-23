@@ -1,8 +1,8 @@
 ﻿using Moq;
 using PartyKlinest.ApplicationCore.Entities.Users.Clients;
+using PartyKlinest.ApplicationCore.Exceptions;
 using PartyKlinest.ApplicationCore.Interfaces;
 using PartyKlinest.ApplicationCore.Services;
-using PartyKlinest.ApplicationCore.Exceptions;
 using System.Threading.Tasks;
 using UnitTests.Factories;
 using Xunit;
