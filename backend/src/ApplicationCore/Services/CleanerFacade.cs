@@ -47,7 +47,7 @@ namespace PartyKlinest.ApplicationCore.Services
             }
 
             order.SetCleanersOpinion(opinion);
-            _orderFacade.CloseOrder(order);            
+            _orderFacade.CloseOrder(order);
         }
         private bool CleanerWithoutPrivileges(Cleaner cleaner, Order order)
         {

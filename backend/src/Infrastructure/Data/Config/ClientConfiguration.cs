@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using PartyKlinest.ApplicationCore.Entities.Users;
+using PartyKlinest.ApplicationCore.Entities.Users.Clients;
 
 namespace PartyKlinest.Infrastructure.Data.Config
 {
@@ -9,7 +9,7 @@ namespace PartyKlinest.Infrastructure.Data.Config
         public void Configure(EntityTypeBuilder<Client> builder)
         {
             builder
-                .Property(x => x.ClientId)
+                .Property(x => x.Id)
                 .HasMaxLength(40);
         }
     }

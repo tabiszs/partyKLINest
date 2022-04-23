@@ -1,6 +1,6 @@
 ﻿using PartyKlinest.ApplicationCore.Entities.Orders.Opinions;
-using PartyKlinest.ApplicationCore.Entities.Users;
 using PartyKlinest.ApplicationCore.Entities.Users.Cleaners;
+using PartyKlinest.ApplicationCore.Entities.Users.Clients;
 using PartyKlinest.ApplicationCore.Interfaces;
 using System;
 
