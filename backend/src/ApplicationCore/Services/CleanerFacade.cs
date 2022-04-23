@@ -1,4 +1,5 @@
-﻿using PartyKlinest.ApplicationCore.Entities.Orders;
+﻿using System;
+using PartyKlinest.ApplicationCore.Entities.Orders;
 using PartyKlinest.ApplicationCore.Entities.Orders.Opinions;
 using PartyKlinest.ApplicationCore.Entities.Users.Cleaners;
 using PartyKlinest.ApplicationCore.Exceptions;
@@ -12,15 +13,18 @@ namespace PartyKlinest.ApplicationCore.Services
 {
     public class CleanerFacade
     {
-        public CleanerFacade(IRepository<Cleaner> cleanerRepository, OrderFacade orderFacade)
+        public CleanerFacade(IRepository<Cleaner> cleanerRepository, OrderFacade orderFacade,
+            IClientService clientService)
         {
             _cleanerRepository = cleanerRepository;
             _orderFacade = orderFacade;
+            _clientService = clientService;
         }
 
         private readonly IRepository<Cleaner> _cleanerRepository;
         private readonly OrderFacade _orderFacade;
-
+        private readonly IClientService _clientService;
+        
         public async Task<List<Order>> GetAssignedOrdersAsync(string cleanerId)
         {
             var cleaner = await GetCleanerInfo(cleanerId);
@@ -172,8 +176,11 @@ namespace PartyKlinest.ApplicationCore.Services
         {
             var order = await _orderFacade.GetOrderAsync(orderId);
 
+            double? clientRating = await _clientService.GetClientRating(order.ClientId);
+            
             var date = order.Date;
-            var spec = new CleanersMatchingOrderSpecification(date);
+            var spec = new CleanersMatchingOrderSpecification(date, order.MessLevel, order.MaxPrice, 
+                clientRating);
 
             return await _cleanerRepository.ListAsync(spec);
         }
