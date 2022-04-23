@@ -32,14 +32,12 @@ namespace PartyKlinest.Infrastructure.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("OrderId"));
 
                     b.Property<string>("CleanerId")
-                        .HasMaxLength(40)
-                        .HasColumnType("character varying(40)")
+                        .HasColumnType("text")
                         .HasColumnName("cleaner_id");
 
                     b.Property<string>("ClientId")
                         .IsRequired()
-                        .HasMaxLength(40)
-                        .HasColumnType("character varying(40)")
+                        .HasColumnType("text")
                         .HasColumnName("client_id");
 
                     b.Property<DateTimeOffset>("Date")
@@ -77,8 +75,7 @@ namespace PartyKlinest.Infrastructure.Migrations
             modelBuilder.Entity("PartyKlinest.ApplicationCore.Entities.Users.Cleaners.Cleaner", b =>
                 {
                     b.Property<string>("CleanerId")
-                        .HasMaxLength(40)
-                        .HasColumnType("character varying(40)")
+                        .HasColumnType("text")
                         .HasColumnName("cleaner_id");
 
                     b.Property<int>("MaxMessLevel")
@@ -113,7 +110,7 @@ namespace PartyKlinest.Infrastructure.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("ScheduleEntryId"));
 
                     b.Property<string>("CleanerId")
-                        .HasColumnType("character varying(40)")
+                        .HasColumnType("text")
                         .HasColumnName("cleaner_id");
 
                     b.Property<int>("DayOfWeek")
@@ -140,8 +137,7 @@ namespace PartyKlinest.Infrastructure.Migrations
             modelBuilder.Entity("PartyKlinest.ApplicationCore.Entities.Users.Client", b =>
                 {
                     b.Property<string>("ClientId")
-                        .HasMaxLength(40)
-                        .HasColumnType("character varying(40)")
+                        .HasColumnType("text")
                         .HasColumnName("client_id");
 
                     b.HasKey("ClientId")
@@ -180,7 +176,7 @@ namespace PartyKlinest.Infrastructure.Migrations
                         .IsRequired()
                         .HasConstraintName("fk_orders_clients_client_id");
 
-                    b.OwnsOne("PartyKlinest.ApplicationCore.Entities.Orders.Address", "Address", b1 =>
+                    b.OwnsOne("PartyKlinest.ApplicationCore.Entities.Orders.Order.Address#PartyKlinest.ApplicationCore.Entities.Orders.Address", "Address", b1 =>
                         {
                             b1.Property<long>("OrderId")
                                 .HasColumnType("bigint")
@@ -204,8 +200,8 @@ namespace PartyKlinest.Infrastructure.Migrations
                                 .HasColumnType("character varying(90)")
                                 .HasColumnName("address_country");
 
-                            b1.Property<int?>("FlatNumber")
-                                .HasColumnType("integer")
+                            b1.Property<string>("FlatNumber")
+                                .HasColumnType("text")
                                 .HasColumnName("address_flat_number");
 
                             b1.Property<string>("PostalCode")
@@ -222,14 +218,14 @@ namespace PartyKlinest.Infrastructure.Migrations
 
                             b1.HasKey("OrderId");
 
-                            b1.ToTable("orders");
+                            b1.ToTable("orders", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("OrderId")
                                 .HasConstraintName("fk_orders_orders_order_id");
                         });
 
-                    b.OwnsOne("PartyKlinest.ApplicationCore.Entities.Orders.Opinions.Opinion", "CleanersOpinion", b1 =>
+                    b.OwnsOne("PartyKlinest.ApplicationCore.Entities.Orders.Order.CleanersOpinion#PartyKlinest.ApplicationCore.Entities.Orders.Opinions.Opinion", "CleanersOpinion", b1 =>
                         {
                             b1.Property<long>("OrderId")
                                 .HasColumnType("bigint")
@@ -246,14 +242,14 @@ namespace PartyKlinest.Infrastructure.Migrations
 
                             b1.HasKey("OrderId");
 
-                            b1.ToTable("orders");
+                            b1.ToTable("orders", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("OrderId")
                                 .HasConstraintName("fk_orders_orders_order_id");
                         });
 
-                    b.OwnsOne("PartyKlinest.ApplicationCore.Entities.Orders.Opinions.Opinion", "ClientsOpinion", b1 =>
+                    b.OwnsOne("PartyKlinest.ApplicationCore.Entities.Orders.Order.ClientsOpinion#PartyKlinest.ApplicationCore.Entities.Orders.Opinions.Opinion", "ClientsOpinion", b1 =>
                         {
                             b1.Property<long>("OrderId")
                                 .HasColumnType("bigint")
@@ -270,7 +266,7 @@ namespace PartyKlinest.Infrastructure.Migrations
 
                             b1.HasKey("OrderId");
 
-                            b1.ToTable("orders");
+                            b1.ToTable("orders", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("OrderId")
