@@ -22,6 +22,7 @@ namespace PartyKlinest.Infrastructure
             services.AddScoped<OrderFacade>();
             services.AddScoped<CleanerFacade>();
             services.AddScoped<ICommissionService, CommissionService>();
+            services.AddScoped<IClientService, ClientService>();
         }
     }
 }
