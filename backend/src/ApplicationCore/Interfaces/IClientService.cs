@@ -9,5 +9,5 @@ public interface IClientService
     /// </summary>
     /// <param name="clientId"></param>
     /// <returns></returns>
-    public Task<double?> GetClientRating(string clientId);
+    public Task<double?> GetAverageClientRatingAsync(string clientId);
 }
