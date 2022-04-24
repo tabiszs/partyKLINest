@@ -13,7 +13,7 @@ internal class ClientService : IClientService
 
     private readonly PartyKlinerDbContext _dbContext;
     
-    public async Task<double?> GetClientRating(string clientId)
+    public async Task<double?> GetAverageClientRatingAsync(string clientId)
     {
         bool hasRatings = await DoesClientHaveRatings(clientId);
         

@@ -176,7 +176,7 @@ namespace PartyKlinest.ApplicationCore.Services
         {
             var order = await _orderFacade.GetOrderAsync(orderId);
 
-            double? clientRating = await _clientService.GetClientRating(order.ClientId);
+            double? clientRating = await _clientService.GetAverageClientRatingAsync(order.ClientId);
             
             var date = order.Date;
             var spec = new CleanersMatchingOrderSpecification(date, order.MessLevel, order.MaxPrice, 
