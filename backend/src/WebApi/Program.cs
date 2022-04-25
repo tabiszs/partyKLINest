@@ -40,6 +40,13 @@ builder.Services.AddControllers()
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("ClientsOnly", policy => policy.RequireClaim("Client"));
+    options.AddPolicy("CleanersOnly", policy => policy.RequireClaim("Cleaner"));
+    options.AddPolicy("AdministratorsOnly", policy => policy.RequireClaim("Administrator"));
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -60,6 +67,7 @@ else
     app.UseCors(CORS_POLICY_PROD);
 }
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
