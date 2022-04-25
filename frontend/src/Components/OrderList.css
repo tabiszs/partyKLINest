@@ -22,3 +22,7 @@
   justify-content: space-around;
   margin: 0.5em 2em;
 }
+
+.opinion-summary {
+  display: inline-block;
+}

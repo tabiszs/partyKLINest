@@ -16,6 +16,7 @@ import OrderDeletion from './ContentScreens/Admin/OrderDeletion';
 import Schedule from './ContentScreens/Cleaner/Schedule';
 import AdminDashboard from './ContentScreens/Admin/AdminDashboard';
 import CleanerDashboard from './ContentScreens/Cleaner/CleanerDashboard';
+import RateOrder from './ContentScreens/RateOrder';
 
 const headerHeight = '6em';
 
