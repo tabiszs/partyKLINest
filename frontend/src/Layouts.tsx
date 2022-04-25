@@ -30,7 +30,7 @@ export const CleanerLayout = (props: LayoutProps) => (
             { label: 'Szczegóły', linkTo: '/schedule' }
         ]}
         bottomButtons={[
-            //{ label: 'Ustawienia', linkTo: '/settings' }, TODO
+            { label: 'Ustawienia', linkTo: '/settings' }, 
             { label: 'Wyloguj', onClick: props.logout }
         ]}
     />

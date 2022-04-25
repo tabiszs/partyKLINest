@@ -11,6 +11,7 @@ import Rating from '@mui/material/Rating';
 import {getCleanerInfo, postCleanerInfo} from '../../Api/endpoints';
 import MessSelector from '../../Components/MessSelector';
 import './Schedule.css';
+import Token from '../../DataClasses/Token';
 
 const scheduleRegEx = /^(...) (\d\d):(\d\d)-(\d\d):(\d\d)$/;
 
@@ -85,9 +86,13 @@ const generateScheduleText = (schedule: ScheduleEntry[]) => {
   return text;
 }
 
-const AvailabilityTable = () => {
+interface AvailabilityTableProps {
+  token: Token;
+}
+
+const AvailabilityTable = (props: AvailabilityTableProps) => {
   // TODO: gdy będzie API to podmienić
-  // const cleanerInfo = getCleanerInfo(/* Jakoś dostać swoje ID */);
+  // const cleanerInfo = getCleanerInfo(props.token.oid);
   // Mock
   let cleanerInfo: CleanerInfo | null = {
     scheduleEntries: [
@@ -219,7 +224,7 @@ const AvailabilityTable = () => {
               minClientRating: minClientRating
             }
             console.log(cleanerInfo);
-            postCleanerInfo('moje ID', cleanerInfo!) // TODO: Jakoś dostać swoje ID
+            postCleanerInfo('moje ID', cleanerInfo!) // TODO: Jakoś dostać swoje ID -> props.token.oid
           }}
         >
           Zatwierdź

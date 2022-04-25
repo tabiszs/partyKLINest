@@ -74,7 +74,8 @@ const App = () => {
           {token?.userType === UserType.Cleaner ?
             <Route path="/" element={<CleanerLayout headerHeight={headerHeight} logout={logout} />}>
               <Route index element={<CleanerDashboard token={token!} />} />
-              <Route path="/schedule" element={<Schedule />} />
+              <Route path="/schedule" element={<Schedule token={token!} />} />
+              <Route path="/settings" element={<ClientSettings token={token!} editProfile={editProfile} deleteProfile={deleteAccount} />} />
             </Route> : ''
           }
           {token?.userType === UserType.Administrator ?
