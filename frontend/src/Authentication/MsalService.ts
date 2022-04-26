@@ -70,3 +70,9 @@ export const GetActiveAccountToken = () => {
     return getTokenFromMsalClaims(GetActiveAccount()?.idTokenClaims as MsalTokenClaims);
 }
 
+export const GetAuthorizationHeader = () => {
+    return msalInstance.acquireTokenSilent({scopes:[]})
+           .then((tokenResponse) => {
+               return { 'Authorization': 'Bearer ' + tokenResponse?.idToken };
+           });
+}
