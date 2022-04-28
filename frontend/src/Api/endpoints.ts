@@ -1,4 +1,4 @@
-import { GetAuthorizationHeader } from '../Authentication/MsalService';
+import { GetRequestHeaders } from '../Authentication/MsalService';
 import CleanerInfo from '../DataClasses/CleanerInfo';
 import Commission from '../DataClasses/Commission';
 import NewOrder from '../DataClasses/NewOrder';
@@ -8,14 +8,14 @@ import UserInfo from '../DataClasses/UserInfo';
 import * as api from './urlProvider';
 
 const get = <T>(address: string) => {
-    return GetAuthorizationHeader()
+    return GetRequestHeaders()
         .then((headers) => fetch(address, { headers }))
         .then((response) => response.json())
         .then((data) => data as T);
 }
 
 const post = (address: string, data?: any) => {
-    return GetAuthorizationHeader()
+    return GetRequestHeaders()
         .then((headers) => fetch(address, {
             method: "POST",
             body: JSON.stringify(data),
@@ -24,7 +24,7 @@ const post = (address: string, data?: any) => {
 }
 
 const del = (address: string) => {
-    return GetAuthorizationHeader()
+    return GetRequestHeaders()
         .then((headers) => fetch(address, {
             method: "DELETE",
             headers
