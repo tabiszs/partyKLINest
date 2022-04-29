@@ -3,7 +3,7 @@ import MessLevel from '../DataClasses/MessLevel';
 import Order from '../DataClasses/Order';
 import Heading from '../Components/Heading';
 import OrderList from '../Components/OrderList';
-import {deleteOrder, getClientOrders} from '../Api/endpoints';
+import {getCleanerOrders, postOrder} from '../Api/endpoints';
 import './ClientOrderManagement.css';
 import {emptyAddress} from '../DataClasses/Address';
 import {useState} from 'react';
@@ -53,7 +53,7 @@ const mockOrders: Order[] = [
 
 const OrderManagement = () => {
   // TODO: gdy będzie gotowe API to zamienić
-  // const orders = getClientOrders();
+  // const orders = getCleanerOrders();
   const orders = mockOrders;
 
   const [open, setOpen] = useState(false);
@@ -78,26 +78,49 @@ const OrderManagement = () => {
       <OrderList
         orders={orders}
 
-        deleteButtonLabel='Anuluj'
-        onDeleteButtonClick={async (order: Order) => {await deleteOrder(order.id)}}
+        deleteButtonLabel='Odrzuć'
+        onDeleteButtonClick={async (order: Order) => {
+          const newOrder = {...order};
+          newOrder.cleanerId = undefined;
+          await postOrder(order.id, newOrder);
+        }}
         shouldDisplayDeleteButton={(order: Order) => order.status === OrderStatus.Active}
+
+        acceptButtonLabel='Akceptuj'
+        onAcceptButtonClick={async (order: Order) => {
+          const newOrder = {...order};
+          newOrder.status = OrderStatus.InProgress;
+          await postOrder(order.id, newOrder);
+        }}
+        shouldDisplayAcceptButton={(order: Order) => order.status === OrderStatus.Active}
 
         showRatingPopup={showRatingPopup}
 
         opinionButtonLabel='Oceń'
         onOpinionButtonClick={showRateOrder}
-        shouldDisplayOpinionButton={(order: Order) => order.opinionFromClient === undefined && order.status === OrderStatus.Closed}
+        shouldDisplayOpinionButton={(order: Order) => order.opinionFromCleaner === undefined && order.status === OrderStatus.Closed}
 
-        acceptButtonLabel=''
-        onAcceptButtonClick={(_) => {}}
-        shouldDisplayAcceptButton={(_) => false}
-
-        closeButtonLabel=''
-        onCloseButtonClick={(_) => {}}
-        shouldDisplayCloseButton={(_) => false}
+        closeButtonLabel='Wykonaj'
+        onCloseButtonClick={async (order: Order) => {
+          const newOrder = {...order};
+          newOrder.status = OrderStatus.Closed;
+          await postOrder(order.id, newOrder);
+        }}
+        shouldDisplayCloseButton={(order: Order) => order.status === OrderStatus.InProgress}
       />
-      <OpinionPopup opinion={rating} open={open} userType={UserType.Client} cancelDialog={() => setOpen(false)} />
-      <RateOrder order={order} userType={UserType.Client} open={ratingOpen} closeDialog={() => setRatingOpen(false)} />
+
+      <OpinionPopup
+        opinion={rating}
+        open={open}
+        userType={UserType.Cleaner}
+        cancelDialog={() => setOpen(false)}
+      />
+      <RateOrder
+        order={order}
+        userType={UserType.Client}
+        open={ratingOpen}
+        closeDialog={() => setRatingOpen(false)}
+      />
     </div>
   );
 };
