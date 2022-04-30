@@ -12,19 +12,19 @@ internal class ClientService : IClientService
     }
 
     private readonly PartyKlinerDbContext _dbContext;
-    
+
     public async Task<double?> GetAverageClientRatingAsync(string clientId)
     {
         bool hasRatings = await DoesClientHaveRatings(clientId);
-        
+
         if (!hasRatings)
         {
             return null;
         }
-        
-        double avg = await 
+
+        double avg = await
             _dbContext.Orders
-                .Where(o => o.CleanersOpinion != null)
+                .Where(o => o.CleanersOpinion != null && o.ClientId == clientId)
                 .AverageAsync(o => o.CleanersOpinion!.Rating);
 
         return avg;
