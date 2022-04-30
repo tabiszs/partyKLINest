@@ -1,10 +1,9 @@
-using System;
-using System.Linq;
 using Ardalis.Specification;
 using PartyKlinest.ApplicationCore.Entities;
-using PartyKlinest.ApplicationCore.Entities.Orders;
 using PartyKlinest.ApplicationCore.Entities.Users.Cleaners;
 using PartyKlinest.ApplicationCore.Extensions;
+using System;
+using System.Linq;
 
 namespace PartyKlinest.ApplicationCore.Specifications;
 
@@ -22,11 +21,11 @@ public class CleanersMatchingOrderSpecification : Specification<Cleaner>
     {
         var time = date.ToTimeOnly();
         double rating = clientRating ?? double.PositiveInfinity;
-        
+
         Query
             .Include(o => o.ScheduleEntries)
-            .Where(c => 
-                c.ScheduleEntries.Any(s => 
+            .Where(c =>
+                c.ScheduleEntries.Any(s =>
                     s.DayOfWeek == date.DayOfWeek && s.Start <= time && s.End >= time)
                 &&
                 c.OrderFilter.MinPrice <= maxPrice
@@ -35,7 +34,7 @@ public class CleanersMatchingOrderSpecification : Specification<Cleaner>
                 &&
                 c.OrderFilter.MinClientRating <= rating
                 &&
-                c.Status != CleanerStatus.Banned
+                c.Status == CleanerStatus.Active
             );
     }
 }
