@@ -1,9 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using PartyKlinest.ApplicationCore.Entities;
 using PartyKlinest.ApplicationCore.Entities.Users.Cleaners;
 using PartyKlinest.ApplicationCore.Specifications;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using Xunit;
 
 namespace UnitTests.ApplicationCore.Specifications;
@@ -29,7 +29,7 @@ public class CleanersMatchingOrderSpecificationTest
         var result = GetCleanersCountForSpec(Monday1830, MessLevel.Low, 10000m, null);
         Assert.Equal(0, result);
     }
-    
+
     [Fact]
     public void MatchesNumberForOrdersMondayLowRequirements()
     {
@@ -76,7 +76,7 @@ public class CleanersMatchingOrderSpecificationTest
         var result = GetCleanersCountForSpec(Monday1615, messLevel, 10000m, null);
         Assert.Equal(expectedCount, result);
     }
-    
+
     private static int GetCleanersCountForSpec(
         DateTimeOffset date,
         MessLevel messLevel,
@@ -177,7 +177,7 @@ public class CleanersMatchingOrderSpecificationTest
                 },
                 new OrderFilter(MessLevel.Moderate, 1, 200m)
             ),
-            new Cleaner("abcdefghijk", CleanerStatus.Registered, new[]
+            new Cleaner("abcdefghijk", CleanerStatus.Active, new[]
                 {
                     new ScheduleEntry(new TimeOnly(16, 00), new TimeOnly(18, 00),
                         DayOfWeek.Monday),
@@ -186,7 +186,7 @@ public class CleanersMatchingOrderSpecificationTest
                 },
                 new OrderFilter(MessLevel.Huge, 5, 20m)
             ),
-            new Cleaner("abc1421", CleanerStatus.Registered, new[]
+            new Cleaner("abc1421", CleanerStatus.Active, new[]
                 {
                     new ScheduleEntry(new TimeOnly(16, 00), new TimeOnly(18, 00),
                         DayOfWeek.Monday),
@@ -212,6 +212,24 @@ public class CleanersMatchingOrderSpecificationTest
                         DayOfWeek.Saturday),
                 },
                 new OrderFilter(MessLevel.Low, 2, 121m)
+            ),
+            new Cleaner("abcdefghijk123", CleanerStatus.Registered, new[]
+                {
+                    new ScheduleEntry(new TimeOnly(16, 00), new TimeOnly(18, 00),
+                        DayOfWeek.Monday),
+                    new ScheduleEntry(new TimeOnly(19, 00), new TimeOnly(20, 00),
+                        DayOfWeek.Monday),
+                },
+                new OrderFilter(MessLevel.Huge, 5, 20m)
+            ),
+            new Cleaner("abc1421123", CleanerStatus.Registered, new[]
+                {
+                    new ScheduleEntry(new TimeOnly(16, 00), new TimeOnly(18, 00),
+                        DayOfWeek.Monday),
+                    new ScheduleEntry(new TimeOnly(19, 00), new TimeOnly(20, 00),
+                        DayOfWeek.Monday),
+                },
+                new OrderFilter(MessLevel.Huge, 3, 25m)
             ),
         };
 
