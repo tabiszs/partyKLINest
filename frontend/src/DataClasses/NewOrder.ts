@@ -1,5 +1,4 @@
 import Address from "./Address";
-import DateTimeOffset from "./DateTimeOffset";
 import MessLevel from "./MessLevel";
 
 interface NewOrder {
@@ -7,7 +6,7 @@ interface NewOrder {
     maxPrice: number;
     minRating: number;
     messLevel: MessLevel;
-    date: DateTimeOffset;
+    date: Date;
     address: Address;
 }
 

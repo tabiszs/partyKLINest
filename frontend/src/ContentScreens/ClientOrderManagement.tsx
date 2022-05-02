@@ -1,11 +1,16 @@
-import Button from '@mui/material/Button';
-import Card from '@mui/material/Card';
-import OrderStatus, {orderStatusText} from '../DataClasses/OrderStatus';
-import MessLevel, {messLevelText} from '../DataClasses/MessLevel';
+import OrderStatus from '../DataClasses/OrderStatus';
+import MessLevel from '../DataClasses/MessLevel';
 import Order from '../DataClasses/Order';
 import Heading from '../Components/Heading';
+import OrderList from '../Components/OrderList';
+import {deleteOrder, getClientOrders} from '../Api/endpoints';
 import './ClientOrderManagement.css';
-import { emptyAddress } from '../DataClasses/Address';
+import {emptyAddress} from '../DataClasses/Address';
+import { useState } from 'react';
+import Rating from '../DataClasses/Rating';
+import OpinionPopup from '../Components/OpinionPopup';
+import UserType from '../DataClasses/UserType';
+import RateOrder from './RateOrder';
 
 const mockOrders: Order[] = [
   {
@@ -13,115 +18,77 @@ const mockOrders: Order[] = [
     maxPrice: 10, minRating: 5.0,
     messLevel: MessLevel.Disaster,
     status: OrderStatus.Cancelled,
-    date: {
-      start: new Date(),
-      end: new Date()
-    },
+    date: new Date(),
     address: emptyAddress(),
-    opinionFromCleaner: {rating: 1, comment: ""},
-    opinionFromClient: {rating:1, comment: ""}
+    opinionFromCleaner: {rating: 1, comment: "abcd"},
+    opinionFromClient: {rating: 1, comment: "dcBA"}
   },
   {
     id: 5, clientId: 'dd', cleanerId: 'st',
     maxPrice: 10000, minRating: 8.0,
     messLevel: MessLevel.Moderate,
     status: OrderStatus.InProgress,
-    date: {
-      start: new Date(),
-      end: new Date()
-    },
+    date: new Date(),
     address: emptyAddress(),
-    opinionFromCleaner: {rating: 1, comment: ""},
-    opinionFromClient: {rating:1, comment: ""}
+    opinionFromClient: {rating: 2, comment: "qwertyuiop"}
   },
   {
     id: 5, clientId: 'dd', cleanerId: 'st',
     maxPrice: 500, minRating: 2.0,
     messLevel: MessLevel.Huge,
     status: OrderStatus.Active,
-    date: {
-      start: new Date(),
-      end: new Date()
-    },
+    date: new Date(),
     address: emptyAddress(),
-    opinionFromCleaner: {rating: 1, comment: ""},
-    opinionFromClient: {rating:1, comment: ""}
+    opinionFromCleaner: {rating: 3, comment: "12345"}
   },
   {
     id: 5, clientId: 'dd', cleanerId: 'st',
     maxPrice: 2000, minRating: 5.5,
     messLevel: MessLevel.Low,
     status: OrderStatus.Closed,
-    date: {
-      start: new Date(),
-      end: new Date()
-    },
+    date: new Date(),
     address: emptyAddress(),
-    opinionFromCleaner: {rating: 1, comment: ""},
-    opinionFromClient: {rating:1, comment: ""}
   },
 ];
 
-const CancelButton = () => {
-  return (
-    <Button
-      variant='outlined'
-      color='error'
-      onClick={() => alert('cancel')}
-    >
-      Anuluj
-    </Button>
-  );
-}
+const OrderManagement = () => {
+  // TODO: gdy będzie gotowe API to zamienić
+  // const orders = getClientOrders();
+  const orders = mockOrders;
 
-const OrderCard = (props: Order) => {
-  return (
-    <div className='order-card'>
-      <Card variant='outlined'>
-        <div className='card-content'>
-          <div className='card-column'>
-            Maksymalna cena: {props.maxPrice}zł
-            <br />
-            Minimalna ocena: {props.minRating}
-            <br />
-            Status: {orderStatusText(props.status)}
-            <br />
-            Poziom bałaganu: {messLevelText(props.messLevel)}
-          </div>
-          <div className='card-column'>
-            {props.status === OrderStatus.Active
-              ? <CancelButton />
-              : null}
-          </div>
-        </div>
-      </Card>
-    </div>
-  );
-}
+  const [open, setOpen] = useState(false);
+  const [rating, setRating] = useState<Rating>({rating:0,comment:""});
+  const [userType, setUserType] = useState<UserType>(UserType.Cleaner);
 
-interface OrderListProps {
-  orders: Order[];
-}
+  const [ratingOpen, setRatingOpen] = useState(false);
+  const [order, setOrder] = useState<Order | undefined>(undefined);
 
-const OrderList = (props: OrderListProps) => {
-  const orderCards = [];
+  const showRatingPopup = (rating: Rating, userType: UserType) => {
+    setRating(rating);
+    setUserType(userType);
+    setOpen(true);
+  }
 
-  for (const order of props.orders) {
-    orderCards.push(<OrderCard {...order} />)
+  const showRateOrder = (order: Order) => {
+    setOrder(order);
+    setRatingOpen(true);
   }
 
   return (
-    <div>
-      {orderCards}
-    </div>
-  );
-}
-
-const OrderManagement = () => {
-  return (
     <div className='order-management-screen'>
       <Heading content='Twoje ogłoszenia' />
-      <OrderList orders={mockOrders} />
+      <OrderList
+        orders={orders}
+        deleteButtonLabel='Anuluj'
+        onDeleteButtonClick={async (order: Order) => {await deleteOrder(order.id)}}
+        shouldDisplayDeleteButton={(order: Order) => order.status === OrderStatus.Active}
+        showRatingPopup={showRatingPopup}
+        opinionButtonLabel='Oceń'
+        onOpinionButtonClick={showRateOrder}
+        shouldDisplayOpinionButton={(order: Order) => order.opinionFromClient === undefined && order.status === OrderStatus.Closed}
+      />
+      <OpinionPopup opinion={rating} open={open} userType={userType} cancelDialog={() => setOpen(false)} />
+      <RateOrder order={order} userType={UserType.Client} open={ratingOpen} closeDialog={() => setRatingOpen(false)} />
     </div>
   );
 };

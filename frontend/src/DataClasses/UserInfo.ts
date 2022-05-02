@@ -1,12 +1,12 @@
-import { stringify } from "querystring";
 import Token from "./Token";
+import UserType from "./UserType";
 
 interface UserInfo {
     oid: string;
     name: string;
     surname: string;
     email: string;
-    accountType: string;
+    accountType: UserType;
     isBanned: boolean;
 }
 

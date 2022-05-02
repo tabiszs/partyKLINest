@@ -13,27 +13,31 @@ const msalConfig = {
 
 const msalInstance = new msal.PublicClientApplication(msalConfig);
 
+const toToken = (response: msal.AuthenticationResult) => {
+    return getTokenFromMsalClaims(response.account?.idTokenClaims as MsalTokenClaims);
+}
+
 export const RetrieveToken = () => {
     return msalInstance.acquireTokenSilent({scopes:[]}).then((tokenResponse) => {
-        if (tokenResponse === null) return undefined;
+        if (tokenResponse === null) return null;
         msalInstance.setActiveAccount(tokenResponse.account);
-        return tokenResponse.accessToken;
+        return toToken(tokenResponse);
     }).catch((error) => {
         console.log(error);
-        return undefined;
+        return null;
     })
 }
 
 export const B2CLogin = async () => {
     try {
         const loginResponse = await msalInstance.loginPopup({scopes:[]});
-        if (loginResponse === null) return undefined;
+        if (loginResponse === null) return null;
         msalInstance.setActiveAccount(loginResponse.account);
-        return loginResponse.accessToken;
+        return toToken(loginResponse);
     } catch (err) {
         // handle error
         console.log(err);
-        return undefined;
+        return null;
     }
 }
 
@@ -46,7 +50,7 @@ export const B2CEditProfile = async () => {
             authority: process.env.REACT_APP_EDIT_PROFILE_USER_FLOW!
         });
         if (loginResponse === null) return null;
-        return loginResponse.account;
+        return toToken(loginResponse);
     } catch (err) {
         console.log(err);
         return null;
@@ -66,3 +70,12 @@ export const GetActiveAccountToken = () => {
     return getTokenFromMsalClaims(GetActiveAccount()?.idTokenClaims as MsalTokenClaims);
 }
 
+export const GetRequestHeaders = () => {
+    return msalInstance.acquireTokenSilent({scopes:[]})
+           .then((tokenResponse) => {
+               return { 
+                   'Authorization': 'Bearer ' + tokenResponse?.idToken,
+                   'Content-Type': 'application/json'
+                };
+           });
+}

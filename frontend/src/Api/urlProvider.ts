@@ -19,6 +19,8 @@ export const getClientOrdersUrl = () => getOrdersUrl() + "Client/"
 
 export const getOrderRateUrl = (orderId: number) => getOrderUrl(orderId) + "/Rate";
 
+export const getOrderMatchingUrl = (orderId: number) => getOrderUrl(orderId) + "/Matching"
+
 export const getUsersUrl = () => apiUrl + "User/"
 
 export const getUserUrl = (userId: string) => getUsersUrl() + userId;

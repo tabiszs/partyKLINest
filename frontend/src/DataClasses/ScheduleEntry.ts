@@ -2,8 +2,8 @@ import DayOfWeek from "./DayOfWeek";
 
 interface ScheduleEntry {
     dayOfWeek: DayOfWeek;
-    start: Date;
-    end: Date;
+    start: string;
+    end: string;
 }
 
 export default ScheduleEntry;

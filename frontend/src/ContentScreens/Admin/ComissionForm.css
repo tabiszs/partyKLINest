@@ -1,0 +1,10 @@
+.comission-container {
+  display: flex;
+  flex-direction: row;
+  justify-items: space-around;
+  align-items: center;
+}
+
+.field-container {
+  margin: 1em;
+}

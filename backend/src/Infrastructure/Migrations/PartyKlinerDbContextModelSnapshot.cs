@@ -78,18 +78,6 @@ namespace PartyKlinest.Infrastructure.Migrations
                         .HasColumnType("text")
                         .HasColumnName("cleaner_id");
 
-                    b.Property<int>("MaxMessLevel")
-                        .HasColumnType("integer")
-                        .HasColumnName("max_mess_level");
-
-                    b.Property<int>("MinClientRating")
-                        .HasColumnType("integer")
-                        .HasColumnName("min_client_rating");
-
-                    b.Property<decimal>("MinPrice")
-                        .HasColumnType("money")
-                        .HasColumnName("min_price");
-
                     b.Property<int>("Status")
                         .HasColumnType("integer")
                         .HasColumnName("status");
@@ -283,6 +271,39 @@ namespace PartyKlinest.Infrastructure.Migrations
                     b.Navigation("Client");
 
                     b.Navigation("ClientsOpinion");
+                });
+
+            modelBuilder.Entity("PartyKlinest.ApplicationCore.Entities.Users.Cleaners.Cleaner", b =>
+                {
+                    b.OwnsOne("PartyKlinest.ApplicationCore.Entities.Users.Cleaners.OrderFilter", "OrderFilter", b1 =>
+                        {
+                            b1.Property<string>("CleanerId")
+                                .HasColumnType("character varying(40)")
+                                .HasColumnName("cleaner_id");
+
+                            b1.Property<int>("MaxMessLevel")
+                                .HasColumnType("integer")
+                                .HasColumnName("order_filter_max_mess_level");
+
+                            b1.Property<int>("MinClientRating")
+                                .HasColumnType("integer")
+                                .HasColumnName("order_filter_min_client_rating");
+
+                            b1.Property<decimal>("MinPrice")
+                                .HasColumnType("money")
+                                .HasColumnName("order_filter_min_price");
+
+                            b1.HasKey("CleanerId");
+
+                            b1.ToTable("cleaners");
+
+                            b1.WithOwner()
+                                .HasForeignKey("CleanerId")
+                                .HasConstraintName("fk_cleaners_cleaners_cleaner_id");
+                        });
+
+                    b.Navigation("OrderFilter")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("PartyKlinest.ApplicationCore.Entities.Users.Cleaners.ScheduleEntry", b =>
