@@ -48,7 +48,7 @@ builder.Services.AddAuthentication();
 
 
 builder.Services.AddAuthentication(sharedopt => sharedopt.DefaultScheme = JwtBearerDefaults.AuthenticationScheme)
-.AddJwtBearer(options => {});
+.AddJwtBearer(options =>{});
 
 builder.Services.AddAuthorization(options =>
 {
@@ -79,12 +79,6 @@ else
 
 app.UseAuthentication();
 app.UseAuthorization();
-
-//app.UseEndpoints(endpoints =>
-//{
-//    endpoints.MapControllers();
-//});
-
 
 app.MapControllers();
 
