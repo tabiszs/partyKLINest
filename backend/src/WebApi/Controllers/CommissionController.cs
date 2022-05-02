@@ -22,7 +22,7 @@ namespace PartyKlinest.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [Authorize(Policy = "CleanerOnly")]
+        [Authorize(Policy = "AdminOnly")]
         public async Task<SetCommissionDTO> GetCommissionAsync()
         {
             decimal commissionValue = await _commissionService.GetCommissionAsync();
@@ -33,7 +33,7 @@ namespace PartyKlinest.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [Authorize(Policy = "CleanerOnly")]
+        [Authorize(Policy = "AdminOnly")]
         public async Task<IActionResult> SetCommissionAsync([FromBody] SetCommissionDTO setCommission)
         {
             await _commissionService.SetCommissionAsync(setCommission.NewProvision);
