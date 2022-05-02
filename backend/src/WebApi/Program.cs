@@ -1,5 +1,7 @@
 using PartyKlinest.Infrastructure;
 using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -40,12 +42,19 @@ builder.Services.AddControllers()
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddAuthorization(options =>
+builder.Services.AddAuthentication();
+
+
+
+
+builder.Services.AddAuthentication(sharedopt => sharedopt.DefaultScheme = JwtBearerDefaults.AuthenticationScheme)
+.AddJwtBearer(options =>
 {
-    options.AddPolicy("ClientsOnly", policy => policy.RequireClaim("Client"));
-    options.AddPolicy("CleanersOnly", policy => policy.RequireClaim("Cleaner"));
-    options.AddPolicy("AdministratorsOnly", policy => policy.RequireClaim("Administrator"));
+
+
 });
+
+builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
@@ -69,6 +78,12 @@ else
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+//app.UseEndpoints(endpoints =>
+//{
+//    endpoints.MapControllers();
+//});
+
 
 app.MapControllers();
 

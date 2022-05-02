@@ -2,6 +2,7 @@
 using PartyKlinest.ApplicationCore.Entities;
 using PartyKlinest.ApplicationCore.Entities.Orders;
 using PartyKlinest.WebApi.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace PartyKlinest.WebApi.Controllers
 {
@@ -51,6 +52,7 @@ namespace PartyKlinest.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Authorize]
         public ActionResult<CleanerInfoDTO> GetCleanerInfo(int cleanerId)
         {
             bool isExisting = cleanerId > 0 && cleanerId < _cleaners.Length;
