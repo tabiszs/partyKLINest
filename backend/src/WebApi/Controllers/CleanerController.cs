@@ -52,7 +52,7 @@ namespace PartyKlinest.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [Authorize]
+        [Authorize(Policy = "CleanerOnly")]
         public ActionResult<CleanerInfoDTO> GetCleanerInfo(int cleanerId)
         {
             bool isExisting = cleanerId > 0 && cleanerId < _cleaners.Length;
@@ -78,6 +78,7 @@ namespace PartyKlinest.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Authorize(Policy = "CleanerOnly")]
         public IActionResult UpdateCleanerInfo(long cleanerId, [FromBody] CleanerInfoDTO cleanerInfo)
         {
             _logger.LogInformation("Update cleaner info. CleanerId: {cleanerId}", cleanerId);
@@ -94,6 +95,7 @@ namespace PartyKlinest.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Authorize(Policy = "CleanerOnly")]
         public ActionResult<IEnumerable<Order>> GetAssignedOrders(int cleanerId)
         {
             return _orders;

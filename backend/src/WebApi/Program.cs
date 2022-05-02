@@ -47,16 +47,15 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddAuthentication();
 
 
-
-
 builder.Services.AddAuthentication(sharedopt => sharedopt.DefaultScheme = JwtBearerDefaults.AuthenticationScheme)
-.AddJwtBearer(options =>
+.AddJwtBearer(options => {});
+
+builder.Services.AddAuthorization(options =>
 {
-
-
+    options.AddPolicy("ClientOnly", policy => policy.RequireClaim("extension_AccountType", "0"));
+    options.AddPolicy("CleanerOnly", policy => policy.RequireClaim("extension_AccountType", "1"));
+    options.AddPolicy("AdminOnly", policy => policy.RequireClaim("extension_AccountType", "2"));
 });
-
-builder.Services.AddAuthorization();
 
 var app = builder.Build();
 

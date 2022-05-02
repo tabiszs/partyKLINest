@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace PartyKlinest.WebApi.Controllers
 {
@@ -24,6 +25,7 @@ namespace PartyKlinest.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Authorize(Policy = "ClientOnly")]
         public IActionResult DeleteClient(int id)
         {
             _logger.LogInformation($"Delete client {id}");

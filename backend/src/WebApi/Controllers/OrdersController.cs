@@ -5,6 +5,7 @@ using PartyKlinest.ApplicationCore.Entities.Users.Cleaners;
 using PartyKlinest.ApplicationCore.Exceptions;
 using PartyKlinest.ApplicationCore.Services;
 using PartyKlinest.WebApi.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace PartyKlinest.WebApi.Controllers
 {
@@ -31,6 +32,7 @@ namespace PartyKlinest.WebApi.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [Authorize(Policy = "CleanerOnly")]
         public async Task<List<Order>> GetOrdersAsync()
         {
             _logger.LogInformation("Getting orders");
@@ -45,6 +47,7 @@ namespace PartyKlinest.WebApi.Controllers
         [HttpGet("Cleaner")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [Authorize(Policy = "CleanerOnly")]
         public async Task<List<Order>> GetAssignedOrdersAsync()
         {
             _logger.LogInformation("Getting assigned orders");
@@ -59,6 +62,7 @@ namespace PartyKlinest.WebApi.Controllers
         [HttpGet("Client")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [Authorize(Policy = "CleanerOnly")]
         public async Task<List<Order>> GetCreatedOrdersAsync()
         {
             _logger.LogInformation("Getting client orders");
@@ -77,6 +81,7 @@ namespace PartyKlinest.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [Authorize(Policy = "CleanerOnly")]
         public async Task<IActionResult> RateOrderAsync(long orderId, [FromBody] Opinion opinion)
         {
             _logger.LogInformation("Rating order");
