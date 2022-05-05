@@ -100,7 +100,7 @@ const OrderManagement = () => {
         onOpinionButtonClick={showRateOrder}
         shouldDisplayOpinionButton={(order: Order) => order.opinionFromCleaner === undefined && order.status === OrderStatus.Closed}
 
-        closeButtonLabel='Wykonaj'
+        closeButtonLabel='Wykonane'
         onCloseButtonClick={async (order: Order) => {
           const newOrder = {...order};
           newOrder.status = OrderStatus.Closed;
@@ -117,7 +117,7 @@ const OrderManagement = () => {
       />
       <RateOrder
         order={order}
-        userType={UserType.Client}
+        userType={UserType.Cleaner}
         open={ratingOpen}
         closeDialog={() => setRatingOpen(false)}
       />
