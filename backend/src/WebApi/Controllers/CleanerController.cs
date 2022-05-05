@@ -34,7 +34,7 @@ namespace PartyKlinest.WebApi.Controllers
         private static readonly Order[] _orders = new[]
         {
             new Order(420.69m, 3, MessLevel.Moderate, new(2019, 2, 2, 1, 23, 12, TimeSpan.Zero), "123",
-                new Address("Poland", "Warsaw", "Krakowska", "1", "1", "1")),
+                new Address("Poland", "Warsaw", "Krakowska", "1", "1", 1)),
         };
 
         public CleanerController(ILogger<CleanerController> logger)

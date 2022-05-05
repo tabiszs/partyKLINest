@@ -2,7 +2,7 @@
 {
     public record Address
     {
-        public Address(string country, string city, string postalCode, string street, string buildingNumber, string? flatNumber = null)
+        public Address(string country, string city, string postalCode, string street, string buildingNumber, int? flatNumber = null)
         {
             Country = country;
             City = city;
@@ -21,7 +21,7 @@
 
         public string Street { get; set; }
         public string BuildingNumber { get; set; }
-        public string? FlatNumber { get; set; }
+        public int? FlatNumber { get; set; }
         public string City { get; set; }
         public string PostalCode { get; set; }
         public string Country { get; set; }
