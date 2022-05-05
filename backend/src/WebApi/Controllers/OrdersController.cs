@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using PartyKlinest.ApplicationCore.Entities.Orders;
 using PartyKlinest.ApplicationCore.Entities.Orders.Opinions;
 using PartyKlinest.ApplicationCore.Entities.Users.Cleaners;
 using PartyKlinest.ApplicationCore.Exceptions;
 using PartyKlinest.ApplicationCore.Services;
+using PartyKlinest.WebApi.Extensions;
 using PartyKlinest.WebApi.Models;
 
 namespace PartyKlinest.WebApi.Controllers
@@ -30,7 +32,9 @@ namespace PartyKlinest.WebApi.Controllers
         /// <returns>All orders.</returns>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [Authorize]
         public async Task<List<Order>> GetOrdersAsync()
         {
             _logger.LogInformation("Getting orders");
@@ -39,12 +43,14 @@ namespace PartyKlinest.WebApi.Controllers
         }
 
         /// <summary>
-        /// Get assigned orders.
+        /// Get orders with assigned cleaners.
         /// </summary>
         /// <returns>Orders with cleaners assigned.</returns>
         [HttpGet("Cleaner")]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [Authorize]
         public async Task<List<Order>> GetAssignedOrdersAsync()
         {
             _logger.LogInformation("Getting assigned orders");
@@ -58,7 +64,9 @@ namespace PartyKlinest.WebApi.Controllers
         /// <returns>Orders which await for assignment.</returns>
         [HttpGet("Client")]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [Authorize]
         public async Task<List<Order>> GetCreatedOrdersAsync()
         {
             _logger.LogInformation("Getting client orders");
@@ -66,20 +74,58 @@ namespace PartyKlinest.WebApi.Controllers
             return await _orderFacade.ListCreatedOrdersAsync();
         }
 
-        // TODO: Missing token with id
         /// <summary>
-        /// 
+        /// Rate order.
         /// </summary>
         /// <param name="orderId"></param>
         /// <param name="opinion"></param>
         /// <returns></returns>
-        [HttpPost("{orderId}/Rate")]
+        [HttpPost("{orderId:long}/Rate")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [Authorize(Policy = "ClientOrCleaner")]
         public async Task<IActionResult> RateOrderAsync(long orderId, [FromBody] Opinion opinion)
         {
-            _logger.LogInformation("Rating order");
+            if (User.IsCleaner())
+            {
+                _logger.LogInformation("Rating order {orderId}. Cleaner's opinion {opinion}", orderId, opinion);
+                try
+                {
+                    await _orderFacade.SubmitOpinionCleanerAsync(orderId, opinion);
+                }
+                catch (OrderNotFoundException)
+                {
+                    return NotFound();
+                }
+                catch (Exception e)
+                {
+                    _logger.LogWarning(e, "Rate order {orderId}", orderId);
+                    return BadRequest();
+                }
+            }
+            else if (User.IsClient())
+            {
+                _logger.LogInformation("Rating order {orderId}. Client's opinion {opinion}", orderId, opinion);
+                try
+                {
+                    await _orderFacade.SubmitOpinionClientAsync(orderId, opinion);
+                }
+                catch (OrderNotFoundException)
+                {
+                    return NotFound();
+                }
+                catch (Exception e)
+                {
+                    _logger.LogWarning(e, "Rate order {orderId}", orderId);
+                    return BadRequest();
+                }
+            }
+            else
+            {
+                return BadRequest();
+            }
             return Ok();
         }
 
@@ -92,7 +138,9 @@ namespace PartyKlinest.WebApi.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [Authorize(Policy = "ClientOnly")]
         public async Task<IActionResult> AddOrderAsync([FromBody] NewOrderDTO newOrder)
         {
             _logger.LogInformation("Adding new order {newOrder}", newOrder);
@@ -102,6 +150,8 @@ namespace PartyKlinest.WebApi.Controllers
 
             try
             {
+                // TODO:
+                //await _clientFacade.AddClientAsync(User.GetOid());
                 await _orderFacade.AddOrderAsync(orderToBeCreated);
             }
             catch (Exception e)
@@ -122,7 +172,9 @@ namespace PartyKlinest.WebApi.Controllers
         [HttpGet("{orderId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Authorize]
         public async Task<ActionResult<Order>> GetOrderInfoAsync(long orderId)
         {
             try
@@ -136,28 +188,40 @@ namespace PartyKlinest.WebApi.Controllers
             }
         }
 
-        // TODO: missing specification
-        //[HttpPost("{orderId}")]
-        //[ProducesResponseType(StatusCodes.Status200OK)]
-        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
-        //[ProducesResponseType(StatusCodes.Status403Forbidden)]
-        //[ProducesResponseType(StatusCodes.Status404NotFound)]
-        //public IActionResult ModifyOrderInfo(int orderId, [FromBody]OrderDTO order)
-        //{
-        //    bool isExisting = orderId > 0 && orderId <= _orders.Length;
+        [HttpPost("{orderId}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Authorize]
+        public async Task<IActionResult> ModifyOrderInfoAsync(long orderId, [FromBody] Order order)
+        {
+            try
+            {
+                await _orderFacade.ModifyOrderAsync(orderId, order.ClientId, order.CleanerId,
+                    order.Status, order.MaxPrice, order.MinCleanerRating, order.Date,
+                    order.Address, order.MessLevel);
+            }
+            catch (OrderNotFoundException)
+            {
+                return NotFound();
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Modify order info {orderId} exception", orderId);
+                return BadRequest();
+            }
 
-        //    if (!isExisting)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    return Ok();
-        //}
+            return Ok();
+        }
 
         [HttpDelete(template: "{orderId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Authorize]
         public async Task<IActionResult> DeleteOrderAsync(long orderId)
         {
             try
@@ -173,8 +237,10 @@ namespace PartyKlinest.WebApi.Controllers
 
         [HttpGet("{orderId}/Matching")]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Authorize]
         public async Task<ActionResult<List<Cleaner>>> ListCleanersMatchingOrder(long orderId)
         {
             try
