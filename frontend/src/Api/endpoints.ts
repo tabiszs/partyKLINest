@@ -1,4 +1,4 @@
-import { GetRequestHeaders } from '../Authentication/MsalService';
+import {GetRequestHeaders} from '../Authentication/MsalService';
 import CleanerInfo from '../DataClasses/CleanerInfo';
 import Commission from '../DataClasses/Commission';
 import NewOrder from '../DataClasses/NewOrder';
@@ -8,27 +8,27 @@ import UserInfo from '../DataClasses/UserInfo';
 import * as api from './urlProvider';
 
 const get = <T>(address: string) => {
-    return GetRequestHeaders()
-        .then((headers) => fetch(address, { headers }))
-        .then((response) => response.json())
-        .then((data) => data as T);
+  return GetRequestHeaders()
+    .then((headers) => fetch(address, {headers}))
+    .then((response) => response.json())
+    .then((data) => data as T);
 }
 
 const post = (address: string, data?: any) => {
-    return GetRequestHeaders()
-        .then((headers) => fetch(address, {
-            method: "POST",
-            body: JSON.stringify(data),
-            headers
-        }));
+  return GetRequestHeaders()
+    .then((headers) => fetch(address, {
+      method: "POST",
+      body: JSON.stringify(data),
+      headers
+    }));
 }
 
 const del = (address: string) => {
-    return GetRequestHeaders()
-        .then((headers) => fetch(address, {
-            method: "DELETE",
-            headers
-        }));
+  return GetRequestHeaders()
+    .then((headers) => fetch(address, {
+      method: "DELETE",
+      headers
+    }));
 }
 
 export const getAllOrders = () => get<Order[]>(api.getOrdersUrl());
