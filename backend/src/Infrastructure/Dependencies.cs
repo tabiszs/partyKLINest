@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Identity.Web;
@@ -26,14 +25,11 @@ namespace PartyKlinest.Infrastructure
 
             JwtSecurityTokenHandler.DefaultMapInboundClaims = false;
 
-            services.Configure<JwtBearerOptions>(JwtBearerDefaults.AuthenticationScheme, options =>
-            {
-            });
-
             services.AddAuthorization(options =>
             {
                 options.AddPolicy("ClientOnly", policy => policy.RequireClaim("extension_AccountType", "0"));
                 options.AddPolicy("CleanerOnly", policy => policy.RequireClaim("extension_AccountType", "1"));
+                options.AddPolicy("ClientOrCleaner", policy => policy.RequireClaim("extension_AccountType", "0", "1"));
                 options.AddPolicy("AdminOnly", policy => policy.RequireClaim("extension_AccountType", "2"));
             });
 
