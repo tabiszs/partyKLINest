@@ -20,7 +20,9 @@ namespace PartyKlinest.Infrastructure
             services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
             services.AddScoped(typeof(IReadRepository<>), typeof(EfRepository<>));
             services.AddScoped<OrderFacade>();
+            services.AddScoped<CleanerFacade>();
             services.AddScoped<ICommissionService, CommissionService>();
+            services.AddScoped<IClientService, ClientService>();
         }
     }
 }

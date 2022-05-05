@@ -15,6 +15,7 @@ namespace UnitTests.ApplicationCore.Services.CleanerFacadeTests
     {
         private readonly Mock<IRepository<Order>> _mockOrderRepo = new();
         private readonly Mock<IRepository<Cleaner>> _mockCleanerRepo = new();
+        private readonly Mock<IClientService> _mockClientService = new();
 
         [Theory(DisplayName = "Make 1 Update: shedule")]
         [InlineData(CleanerStatus.Active, CleanerStatus.Active)]
@@ -40,7 +41,7 @@ namespace UnitTests.ApplicationCore.Services.CleanerFacadeTests
                 .Setup(x => x.GetByIdAsync(It.IsAny<string>(), default))
                 .ReturnsAsync(localCleaner);
             OrderFacade orderFacade = new(_mockOrderRepo.Object);
-            var cleanerFacade = new CleanerFacade(_mockCleanerRepo.Object, orderFacade);
+            var cleanerFacade = new CleanerFacade(_mockCleanerRepo.Object, orderFacade, _mockClientService.Object);
 
             // Act
             await cleanerFacade.UpdateCleanerAsync(sentCleaner);
