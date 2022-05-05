@@ -192,8 +192,8 @@ namespace PartyKlinest.Infrastructure.Migrations
                                 .HasColumnType("character varying(90)")
                                 .HasColumnName("address_country");
 
-                            b1.Property<string>("FlatNumber")
-                                .HasColumnType("text")
+                            b1.Property<int?>("FlatNumber")
+                                .HasColumnType("integer")
                                 .HasColumnName("address_flat_number");
 
                             b1.Property<string>("PostalCode")
