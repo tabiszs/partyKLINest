@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using PartyKlinest.WebApi.Models;
 
 namespace PartyKlinest.WebApi.Controllers
@@ -26,7 +25,7 @@ namespace PartyKlinest.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public IActionResult Rate(int id, [FromBody]AddRatingDTO addRating)
+        public IActionResult Rate(int id, [FromBody] AddRatingDTO addRating)
         {
             return Ok();
         }
