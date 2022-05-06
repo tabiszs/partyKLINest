@@ -1,5 +1,6 @@
 ﻿using Moq;
 using PartyKlinest.ApplicationCore.Entities.Orders;
+using PartyKlinest.ApplicationCore.Entities.Users;
 using PartyKlinest.ApplicationCore.Exceptions;
 using PartyKlinest.ApplicationCore.Interfaces;
 using PartyKlinest.ApplicationCore.Services;
@@ -11,6 +12,7 @@ namespace UnitTests.ApplicationCore.Services.OrderFacadeTests
 {
     public class SubmitOpinionCleaner
     {
+        private readonly Mock<IRepository<Client>> _mockClientRepo = new();
         private readonly Mock<IRepository<Order>> _mockOrderRepo = new();
 
         [Fact]
@@ -23,7 +25,7 @@ namespace UnitTests.ApplicationCore.Services.OrderFacadeTests
 
             _mockOrderRepo.Setup(x => x.GetByIdAsync(It.IsAny<long>(), default)).ReturnsAsync(returnedOrder);
 
-            var orderFacade = new OrderFacade(_mockOrderRepo.Object);
+            var orderFacade = new OrderFacade(_mockOrderRepo.Object, _mockClientRepo.Object);
 
             await Assert.ThrowsAsync<OrderNotFoundException>(() => orderFacade.SubmitOpinionCleanerAsync(orderId, opinion));
         }
@@ -43,7 +45,7 @@ namespace UnitTests.ApplicationCore.Services.OrderFacadeTests
 
             Assert.Null(order.CleanersOpinion);
 
-            var orderFacade = new OrderFacade(_mockOrderRepo.Object);
+            var orderFacade = new OrderFacade(_mockOrderRepo.Object, _mockClientRepo.Object);
             await orderFacade.SubmitOpinionCleanerAsync(orderId, opinion);
 
             _mockOrderRepo.Verify(x =>

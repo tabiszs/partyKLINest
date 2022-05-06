@@ -150,8 +150,6 @@ namespace PartyKlinest.WebApi.Controllers
 
             try
             {
-                // TODO:
-                //await _clientFacade.AddClientAsync(User.GetOid());
                 await _orderFacade.AddOrderAsync(orderToBeCreated);
             }
             catch (Exception e)

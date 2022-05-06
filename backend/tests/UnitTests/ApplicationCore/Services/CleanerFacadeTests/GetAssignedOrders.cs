@@ -1,6 +1,7 @@
 ﻿using Ardalis.Specification;
 using Moq;
 using PartyKlinest.ApplicationCore.Entities.Orders;
+using PartyKlinest.ApplicationCore.Entities.Users;
 using PartyKlinest.ApplicationCore.Entities.Users.Cleaners;
 using PartyKlinest.ApplicationCore.Exceptions;
 using PartyKlinest.ApplicationCore.Interfaces;
@@ -16,6 +17,7 @@ namespace UnitTests.ApplicationCore.Services.CleanerFacadeTests
     {
         private readonly Mock<IRepository<Order>> _mockOrderRepo = new();
         private readonly Mock<IRepository<Cleaner>> _mockCleanerRepo = new();
+        private readonly Mock<IRepository<Client>> _mockClientRepo = new();
         private readonly Mock<IClientService> _mockClientService = new();
 
         [Fact]
@@ -26,7 +28,7 @@ namespace UnitTests.ApplicationCore.Services.CleanerFacadeTests
             _mockCleanerRepo
                 .Setup(x => x.GetByIdAsync(It.IsAny<string>(), default))
                 .ReturnsAsync(returnedCleaner);
-            OrderFacade orderFacade = new(_mockOrderRepo.Object);
+            OrderFacade orderFacade = new(_mockOrderRepo.Object, _mockClientRepo.Object);
             var cleanerFacade = new CleanerFacade(_mockCleanerRepo.Object, orderFacade, _mockClientService.Object);
 
             // Act & Assert
@@ -52,7 +54,7 @@ namespace UnitTests.ApplicationCore.Services.CleanerFacadeTests
                 .ReturnsAsync(expected);
 
             // Act
-            OrderFacade orderFacade = new(_mockOrderRepo.Object);
+            OrderFacade orderFacade = new(_mockOrderRepo.Object, _mockClientRepo.Object);
             var cleanerFacade = new CleanerFacade(_mockCleanerRepo.Object, orderFacade, _mockClientService.Object);
 
             var results = await cleanerFacade.GetAssignedOrdersAsync(cleanerId);

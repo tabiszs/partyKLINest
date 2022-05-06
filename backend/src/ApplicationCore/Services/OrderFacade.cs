@@ -1,6 +1,7 @@
 ﻿using PartyKlinest.ApplicationCore.Entities;
 using PartyKlinest.ApplicationCore.Entities.Orders;
 using PartyKlinest.ApplicationCore.Entities.Orders.Opinions;
+using PartyKlinest.ApplicationCore.Entities.Users;
 using PartyKlinest.ApplicationCore.Exceptions;
 using PartyKlinest.ApplicationCore.Interfaces;
 using System;
@@ -11,12 +12,15 @@ namespace PartyKlinest.ApplicationCore.Services
 {
     public class OrderFacade
     {
-        public OrderFacade(IRepository<Order> orderRepository)
+        public OrderFacade(IRepository<Order> orderRepository, IRepository<Client> clientRepository)
         {
             _orderRepository = orderRepository;
+            _clientRepository = clientRepository;
         }
 
         private readonly IRepository<Order> _orderRepository;
+        private readonly IRepository<Client> _clientRepository;
+
         private const OrderStatus closedOrder = OrderStatus.Closed;
 
         public async Task<Order> GetOrderAsync(long orderId)
@@ -45,6 +49,15 @@ namespace PartyKlinest.ApplicationCore.Services
 
         public async Task<Order> AddOrderAsync(Order order)
         {
+            var oid = order.ClientId;
+
+            bool clientExists = await _clientRepository.GetByIdAsync(oid) != null;
+            if (!clientExists)
+            {
+                var client = new Client(oid);
+                await _clientRepository.AddAsync(client);
+            }
+
             return await _orderRepository.AddAsync(order);
         }
 
