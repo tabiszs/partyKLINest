@@ -43,35 +43,37 @@ namespace PartyKlinest.WebApi.Controllers
         }
 
         /// <summary>
-        /// Get orders with assigned cleaners.
+        /// Get orders with assigned for cleaner calling this endpoint.
         /// </summary>
-        /// <returns>Orders with cleaners assigned.</returns>
+        /// <returns>Orders assigned to cleaner.</returns>
         [HttpGet("Cleaner")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [Authorize]
+        [Authorize(Policy = "CleanerOnly")]
         public async Task<List<Order>> GetAssignedOrdersAsync()
         {
-            _logger.LogInformation("Getting assigned orders");
+            var cleanerId = User.GetOid();
+            _logger.LogInformation("Getting assigned orders for cleaner {cleanerId}", cleanerId);
 
-            return await _orderFacade.ListAssignedOrdersAsync();
+            return await _orderFacade.ListAssignedOrdersToAsync(cleanerId);
         }
 
         /// <summary>
-        /// Get created orders.
+        /// Get orders created by client calling this endpoint.
         /// </summary>
-        /// <returns>Orders which await for assignment.</returns>
+        /// <returns>Orders created by client calling this endpoint</returns>
         [HttpGet("Client")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [Authorize]
+        [Authorize(Policy = "ClientOnly")]
         public async Task<List<Order>> GetCreatedOrdersAsync()
         {
-            _logger.LogInformation("Getting client orders");
+            var clientId = User.GetOid();
+            _logger.LogInformation("Getting orders for client {clientId}", clientId);
 
-            return await _orderFacade.ListCreatedOrdersAsync();
+            return await _orderFacade.ListCreatedOrdersByAsync(clientId);
         }
 
         /// <summary>
@@ -186,6 +188,12 @@ namespace PartyKlinest.WebApi.Controllers
             }
         }
 
+        /// <summary>
+        /// Modify order.
+        /// </summary>
+        /// <param name="orderId"></param>
+        /// <param name="order"></param>
+        /// <returns></returns>
         [HttpPost("{orderId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -214,6 +222,11 @@ namespace PartyKlinest.WebApi.Controllers
             return Ok();
         }
 
+        /// <summary>
+        /// Delete order from database.
+        /// </summary>
+        /// <param name="orderId"></param>
+        /// <returns></returns>
         [HttpDelete(template: "{orderId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -233,6 +246,11 @@ namespace PartyKlinest.WebApi.Controllers
             }
         }
 
+        /// <summary>
+        /// Get list of cleaners that match the criteria for the order.
+        /// </summary>
+        /// <param name="orderId"></param>
+        /// <returns></returns>
         [HttpGet("{orderId}/Matching")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]

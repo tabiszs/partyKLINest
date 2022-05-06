@@ -90,6 +90,12 @@ namespace PartyKlinest.ApplicationCore.Services
             return await _orderRepository.ListAsync(spec);
         }
 
+        public async Task<List<Order>> ListCreatedOrdersByAsync(string clientId)
+        {
+            var spec = new Specifications.OrdersCreatedBySpecification(clientId);
+            return await _orderRepository.ListAsync(spec);
+        }
+
         public async Task ModifyOrderAsync(long orderId,
             string newClientId, string? newCleanerId,
             OrderStatus newOrderStatus, decimal newMaxPrice,
