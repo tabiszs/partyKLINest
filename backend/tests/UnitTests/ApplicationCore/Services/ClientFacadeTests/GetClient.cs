@@ -1,7 +1,9 @@
 ﻿using Moq;
 using PartyKlinest.ApplicationCore.Entities.Users.Clients;
+using PartyKlinest.ApplicationCore.Entities.Orders;
 using PartyKlinest.ApplicationCore.Interfaces;
 using PartyKlinest.ApplicationCore.Services;
+using PartyKlinest.ApplicationCore.Exceptions;
 using System.Threading.Tasks;
 using UnitTests.Factories;
 using Xunit;
@@ -11,16 +13,18 @@ namespace UnitTests.ApplicationCore.Services.OrderFacadeTests
     public class GetClient
     {
         private readonly Mock<IRepository<Client>> _mockClientRepo = new();
+        private readonly Mock<IRepository<Order>> _mockOrderRepo = new();
 
         [Fact]
-        public async Task ReturnsNullWhenThereIsNoClientWithGivenId()
+        public async Task ThrowsCleanerNotFoundExceptionWhenThereIsNoClientWithGivenId()
         {
             Client? returnedClient = null;
             _mockClientRepo.Setup(x => x.GetByIdAsync(It.IsAny< string>(), default)).ReturnsAsync(returnedClient);
 
-            var clientFacade = new ClientFacade(_mockClientRepo.Object);
+            OrderFacade orderFacade = new(_mockOrderRepo.Object);
+            var clientFacade = new ClientFacade(_mockClientRepo.Object, orderFacade);
 
-            Assert.Null(await clientFacade.GetClientAsync("1"));
+            await Assert.ThrowsAsync<ClientNotFoundException>(() => clientFacade.GetClientAsync("1"));
         }
 
         [Fact]
@@ -30,9 +34,10 @@ namespace UnitTests.ApplicationCore.Services.OrderFacadeTests
             clientBuilder.GetWithDefaultValues();
             Client? expected = clientBuilder.Build();
 
+            OrderFacade orderFacade = new(_mockOrderRepo.Object);
             _mockClientRepo.Setup(x => x.GetByIdAsync(It.IsAny<string>(), default)).ReturnsAsync(expected);
 
-            var clientFacade = new ClientFacade(_mockClientRepo.Object);
+            var clientFacade = new ClientFacade(_mockClientRepo.Object, orderFacade);
 
             var result = await clientFacade.GetClientAsync(clientBuilder.TestId);
             Assert.Equal(expected, result);

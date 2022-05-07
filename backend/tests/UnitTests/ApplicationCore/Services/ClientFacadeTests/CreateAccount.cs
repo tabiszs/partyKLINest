@@ -1,5 +1,6 @@
 ﻿using Moq;
 using PartyKlinest.ApplicationCore.Entities.Users.Clients;
+using PartyKlinest.ApplicationCore.Entities.Orders;
 using PartyKlinest.ApplicationCore.Interfaces;
 using PartyKlinest.ApplicationCore.Services;
 using System.Threading.Tasks;
@@ -11,7 +12,7 @@ namespace UnitTests.ApplicationCore.Services.OrderFacadeTests
     public class CreateAccount
     {
         private readonly Mock<IRepository<Client>> _mockClientRepo = new();
-
+        private readonly Mock<IRepository<Order>> _mockOrderRepo = new();
 
         [Fact]
         public async Task CreatesAccount()
@@ -24,7 +25,8 @@ namespace UnitTests.ApplicationCore.Services.OrderFacadeTests
                 .Setup(x => x.AddAsync(It.IsAny<Client>(), default))
                 .ReturnsAsync(client);
 
-            var clientFacade = new ClientFacade(_mockClientRepo.Object);
+            OrderFacade orderFacade = new(_mockOrderRepo.Object);
+            var clientFacade = new ClientFacade(_mockClientRepo.Object, orderFacade);
 
             await clientFacade.CreateAccountAsync(client);
 

@@ -1,5 +1,6 @@
 ﻿using Moq;
 using PartyKlinest.ApplicationCore.Entities.Users.Clients;
+using PartyKlinest.ApplicationCore.Entities.Orders;
 using PartyKlinest.ApplicationCore.Interfaces;
 using PartyKlinest.ApplicationCore.Services;
 using System.Threading.Tasks;
@@ -13,6 +14,7 @@ namespace UnitTests.ApplicationCore.Services.OrderFacadeTests
     public class GetClients
     {
         private readonly Mock<IRepository<Client>> _mockClientRepo = new();
+        private readonly Mock<IRepository<Order>> _mockOrderRepo = new();
 
         [Fact]
         public async Task ReturnsAllClients()
@@ -31,12 +33,11 @@ namespace UnitTests.ApplicationCore.Services.OrderFacadeTests
 
             _mockClientRepo.Setup(x => x.ListAsync(It.IsAny<Specification<Client>>(), default)).ReturnsAsync(expected);
 
-            var clientFacade = new ClientFacade(_mockClientRepo.Object);
+            OrderFacade orderFacade = new(_mockOrderRepo.Object);
+            var clientFacade = new ClientFacade(_mockClientRepo.Object, orderFacade);
             var results = await clientFacade.GetClientsAsync();
 
-            // TODO: fix test
-            // Assert.Equal(expected, result);
-            Assert.Equal(expected, expected);
+            Assert.Equal(expected, results);
         }
     }
 }

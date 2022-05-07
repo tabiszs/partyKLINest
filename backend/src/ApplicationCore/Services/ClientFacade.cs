@@ -1,6 +1,7 @@
 ﻿using PartyKlinest.ApplicationCore.Entities.Users.Clients;
 using PartyKlinest.ApplicationCore.Exceptions;
 using PartyKlinest.ApplicationCore.Interfaces;
+using PartyKlinest.ApplicationCore.Entities.Orders;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 
@@ -8,16 +9,23 @@ namespace PartyKlinest.ApplicationCore.Services
 {
     public class ClientFacade
     {
-        public ClientFacade(IRepository<Client> clientRepository)
+        public ClientFacade(IRepository<Client> clientRepository, OrderFacade orderFacade)
         {
             _clientRepository = clientRepository;
+            _orderFacade = orderFacade;
         }
 
         private readonly IRepository<Client> _clientRepository;
+        private readonly OrderFacade _orderFacade;
 
-        public async Task<Client?> GetClientAsync(string clientId)
+        public async Task<Client> GetClientAsync(string clientId)
         {
-            return await _clientRepository.GetByIdAsync(clientId);
+            var client = await _clientRepository.GetByIdAsync(clientId);
+            if (client is null)
+            {
+                throw new ClientNotFoundException(clientId);
+            }
+            return client;
 
         }
 
@@ -68,6 +76,12 @@ namespace PartyKlinest.ApplicationCore.Services
         public async Task<List<Client>> GetClientsAsync()
         {
             return await _clientRepository.ListAsync();
+        }
+
+        public async Task<List<Order>> GetCreatedOrdersAsync(string cleanerId)
+        {
+            var client = await GetClientAsync(cleanerId);
+            return await _orderFacade.ListAssignedOrdersToAsync(client.ClientId);
         }
 
     }
