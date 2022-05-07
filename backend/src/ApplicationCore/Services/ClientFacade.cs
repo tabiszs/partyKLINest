@@ -2,6 +2,7 @@
 using PartyKlinest.ApplicationCore.Exceptions;
 using PartyKlinest.ApplicationCore.Interfaces;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace PartyKlinest.ApplicationCore.Services
 {
@@ -14,7 +15,7 @@ namespace PartyKlinest.ApplicationCore.Services
 
         private readonly IRepository<Client> _clientRepository;
 
-        public async Task<Client?> GetClientAsync(long clientId)
+        public async Task<Client?> GetClientAsync(string clientId)
         {
             return await _clientRepository.GetByIdAsync(clientId);
 
@@ -25,7 +26,7 @@ namespace PartyKlinest.ApplicationCore.Services
             return await _clientRepository.AddAsync(client);
         }
 
-        public async Task EditProfileAsync(long clientId, PersonalInfo personalInfo)
+        public async Task EditProfileAsync(string clientId, PersonalInfo personalInfo)
         {
             Client? client = await GetClientAsync(clientId);
 
@@ -39,7 +40,7 @@ namespace PartyKlinest.ApplicationCore.Services
 
         }
 
-        public async Task DeleteAccountAsync(long clientId)
+        public async Task DeleteAccountAsync(string clientId)
         {
             Client? client = await GetClientAsync(clientId);
 
@@ -49,6 +50,24 @@ namespace PartyKlinest.ApplicationCore.Services
             }
 
             await _clientRepository.DeleteAsync(client);
+        }
+
+        public async Task BanClientAsync(string clientId)
+        {
+            Client? client = await GetClientAsync(clientId);
+
+            if (client == null)
+            {
+                throw new ClientNotFoundException(clientId);
+            }
+
+            client.IsBanned = true;
+            await _clientRepository.UpdateAsync(client);
+        }
+
+        public async Task<List<Client>> GetClientsAsync()
+        {
+            return await _clientRepository.ListAsync();
         }
 
     }

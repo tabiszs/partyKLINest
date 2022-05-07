@@ -16,21 +16,21 @@ namespace UnitTests.ApplicationCore.Services.OrderFacadeTests
         public async Task ReturnsNullWhenThereIsNoClientWithGivenId()
         {
             Client? returnedClient = null;
-            _mockClientRepo.Setup(x => x.GetByIdAsync(It.IsAny<long>(), default)).ReturnsAsync(returnedClient);
+            _mockClientRepo.Setup(x => x.GetByIdAsync(It.IsAny< string>(), default)).ReturnsAsync(returnedClient);
 
             var clientFacade = new ClientFacade(_mockClientRepo.Object);
 
-            Assert.Null(await clientFacade.GetClientAsync(1));
+            Assert.Null(await clientFacade.GetClientAsync("1"));
         }
 
         [Fact]
-        public async Task ReturnsOrderIfItExistsInRepo()
+        public async Task ReturnsClientIfItExistsInRepo()
         {
             var clientBuilder = new ClientBuilder();
             clientBuilder.GetWithDefaultValues();
             Client? expected = clientBuilder.Build();
 
-            _mockClientRepo.Setup(x => x.GetByIdAsync(It.IsAny<long>(), default)).ReturnsAsync(expected);
+            _mockClientRepo.Setup(x => x.GetByIdAsync(It.IsAny<string>(), default)).ReturnsAsync(expected);
 
             var clientFacade = new ClientFacade(_mockClientRepo.Object);
 

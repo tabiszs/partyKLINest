@@ -12,17 +12,19 @@ namespace PartyKlinest.ApplicationCore.Entities.Users.Clients
 
         }
 
-        public long Id { get; private set; }
+        public string ClientId { get; private set; }
         public string Login { get; private set; }
         public PersonalInfo PersonalInfo { get; set; }
-        public Address Address { get; private set; }
+        public Address Address { get; set; }
+        public bool IsBanned { get; set; }
 
-        public Client(long id, string login, PersonalInfo personalInfo, Address address)
+        public Client(string clientId, string login, PersonalInfo personalInfo, Address address)
         {
-            Id = id;
+            ClientId = clientId;
             Login = login;
             Address = address;
             PersonalInfo = personalInfo;
         }
+
     }
 }

@@ -7,7 +7,7 @@ namespace UnitTests.Factories
         private Client _client;
         private readonly AddressFactory _addressFactory = new AddressFactory();
         private readonly PersonalInfoFactory _personalInfoFactory = new PersonalInfoFactory();
-        public long TestId = 123456789;
+        public string TestId = "123456789";
         public string TestLogin = "abc123456789";
 
         public ClientBuilder(AddressFactory addressFactory, PersonalInfoFactory personalInfoFactory)

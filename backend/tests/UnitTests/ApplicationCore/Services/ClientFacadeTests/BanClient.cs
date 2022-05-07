@@ -9,7 +9,7 @@ using Xunit;
 
 namespace UnitTests.ApplicationCore.Services.ClientFacadeTests
 {
-    public class EditProfile
+    public class BanClient
     {
         private readonly Mock<IRepository<Client>> _mockClientRepo = new();
 
@@ -36,26 +36,20 @@ namespace UnitTests.ApplicationCore.Services.ClientFacadeTests
 
             var clientFacade = new ClientFacade(_mockClientRepo.Object);
 
-            var personalInfoFactory = new PersonalInfoFactory();
-            var newPersonalInfo = personalInfoFactory.CreateWithDefaultValues();
-
-            await clientFacade.EditProfileAsync("1", newPersonalInfo);
+            await clientFacade.BanClientAsync("1");
 
             _mockClientRepo.Verify(x => x.GetByIdAsync(It.IsAny<string>(), default), Times.Once);
         }
 
         [Fact]
-        public async Task SavesNewClientToRepo()
+        public async Task SavesClientToRepo()
         {
             Client? returnedClient = new ClientBuilder().Build();
             _mockClientRepo.Setup(x => x.GetByIdAsync(It.IsAny<string>(), default)).ReturnsAsync(returnedClient);
 
             var clientFacade = new ClientFacade(_mockClientRepo.Object);
 
-            var personalInfoFactory = new PersonalInfoFactory();
-            var newPersonalInfo = personalInfoFactory.CreateWithDefaultValues();
-
-            await clientFacade.EditProfileAsync("1", newPersonalInfo);
+            await clientFacade.BanClientAsync("1");
 
             _mockClientRepo.Verify(x => x.UpdateAsync(It.IsAny<Client>(), default), Times.Once);
         }

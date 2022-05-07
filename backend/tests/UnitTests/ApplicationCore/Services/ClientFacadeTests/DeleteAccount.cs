@@ -18,10 +18,10 @@ namespace UnitTests.ApplicationCore.Services.ClientFacadeTests
         {
             var clientBuilder = new ClientBuilder();
             Client? returnedClient = null;
-            long clientId = clientBuilder.TestId;
+            string clientId = clientBuilder.TestId;
 
             _mockClientRepo
-                .Setup(x => x.GetByIdAsync(It.IsAny<long>(), default))
+                .Setup(x => x.GetByIdAsync(It.IsAny<string>(), default))
                 .ReturnsAsync(returnedClient);
 
             var clientFacade = new ClientFacade(_mockClientRepo.Object);
@@ -34,10 +34,10 @@ namespace UnitTests.ApplicationCore.Services.ClientFacadeTests
         {
             var clientBuilder = new ClientBuilder();
             Client? returnedClient = clientBuilder.Build();
-            long clientId = clientBuilder.TestId;
+            string clientId = clientBuilder.TestId;
 
             _mockClientRepo
-                .Setup(x => x.GetByIdAsync(It.IsAny<long>(), default))
+                .Setup(x => x.GetByIdAsync(It.IsAny<string>(), default))
                 .ReturnsAsync(returnedClient);
 
             var clientFacade = new ClientFacade(_mockClientRepo.Object);
