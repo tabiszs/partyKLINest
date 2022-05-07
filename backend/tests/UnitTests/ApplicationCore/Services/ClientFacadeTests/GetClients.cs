@@ -1,13 +1,13 @@
-﻿using Moq;
-using PartyKlinest.ApplicationCore.Entities.Users.Clients;
+﻿using Ardalis.Specification;
+using Moq;
 using PartyKlinest.ApplicationCore.Entities.Orders;
+using PartyKlinest.ApplicationCore.Entities.Users.Clients;
 using PartyKlinest.ApplicationCore.Interfaces;
 using PartyKlinest.ApplicationCore.Services;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnitTests.Factories;
 using Xunit;
-using System.Collections.Generic;
-using Ardalis.Specification;
 
 namespace UnitTests.ApplicationCore.Services.OrderFacadeTests
 {
@@ -30,7 +30,6 @@ namespace UnitTests.ApplicationCore.Services.OrderFacadeTests
                 expectedClient2,
                 expectedClient3,
             };
-
             _mockClientRepo.Setup(x => x.ListAsync(It.IsAny<Specification<Client>>(), default)).ReturnsAsync(expected);
 
             OrderFacade orderFacade = new(_mockOrderRepo.Object);

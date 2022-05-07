@@ -15,7 +15,7 @@ namespace UnitTests.ApplicationCore.Services.CleanerFacadeTests
     public class GetCreatedOrders
     {
         private readonly Mock<IRepository<Client>> _mockClientRepo = new();
-        private readonly Mock<IRepository<Order>> _mockOrderRepo = new();     
+        private readonly Mock<IRepository<Order>> _mockOrderRepo = new();
 
         [Fact]
         public async Task ThrowsClientNotFoundExceptionWhenThereIsNoClientWithGivenId()

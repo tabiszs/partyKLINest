@@ -1,6 +1,6 @@
 ﻿using Moq;
-using PartyKlinest.ApplicationCore.Entities.Users.Clients;
 using PartyKlinest.ApplicationCore.Entities.Orders;
+using PartyKlinest.ApplicationCore.Entities.Users.Clients;
 using PartyKlinest.ApplicationCore.Exceptions;
 using PartyKlinest.ApplicationCore.Interfaces;
 using PartyKlinest.ApplicationCore.Services;

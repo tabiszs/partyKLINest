@@ -1,9 +1,9 @@
 ﻿using Moq;
-using PartyKlinest.ApplicationCore.Entities.Users.Clients;
 using PartyKlinest.ApplicationCore.Entities.Orders;
+using PartyKlinest.ApplicationCore.Entities.Users.Clients;
+using PartyKlinest.ApplicationCore.Exceptions;
 using PartyKlinest.ApplicationCore.Interfaces;
 using PartyKlinest.ApplicationCore.Services;
-using PartyKlinest.ApplicationCore.Exceptions;
 using System.Threading.Tasks;
 using UnitTests.Factories;
 using Xunit;
@@ -19,7 +19,7 @@ namespace UnitTests.ApplicationCore.Services.OrderFacadeTests
         public async Task ThrowsCleanerNotFoundExceptionWhenThereIsNoClientWithGivenId()
         {
             Client? returnedClient = null;
-            _mockClientRepo.Setup(x => x.GetByIdAsync(It.IsAny< string>(), default)).ReturnsAsync(returnedClient);
+            _mockClientRepo.Setup(x => x.GetByIdAsync(It.IsAny<string>(), default)).ReturnsAsync(returnedClient);
 
             OrderFacade orderFacade = new(_mockOrderRepo.Object);
             var clientFacade = new ClientFacade(_mockClientRepo.Object, orderFacade);

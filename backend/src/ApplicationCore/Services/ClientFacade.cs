@@ -1,9 +1,9 @@
-﻿using PartyKlinest.ApplicationCore.Entities.Users.Clients;
+﻿using PartyKlinest.ApplicationCore.Entities.Orders;
+using PartyKlinest.ApplicationCore.Entities.Users.Clients;
 using PartyKlinest.ApplicationCore.Exceptions;
 using PartyKlinest.ApplicationCore.Interfaces;
-using PartyKlinest.ApplicationCore.Entities.Orders;
-using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace PartyKlinest.ApplicationCore.Services
 {
@@ -75,7 +75,8 @@ namespace PartyKlinest.ApplicationCore.Services
 
         public async Task<List<Client>> GetClientsAsync()
         {
-            return await _clientRepository.ListAsync();
+            var spec = new Specifications.AllClientsSpecification();
+            return await _clientRepository.ListAsync(spec);
         }
 
         public async Task<List<Order>> GetCreatedOrdersAsync(string cleanerId)
