@@ -110,5 +110,10 @@ namespace PartyKlinest.ApplicationCore.Services
             var spec = new Specifications.OrdersCreatedBySpecification(clientId);
             return await _orderRepository.ListAsync(spec);
         }
+
+        public async Task DeleteOrdersAsync(List<Order> orders)
+        {
+            await _orderRepository.DeleteRangeAsync(orders);
+        }
     }
 }
