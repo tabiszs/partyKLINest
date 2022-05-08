@@ -26,7 +26,7 @@ namespace PartyKlinest.WebApi.Extensions
                     _ => UserType.Unknown
                 };
             }
-            catch (ArgumentNullException _)
+            catch (ArgumentNullException)
             {
                 return UserType.Unknown;
             }

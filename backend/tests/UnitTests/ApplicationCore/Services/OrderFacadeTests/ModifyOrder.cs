@@ -1,6 +1,7 @@
 ﻿using Moq;
 using PartyKlinest.ApplicationCore.Entities;
 using PartyKlinest.ApplicationCore.Entities.Orders;
+using PartyKlinest.ApplicationCore.Entities.Users;
 using PartyKlinest.ApplicationCore.Exceptions;
 using PartyKlinest.ApplicationCore.Interfaces;
 using PartyKlinest.ApplicationCore.Services;
@@ -14,6 +15,7 @@ namespace UnitTests.ApplicationCore.Services.OrderFacadeTests
     public class ModifyOrder
     {
         private readonly Mock<IRepository<Order>> _mockOrderRepo = new();
+        private readonly Mock<IRepository<Client>> _mockClientRepo = new();
 
         [Fact]
         public async Task ThrowsOrderNotFoundExceptionWhenThereIsNoOrderWithGivenId()
@@ -21,7 +23,7 @@ namespace UnitTests.ApplicationCore.Services.OrderFacadeTests
             Order? returnedOrder = null;
             _mockOrderRepo.Setup(x => x.GetByIdAsync(It.IsAny<long>(), default)).ReturnsAsync(returnedOrder);
 
-            var orderFacade = new OrderFacade(_mockOrderRepo.Object);
+            var orderFacade = new OrderFacade(_mockOrderRepo.Object, _mockClientRepo.Object);
 
             string newCleanerId = "newCleanerId";
             string newClientId = "newCustomerId";
@@ -44,7 +46,7 @@ namespace UnitTests.ApplicationCore.Services.OrderFacadeTests
             Order? returnedOrder = new OrderBuilder().Build();
             _mockOrderRepo.Setup(x => x.GetByIdAsync(It.IsAny<long>(), default)).ReturnsAsync(returnedOrder);
 
-            var orderFacade = new OrderFacade(_mockOrderRepo.Object);
+            var orderFacade = new OrderFacade(_mockOrderRepo.Object, _mockClientRepo.Object);
 
             string newCleanerId = "newCleanerId";
             string newClientId = "newCustomerId";
@@ -68,7 +70,7 @@ namespace UnitTests.ApplicationCore.Services.OrderFacadeTests
             Order? returnedOrder = new OrderBuilder().Build();
             _mockOrderRepo.Setup(x => x.GetByIdAsync(It.IsAny<long>(), default)).ReturnsAsync(returnedOrder);
 
-            var orderFacade = new OrderFacade(_mockOrderRepo.Object);
+            var orderFacade = new OrderFacade(_mockOrderRepo.Object, _mockClientRepo.Object);
 
             string newCleanerId = "newCleanerId";
             string newClientId = "newCustomerId";

@@ -1,4 +1,4 @@
-﻿using Ardalis.Specification;
+using Ardalis.Specification;
 using PartyKlinest.ApplicationCore.Entities.Orders;
 
 namespace PartyKlinest.ApplicationCore.Specifications
