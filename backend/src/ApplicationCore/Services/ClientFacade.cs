@@ -32,8 +32,7 @@ namespace PartyKlinest.ApplicationCore.Services
 
         public async Task<List<Client>> GetClientsAsync()
         {
-            var spec = new Specifications.AllClientsSpecification();
-            return await _clientRepository.ListAsync(spec);
+            return await _clientRepository.ListAsync();
         }
 
         public async Task<Client> AddClientAsync(Client client)
