@@ -45,16 +45,15 @@ namespace PartyKlinest.ApplicationCore.Services
         {
             Client? client = await GetClientAsync(clientId);
 
-            var orders = await _orderFacade.ListOrdersAsync();
+            var orders = await _orderFacade.GetOrdersCreatedByAsync(clientId);
 
             if(orders is not null)
             {
-                foreach (Order order in orders)
+                foreach (var order in orders)
                 {
-                    if (order.Client == client)
-                        await _orderFacade.DeleteOrderAsync(order.OrderId);
+                    await _orderFacade.DeleteOrderAsync(order.OrderId);
                 }
-            }
+            }                    
             
             await _clientRepository.DeleteAsync(client);
         }
