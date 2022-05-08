@@ -19,15 +19,7 @@ namespace UnitTests.ApplicationCore.Services.ClientFacadeTests
         [Fact]
         public async Task BansClient()
         {
-            //Client? returnedClient = new ClientBuilder().Build();
-            //_mockClientRepo.Setup(x => x.GetByIdAsync(It.IsAny<string>(), default)).ReturnsAsync(returnedClient);
-
-            //OrderFacade orderFacade = new(_mockOrderRepo.Object);
-            //var clientFacade = new ClientFacade(_mockClientRepo.Object, orderFacade);
-
-            //await clientFacade.BanClientAsync("1");
-
-            //_mockClientRepo.Verify(x => x.UpdateAsync(It.IsAny<Client>(), default), Times.Once);
+            // TODO
         }
     }
 }
