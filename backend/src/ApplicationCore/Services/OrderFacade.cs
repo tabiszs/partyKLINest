@@ -18,6 +18,7 @@ namespace PartyKlinest.ApplicationCore.Services
 
         private readonly IRepository<Order> _orderRepository;
         private const OrderStatus closedOrder = OrderStatus.Closed;
+        private const OrderStatus cancelledOrder = OrderStatus.Cancelled;
 
         public async Task<Order> GetOrderAsync(long orderId)
         {
@@ -95,7 +96,7 @@ namespace PartyKlinest.ApplicationCore.Services
             await _orderRepository.UpdateAsync(order);
         }
 
-        public async void CloseOrder(Order order)
+        public async Task CloseOrderAsync(Order order)
         {
             if (order.Status != OrderStatus.InProgress)
             {
@@ -103,6 +104,19 @@ namespace PartyKlinest.ApplicationCore.Services
             }
             order.SetOrderStatus(closedOrder);
             await UpdateAsync(order);
+        }
+
+        public async Task CancelOrderAsync(Order order)
+        {
+            if (order.Status == OrderStatus.InProgress || order.Status == OrderStatus.Active)
+            {
+                order.SetOrderStatus(cancelledOrder);
+                await UpdateAsync(order);
+            }
+            else
+            {
+                throw new NotCorrectOrderStatusException(order.Status, OrderStatus.Cancelled);
+            }
         }
     }
 }
