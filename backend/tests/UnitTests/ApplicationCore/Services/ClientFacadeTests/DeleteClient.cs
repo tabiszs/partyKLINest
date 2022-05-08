@@ -26,7 +26,7 @@ namespace UnitTests.ApplicationCore.Services.ClientFacadeTests
                 .Setup(x => x.GetByIdAsync(It.IsAny<string>(), default))
                 .ReturnsAsync(returnedClient);
 
-            OrderFacade orderFacade = new(_mockOrderRepo.Object);
+            OrderFacade orderFacade = new(_mockOrderRepo.Object, _mockClientRepo.Object);
             var clientFacade = new ClientFacade(_mockClientRepo.Object, orderFacade);
 
             await Assert.ThrowsAsync<ClientNotFoundException>(() => clientFacade.DeleteClientAsync(clientId));
@@ -43,7 +43,7 @@ namespace UnitTests.ApplicationCore.Services.ClientFacadeTests
                 .Setup(x => x.GetByIdAsync(It.IsAny<string>(), default))
                 .ReturnsAsync(returnedClient);
 
-            OrderFacade orderFacade = new(_mockOrderRepo.Object);
+            OrderFacade orderFacade = new(_mockOrderRepo.Object, _mockClientRepo.Object);
             var clientFacade = new ClientFacade(_mockClientRepo.Object, orderFacade);
 
             await clientFacade.DeleteClientAsync(clientId);

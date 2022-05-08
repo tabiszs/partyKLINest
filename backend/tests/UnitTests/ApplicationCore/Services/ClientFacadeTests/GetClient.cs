@@ -21,7 +21,7 @@ namespace UnitTests.ApplicationCore.Services.OrderFacadeTests
             Client? returnedClient = null;
             _mockClientRepo.Setup(x => x.GetByIdAsync(It.IsAny<string>(), default)).ReturnsAsync(returnedClient);
 
-            OrderFacade orderFacade = new(_mockOrderRepo.Object);
+            OrderFacade orderFacade = new(_mockOrderRepo.Object, _mockClientRepo.Object);
             var clientFacade = new ClientFacade(_mockClientRepo.Object, orderFacade);
 
             await Assert.ThrowsAsync<ClientNotFoundException>(() => clientFacade.GetClientAsync("1"));
@@ -34,7 +34,7 @@ namespace UnitTests.ApplicationCore.Services.OrderFacadeTests
             clientBuilder.GetWithDefaultValues();
             Client? expected = clientBuilder.Build();
 
-            OrderFacade orderFacade = new(_mockOrderRepo.Object);
+            OrderFacade orderFacade = new(_mockOrderRepo.Object, _mockClientRepo.Object);
             _mockClientRepo.Setup(x => x.GetByIdAsync(It.IsAny<string>(), default)).ReturnsAsync(expected);
 
             var clientFacade = new ClientFacade(_mockClientRepo.Object, orderFacade);

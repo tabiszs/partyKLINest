@@ -32,7 +32,7 @@ namespace UnitTests.ApplicationCore.Services.OrderFacadeTests
             };
             _mockClientRepo.Setup(x => x.ListAsync(default)).ReturnsAsync(expected);
 
-            OrderFacade orderFacade = new(_mockOrderRepo.Object);
+            OrderFacade orderFacade = new(_mockOrderRepo.Object, _mockClientRepo.Object);
             var clientFacade = new ClientFacade(_mockClientRepo.Object, orderFacade);
             var results = await clientFacade.GetClientsAsync();
 
