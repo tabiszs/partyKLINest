@@ -1,6 +1,5 @@
 ﻿using Ardalis.Specification;
 using PartyKlinest.ApplicationCore.Entities.Orders;
-using System.Linq;
 
 namespace PartyKlinest.ApplicationCore.Specifications
 {
@@ -8,7 +7,7 @@ namespace PartyKlinest.ApplicationCore.Specifications
     {
         public OrdersCreatedBySpecification(string clientId)
         {
-            Query.Where(o => o.ClientId == clientId);
+            Query.Where(x => x.ClientId == clientId);
         }
     }
 }
