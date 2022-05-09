@@ -21,7 +21,13 @@ namespace PartyKlinest.Infrastructure
 
             // Add Azure AD B2C authentication to the ASP.NET Core pipeline
             services
-                .AddMicrosoftIdentityWebApiAuthentication(configuration, "AzureAdB2C");
+                .AddMicrosoftIdentityWebApiAuthentication(configuration, "AzureAdB2C")
+                .EnableTokenAcquisitionToCallDownstreamApi(options =>
+                {
+                    configuration.Bind("AzureAdB2C", options);
+                })
+                .AddMicrosoftGraph(defaultScopes: "User.ReadWrite.All")
+                .AddInMemoryTokenCaches();
 
             JwtSecurityTokenHandler.DefaultMapInboundClaims = false;
 
