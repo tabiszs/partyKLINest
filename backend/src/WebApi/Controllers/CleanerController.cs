@@ -1,6 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using PartyKlinest.ApplicationCore.Entities;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using PartyKlinest.ApplicationCore.Entities.Orders;
+using PartyKlinest.ApplicationCore.Entities.Users.Cleaners;
+using PartyKlinest.ApplicationCore.Exceptions;
+using PartyKlinest.ApplicationCore.Services;
+using PartyKlinest.WebApi.Extensions;
 using PartyKlinest.WebApi.Models;
 
 namespace PartyKlinest.WebApi.Controllers
@@ -10,36 +14,12 @@ namespace PartyKlinest.WebApi.Controllers
     public class CleanerController : ControllerBase
     {
         private readonly ILogger<CleanerController> _logger;
+        private readonly CleanerFacade _cleanerFacade;
 
-        private static readonly ScheduleEntryDTO[] scheduleEntries = new[]
-        {
-            new ScheduleEntryDTO(DayOfWeek.Monday, "07:20", "12:15"),
-            new ScheduleEntryDTO(DayOfWeek.Monday, "13:21", "21:21"),
-            new ScheduleEntryDTO(DayOfWeek.Wednesday, "13:21", "21:21"),
-            new ScheduleEntryDTO(DayOfWeek.Tuesday, "13:21", "21:21"),
-            new ScheduleEntryDTO(DayOfWeek.Saturday, "13:21", "21:21"),
-            new ScheduleEntryDTO(DayOfWeek.Sunday, "13:21", "23:59"),
-        };
-
-        private static readonly CleanerInfoDTO[] _cleaners = new[]
-        {
-            new CleanerInfoDTO(new[] {scheduleEntries[0], scheduleEntries[1]}, MessLevel.Low, 1, 12.0m, 5.0f),
-            new CleanerInfoDTO(new[] {scheduleEntries[1], scheduleEntries[2]}, MessLevel.Moderate, 2, 13.0m, 5.0f),
-            new CleanerInfoDTO(new[] {scheduleEntries[0]}, MessLevel.Low, 3, 12.50m, 5.0f),
-            new CleanerInfoDTO(new[] {scheduleEntries[0], scheduleEntries[1], scheduleEntries[3], scheduleEntries[4], scheduleEntries[5],},
-                MessLevel.Disaster, 4, 69.0m, 5.0f),
-            new CleanerInfoDTO(new[] {scheduleEntries[5]}, MessLevel.Low, 8, 12.0m, 5.0f),
-        };
-
-        private static readonly Order[] _orders = new[]
-        {
-            new Order(420.69m, 3, MessLevel.Moderate, new(2019, 2, 2, 1, 23, 12, TimeSpan.Zero), "123",
-                new Address("Poland", "Warsaw", "Krakowska", "1", "1", 1)),
-        };
-
-        public CleanerController(ILogger<CleanerController> logger)
+        public CleanerController(ILogger<CleanerController> logger, CleanerFacade cleanerFacade)
         {
             _logger = logger;
+            _cleanerFacade = cleanerFacade;
         }
 
         /// <summary>
@@ -51,18 +31,48 @@ namespace PartyKlinest.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult<CleanerInfoDTO> GetCleanerInfo(int cleanerId)
+        [Authorize(Policy = "CleanerOnly")]
+        public async Task<ActionResult<CleanerInfoDTO>> GetCleanerInfo(string cleanerId)
         {
-            bool isExisting = cleanerId > 0 && cleanerId < _cleaners.Length;
-
-            if (!isExisting)
-            {
-                return NotFound();
-            }
-
             _logger.LogInformation("Get cleaner info. CleanerId: {cleanerId}", cleanerId);
+            if (User.IsCleaner())
+            {
+                try
+                {
+                    var cleaner = await _cleanerFacade.GetCleanerInfo(cleanerId);
+                    List<ScheduleEntryDTO> schedulesDTO = new();
+                    foreach (var entry in cleaner.ScheduleEntries)
+                    {
+                        schedulesDTO.Add(
+                            new ScheduleEntryDTO(
+                                entry.DayOfWeek,
+                                entry.Start.ToShortTimeString(),
+                                entry.End.ToShortTimeString()));
+                    }
 
-            return _cleaners[cleanerId - 1];
+                    var cleanerDTO = new CleanerInfoDTO(
+                        schedulesDTO.ToArray(),
+                        cleaner.OrderFilter.MaxMessLevel,
+                        cleaner.OrderFilter.MinClientRating,
+                        cleaner.OrderFilter.MinPrice,
+                        0,
+                        cleaner.Status.ToString());
+                    return cleanerDTO;
+                }
+                catch (CleanerNotFoundException)
+                {
+                    return NotFound();
+                }
+                catch (Exception e)
+                {
+                    _logger.LogWarning(e, "Not able to get cleaner {cleanerId} info", cleanerId);
+                    return BadRequest();
+                }
+            }
+            else
+            {
+                return Forbid();
+            }
         }
 
         /// <summary>
@@ -76,9 +86,36 @@ namespace PartyKlinest.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public IActionResult UpdateCleanerInfo(long cleanerId, [FromBody] CleanerInfoDTO cleanerInfo)
+        [Authorize(Policy = "CleanerOnly")]
+        public async Task<IActionResult> UpdateCleanerInfo(string cleanerId, [FromBody] CleanerInfoDTO cleanerInfo)
         {
             _logger.LogInformation("Update cleaner info. CleanerId: {cleanerId}", cleanerId);
+            if (User.IsCleaner())
+            {
+                try
+                {
+                    List<ScheduleEntry> scheduleEntries = new();
+                    foreach (var entry in cleanerInfo.ScheduleEntries)
+                    {
+                        var ts = TimeOnly.Parse(entry.Start);
+                        var te = TimeOnly.Parse(entry.End);
+                        scheduleEntries.Add(new ScheduleEntry(ts, te, entry.DayOfWeek));
+                    }
+                    var filter = new OrderFilter(cleanerInfo.MaxMess, cleanerInfo.MinClientRating, cleanerInfo.MinPrice);
+                    var status = CleanerStatusExtention.FromString(cleanerInfo.Status);
+                    var cleaner = new Cleaner(cleanerId, status, scheduleEntries, filter);
+                    await _cleanerFacade.UpdateCleanerAsync(cleaner);
+                }
+                catch (Exception e)
+                {
+                    _logger.LogWarning(e, "Invalid update cleaner info for {cleanerId}", cleanerId);
+                    return BadRequest();
+                }
+            }
+            else
+            {
+                return Forbid();
+            }
 
             return Ok();
         }
@@ -92,9 +129,30 @@ namespace PartyKlinest.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult<IEnumerable<Order>> GetAssignedOrders(int cleanerId)
+        [Authorize(Policy = "CleanerOnly")]
+        public async Task<ActionResult<IEnumerable<Order>>> GetAssignedOrders(string cleanerId)
         {
-            return _orders;
+            _logger.LogInformation("Update cleaner info. CleanerId: {cleanerId}", cleanerId);
+            if (User.IsCleaner())
+            {
+                try
+                {
+                    return await _cleanerFacade.GetAssignedOrdersAsync(cleanerId);
+                }
+                catch (CleanerNotFoundException)
+                {
+                    return NotFound();
+                }
+                catch (Exception e)
+                {
+                    _logger.LogWarning(e, "Getting assigned orders to {cleanerId} failed", cleanerId);
+                    return BadRequest();
+                }
+            }
+            else
+            {
+                return Forbid();
+            }
         }
     }
 }

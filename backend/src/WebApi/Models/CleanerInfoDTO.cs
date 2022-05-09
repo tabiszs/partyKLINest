@@ -10,13 +10,14 @@ namespace PartyKlinest.WebApi.Models
     {
         public CleanerInfoDTO(ScheduleEntryDTO[] scheduleEntries,
             MessLevel maxMess, int minClientRating, decimal minPrice,
-            float maxLocationRange)
+            float maxLocationRange, string status)
         {
             ScheduleEntries = scheduleEntries;
             MaxMess = maxMess;
             MinClientRating = minClientRating;
             MinPrice = minPrice;
             MaxLocationRange = maxLocationRange;
+            Status = status;
         }
 
         [Required]
@@ -29,6 +30,8 @@ namespace PartyKlinest.WebApi.Models
         public decimal MinPrice { get; init; }
 
         public float MaxLocationRange { get; init; }
+
+        public string Status { get; init; }
 
     }
 }
