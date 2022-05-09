@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using PartyKlinest.ApplicationCore.Exceptions;
+using PartyKlinest.ApplicationCore.Services;
+using PartyKlinest.WebApi.Extensions;
 
 namespace PartyKlinest.WebApi.Controllers
 {
@@ -8,16 +11,18 @@ namespace PartyKlinest.WebApi.Controllers
     public class ClientController : ControllerBase
     {
         private readonly ILogger<ClientController> _logger;
+        private readonly ClientFacade _clientFacade;
 
-        public ClientController(ILogger<ClientController> logger)
+        public ClientController(ILogger<ClientController> logger, ClientFacade clientFacade)
         {
             _logger = logger;
+            _clientFacade = clientFacade;
         }
 
         /// <summary>
         /// Deletes account from the system.
         /// </summary>
-        /// <param name="id">Client's id.</param>
+        /// <param name="clientId">Client's id.</param>
         /// <returns></returns>
         /// <response code="200">OK</response>
         /// <response code="403">Not Authorized</response>
@@ -25,10 +30,31 @@ namespace PartyKlinest.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public IActionResult DeleteClient(int id)
+        [Authorize(Policy = "AdminOnly")]
+        public async Task<IActionResult> DeleteClient(string clientId)
         {
-            _logger.LogInformation($"Delete client {id}");
-            return Ok();
+            _logger.LogInformation($"Delete client {clientId}");
+            if (User.IsCleaner())
+            {
+                try
+                {
+                    await _clientFacade.DeleteClientAsync(clientId);
+                    return Ok();
+                }
+                catch (ClientNotFoundException)
+                {
+                    return NotFound();
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogWarning(ex, "Delete client {clientId} failed", clientId);
+                    return BadRequest();
+                }
+            }
+            else
+            {
+                return Forbid();
+            }
         }
     }
 }

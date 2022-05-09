@@ -1,5 +1,4 @@
-﻿using PartyKlinest.ApplicationCore.Entities.Orders;
-using PartyKlinest.ApplicationCore.Entities.Users;
+﻿using PartyKlinest.ApplicationCore.Entities.Users;
 using PartyKlinest.ApplicationCore.Exceptions;
 using PartyKlinest.ApplicationCore.Interfaces;
 using System.Collections.Generic;
@@ -16,7 +15,7 @@ namespace PartyKlinest.ApplicationCore.Services
         }
 
         private readonly IRepository<Client> _clientRepository;
-        private readonly OrderFacade _orderFacade;  
+        private readonly OrderFacade _orderFacade;
 
         public async Task<Client> GetClientAsync(string clientId)
         {
@@ -46,8 +45,8 @@ namespace PartyKlinest.ApplicationCore.Services
 
             var orders = await _orderFacade.ListCreatedOrdersByAsync(clientId);
 
-            await _orderFacade.DeleteOrdersAsync(orders);                 
-            
+            await _orderFacade.DeleteOrdersAsync(orders);
+
             await _clientRepository.DeleteAsync(client);
         }
 
