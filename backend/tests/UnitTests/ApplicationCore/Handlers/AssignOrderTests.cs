@@ -1,12 +1,10 @@
 ﻿using Moq;
-using PartyKlinest.ApplicationCore.Entities;
 using PartyKlinest.ApplicationCore.Entities.Orders;
 using PartyKlinest.ApplicationCore.Entities.Users;
 using PartyKlinest.ApplicationCore.Entities.Users.Cleaners;
 using PartyKlinest.ApplicationCore.Exceptions;
 using PartyKlinest.ApplicationCore.Handlers;
 using PartyKlinest.ApplicationCore.Interfaces;
-using System;
 using System.Threading.Tasks;
 using UnitTests.Factories;
 using Xunit;
@@ -14,7 +12,7 @@ using Xunit;
 
 namespace UnitTests.ApplicationCore.Handlers
 {
-    public  class AssignOrderTests
+    public class AssignOrderTests
     {
         private readonly Mock<IRepository<Order>> _mockOrderRepo = new();
         private readonly Mock<IRepository<Cleaner>> _mockCleanerRepo = new();
@@ -33,7 +31,7 @@ namespace UnitTests.ApplicationCore.Handlers
             _mockOrderRepo.Setup(x => x.GetByIdAsync(It.IsAny<long>(), default)).ReturnsAsync(returnedOrder);
 
             var assignHandler = new AssignOrder(
-                _mockCleanerRepo.Object, 
+                _mockCleanerRepo.Object,
                 _mockClientRepo.Object,
                 _mockOrderRepo.Object);
 
@@ -64,7 +62,7 @@ namespace UnitTests.ApplicationCore.Handlers
                 () => assignHandler.AssignOrderToCleaner(1, returnedCleaner.CleanerId));
         }
 
-        [Theory(DisplayName ="Throw not active exception")]
+        [Theory(DisplayName = "Throw not active exception")]
         [InlineData(OrderStatus.Cancelled)]
         [InlineData(OrderStatus.Closed)]
         [InlineData(OrderStatus.InProgress)]

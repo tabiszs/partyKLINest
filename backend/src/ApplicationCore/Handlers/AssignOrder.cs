@@ -1,20 +1,16 @@
 ﻿using PartyKlinest.ApplicationCore.Entities.Orders;
-using PartyKlinest.ApplicationCore.Entities.Orders.Opinions;
+using PartyKlinest.ApplicationCore.Entities.Users;
 using PartyKlinest.ApplicationCore.Entities.Users.Cleaners;
 using PartyKlinest.ApplicationCore.Exceptions;
 using PartyKlinest.ApplicationCore.Interfaces;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using PartyKlinest.ApplicationCore.Specifications;
-using PartyKlinest.ApplicationCore.Entities.Users;
 
 namespace PartyKlinest.ApplicationCore.Handlers
 {
     public class AssignOrder
     {
         public AssignOrder(
-            IRepository<Cleaner> cleanerRepository, 
+            IRepository<Cleaner> cleanerRepository,
             IRepository<Client> clientRepository,
             IRepository<Order> orderRepository)
         {
@@ -65,8 +61,8 @@ namespace PartyKlinest.ApplicationCore.Handlers
 
         private async Task Assign(Order order, Cleaner cleaner)
         {
-           order.SetCleanerId(cleaner.CleanerId);
-           await _orderRepository.UpdateAsync(order);
+            order.SetCleanerId(cleaner.CleanerId);
+            await _orderRepository.UpdateAsync(order);
         }
     }
 }
