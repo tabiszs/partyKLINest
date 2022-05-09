@@ -44,19 +44,11 @@ namespace PartyKlinest.ApplicationCore.Services
         {
             Client? client = await GetClientAsync(clientId);
 
-            var orders = await _orderFacade.GetOrdersCreatedByAsync(clientId);
+            var orders = await _orderFacade.ListCreatedOrdersByAsync(clientId);
 
             await _orderFacade.DeleteOrdersAsync(orders);                 
             
             await _clientRepository.DeleteAsync(client);
-        }
-
-        public async Task BanClientAsync(string clientId)
-        {
-            Client? client = await GetClientAsync(clientId);
-
-            // TODO: ban in B2C
-            await _clientRepository.UpdateAsync(client);
         }
 
     }
