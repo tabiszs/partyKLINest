@@ -16,7 +16,7 @@ namespace PartyKlinest.Infrastructure.Data.Config
                 .OwnsOne(x => x.OrderFilter, of =>
                 {
                     of.Property(o => o.MinPrice)
-                        .HasColumnType("money");    
+                        .HasColumnType("money");
                 });
         }
     }
