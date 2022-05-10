@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Heading from '../../Components/Heading';
@@ -91,31 +91,25 @@ interface AvailabilityTableProps {
 }
 
 const AvailabilityTable = (props: AvailabilityTableProps) => {
-  // TODO: gdy będzie API to podmienić
-  // const cleanerInfo = getCleanerInfo(props.token.oid);
-  // Mock
-  let cleanerInfo: CleanerInfo | null = {
-    scheduleEntries: [
-      {dayOfWeek: DayOfWeek.Monday, start: '21:00', end: '22:35'},
-      {dayOfWeek: DayOfWeek.Tuesday, start: '08:00', end: '12:35'},
-      {dayOfWeek: DayOfWeek.Tuesday, start: '21:00', end: '22:35'},
-      {dayOfWeek: DayOfWeek.Wednesday, start: '07:00', end: '15:00'}
-    ],
+
+  const defaultCleanerInfo = {
+    scheduleEntries: [],
     maxMess: MessLevel.Disaster,
     minClientRating: 5,
     minPrice: 0.0,
-    maxLocationRange: 100,
+    maxLocationRange: 100000,
   };
 
-  if (cleanerInfo === null) {
-    cleanerInfo = {
-      scheduleEntries: [],
-      maxMess: MessLevel.Disaster,
-      minClientRating: 5,
-      minPrice: 0.0,
-      maxLocationRange: 100000,
-    };
-  }
+  const [cleanerInfo, setCleanerInfo] = useState<CleanerInfo>(defaultCleanerInfo);
+
+  useEffect(() => {
+    getCleanerInfo(props.token.oid)
+    .then(setCleanerInfo)
+    .catch((err) => {
+      console.log(err);
+      setCleanerInfo(defaultCleanerInfo);
+    });
+  })
 
   const [scheduleText, setScheduleText] = useState<string>(generateScheduleText(cleanerInfo.scheduleEntries));
   const [schedule, setSchedule] = useState<ScheduleEntry[] | null>(cleanerInfo.scheduleEntries);
@@ -216,15 +210,15 @@ const AvailabilityTable = (props: AvailabilityTableProps) => {
               return;
             }
 
-            cleanerInfo = {
+            const newCleanerInfo = {
               scheduleEntries: schedule,
               maxMess: messLevel,
               maxLocationRange: maxLocationRange,
               minPrice: minPrice,
               minClientRating: minClientRating
             }
-            console.log(cleanerInfo);
-            postCleanerInfo('moje ID', cleanerInfo!) // TODO: Jakoś dostać swoje ID -> props.token.oid
+            console.log(newCleanerInfo);
+            postCleanerInfo(props.token.oid, newCleanerInfo);
           }}
         >
           Zatwierdź
