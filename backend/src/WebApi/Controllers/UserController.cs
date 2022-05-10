@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Graph;
+using PartyKlinest.Infrastructure;
 
 namespace PartyKlinest.WebApi.Controllers
 {
@@ -10,13 +11,15 @@ namespace PartyKlinest.WebApi.Controllers
     {
         private readonly GraphServiceClient _graphClient;
         private readonly ILogger<UserController> _logger;
+        private readonly ExtensionPropertyNameBuilder _nameBuilder;
 
-        public UserController(GraphServiceClient graphClient, ILogger<UserController> logger)
+        public UserController(GraphServiceClient graphClient, ILogger<UserController> logger, ExtensionPropertyNameBuilder nameBuilder)
         {
             _graphClient = graphClient;
             _logger = logger;
+            _nameBuilder = nameBuilder;
         }
-
+        
         /// <summary>
         /// Ban client/cleaner.
         /// </summary>
@@ -31,7 +34,7 @@ namespace PartyKlinest.WebApi.Controllers
         {
             _logger.LogInformation("Ban a user");
             var bannedUser = new User();
-            bannedUser.AdditionalData = new Dictionary<string, object> { { "extension_isBanned", true } };
+            bannedUser.AdditionalData = new Dictionary<string, object> { { _nameBuilder.GetExtensionName("isBanned"), true } };
             await _graphClient.Users[userId].Request().UpdateAsync(bannedUser);
             return Ok();
         }

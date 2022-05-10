@@ -5,7 +5,7 @@ import UserType from "../../DataClasses/UserType";
 
 const mockUsers: UserInfo[] = [
     {
-        oid: '213769420abcdef',
+        oid: '54cf8951-82a3-48d2-a68b-2e8147e188a1',
         name: 'Kot',
         surname: 'Filemon',
         email: 'kot.filemon@catmail.com',

@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Graph;
+using Microsoft.Identity.Client;
 using Microsoft.Identity.Web;
 using PartyKlinest.ApplicationCore.Interfaces;
 using PartyKlinest.ApplicationCore.Services;
@@ -25,24 +27,17 @@ namespace PartyKlinest.Infrastructure
                 var confidentialClientApplication = ConfidentialClientApplicationBuilder
                     .Create(configuration.GetSection("AzureAdB2C")["ClientId"])
                     .WithTenantId(configuration.GetSection("AzureAdB2C")["TenantId"])
-                    .WithClientSecret(configuration[configuration.GetSection("AzureAdB2C")["ClientSecret"]])
+                    .WithClientSecret(configuration.GetSection("AzureAdB2C")["ClientSecret"])
                     .Build();
 
-                return new ClientCredentialProvider(confidentialClientApplication);
+                return new Microsoft.Graph.Auth.ClientCredentialProvider(confidentialClientApplication);
             });
 
             services.AddSingleton(conf => new GraphServiceClient(conf.GetService<IAuthenticationProvider>()));
 
-            services
-                .AddMicrosoftIdentityWebApiAuthentication(configuration, "AzureAdB2C");
-            //    .EnableTokenAcquisitionToCallDownstreamApi(options =>
-            //    {
-            //        configuration.Bind("AzureAdB2C", options);
-            //    })
-            //    .AddMicrosoftGraph(defaultScopes: "User.ReadWrite.All")
-            //    .AddInMemoryTokenCaches();
+            services.AddSingleton(o => new ExtensionPropertyNameBuilder(configuration.GetSection("AzureAdB2C")["ExtensionAppId"]));
 
-            //JwtSecurityTokenHandler.DefaultMapInboundClaims = false;
+            services.AddMicrosoftIdentityWebApiAuthentication(configuration, "AzureAdB2C");
 
             services.AddAuthorization(options =>
             {
