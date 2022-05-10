@@ -5,7 +5,7 @@ import Heading from '../../Components/Heading';
 import ScheduleEntry from '../../DataClasses/ScheduleEntry';
 import CleanerInfo from '../../DataClasses/CleanerInfo';
 import MessLevel from '../../DataClasses/MessLevel';
-import DayOfWeek, {dayOfWeekGetFromStr, dayOfWeektoStr} from '../../DataClasses/DayOfWeek';
+import {dayOfWeekGetFromStr, dayOfWeektoStr} from '../../DataClasses/DayOfWeek';
 import Typography from '@mui/material/Typography';
 import Rating from '@mui/material/Rating';
 import {getCleanerInfo, postCleanerInfo} from '../../Api/endpoints';
@@ -109,7 +109,7 @@ const AvailabilityTable = (props: AvailabilityTableProps) => {
       console.log(err);
       setCleanerInfo(defaultCleanerInfo);
     });
-  })
+  }, [])
 
   const [scheduleText, setScheduleText] = useState<string>(generateScheduleText(cleanerInfo.scheduleEntries));
   const [schedule, setSchedule] = useState<ScheduleEntry[] | null>(cleanerInfo.scheduleEntries);
