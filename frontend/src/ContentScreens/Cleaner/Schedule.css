@@ -1,0 +1,17 @@
+.schedule-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.schedule-textfield {
+    margin-bottom: 2em;
+}
+
+.schedule-instructions {
+    margin-bottom: 2em;
+}
+
+.field-container {
+    padding: 1em 0;
+    margin: 0;
+}

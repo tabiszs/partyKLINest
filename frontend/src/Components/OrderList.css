@@ -1,0 +1,28 @@
+.order-card {
+  width: 48em;
+  margin: 1.5em;
+}
+
+.card-content {
+  text-align: left;
+  padding: 1em;
+  line-height: 1.5em;
+  font-size: 1.1em;
+  color: #404040;
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  justify-content: space-between;
+}
+
+.card-column {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-around;
+  margin: 0.5em 2em;
+}
+
+.opinion-summary {
+  display: inline-block;
+}

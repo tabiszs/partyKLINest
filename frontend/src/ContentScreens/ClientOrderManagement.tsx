@@ -1,114 +1,70 @@
-import Button from '@mui/material/Button';
-import Card from '@mui/material/Card';
-import OrderStatus, {orderStatusText} from '../DataClasses/OrderStatus';
-import MessLevel, {messLevelText} from '../DataClasses/MessLevel';
+import OrderStatus from '../DataClasses/OrderStatus';
 import Order from '../DataClasses/Order';
 import Heading from '../Components/Heading';
+import OrderList from '../Components/OrderList';
+import {deleteOrder, getClientOrders} from '../Api/endpoints';
 import './ClientOrderManagement.css';
-
-const mockOrders: Order[] = [
-  {
-    id: 5, clientId: 'dd', cleanerId: 'st',
-    maxPrice: 10, minRating: 5.0,
-    messLevel: MessLevel.Disaster,
-    status: OrderStatus.Cancelled,
-    date: {
-      start: new Date(),
-      end: new Date()
-    }
-  },
-  {
-    id: 5, clientId: 'dd', cleanerId: 'st',
-    maxPrice: 10000, minRating: 8.0,
-    messLevel: MessLevel.Moderate,
-    status: OrderStatus.InProgress,
-    date: {
-      start: new Date(),
-      end: new Date()
-    }
-  },
-  {
-    id: 5, clientId: 'dd', cleanerId: 'st',
-    maxPrice: 500, minRating: 2.0,
-    messLevel: MessLevel.Huge,
-    status: OrderStatus.Active,
-    date: {
-      start: new Date(),
-      end: new Date()
-    }
-  },
-  {
-    id: 5, clientId: 'dd', cleanerId: 'st',
-    maxPrice: 2000, minRating: 5.5,
-    messLevel: MessLevel.Low,
-    status: OrderStatus.Closed,
-    date: {
-      start: new Date(),
-      end: new Date()
-    }
-  },
-];
-
-const CancelButton = () => {
-  return (
-    <Button
-      variant='outlined'
-      color='error'
-      onClick={() => alert('cancel')}
-    >
-      Anuluj
-    </Button>
-  );
-}
-
-const OrderCard = (props: Order) => {
-  return (
-    <div className='order-card'>
-      <Card variant='outlined'>
-        <div className='card-content'>
-          <div className='card-column'>
-            Maksymalna cena: {props.maxPrice}zł
-            <br />
-            Minimalna ocena: {props.minRating}
-            <br />
-            Status: {orderStatusText(props.status)}
-            <br />
-            Poziom bałaganu: {messLevelText(props.messLevel)}
-          </div>
-          <div className='card-column'>
-            {props.status === OrderStatus.Active
-              ? <CancelButton />
-              : null}
-          </div>
-        </div>
-      </Card>
-    </div>
-  );
-}
-
-interface OrderListProps {
-  orders: Order[];
-}
-
-const OrderList = (props: OrderListProps) => {
-  const orderCards = [];
-
-  for (const order of props.orders) {
-    orderCards.push(<OrderCard {...order} />)
-  }
-
-  return (
-    <div>
-      {orderCards}
-    </div>
-  );
-}
+import {useEffect, useState} from 'react';
+import Rating from '../DataClasses/Rating';
+import OpinionPopup from '../Components/OpinionPopup';
+import UserType from '../DataClasses/UserType';
+import RateOrder from './RateOrder';
 
 const OrderManagement = () => {
+
+  const [orders, setOrders] = useState<Order[]>([]);
+
+  const [open, setOpen] = useState(false);
+  const [rating, setRating] = useState<Rating>({rating: 0, comment: ""});
+
+  const [ratingOpen, setRatingOpen] = useState(false);
+  const [order, setOrder] = useState<Order | undefined>(undefined);
+
+  const showRatingPopup = (rating: Rating) => {
+    setRating(rating);
+    setOpen(true);
+  }
+
+  const showRateOrder = (order: Order) => {
+    setOrder(order);
+    setRatingOpen(true);
+  }
+
+  useEffect(() => {
+    getClientOrders()
+    .then(setOrders)
+    .catch((err) => {
+      console.log(err);
+      setOrders([]);
+    });
+  });
+
   return (
     <div className='order-management-screen'>
       <Heading content='Twoje ogłoszenia' />
-      <OrderList orders={mockOrders} />
+      <OrderList
+        orders={orders}
+
+        deleteButtonLabel='Anuluj'
+        onDeleteButtonClick={async (order: Order) => {await deleteOrder(order.id)}}
+        shouldDisplayDeleteButton={(order: Order) => order.status === OrderStatus.Active}
+
+        showRatingPopup={showRatingPopup}
+
+        opinionButtonLabel='Oceń'
+        onOpinionButtonClick={showRateOrder}
+        shouldDisplayOpinionButton={(order: Order) => order.opinionFromClient === undefined && order.status === OrderStatus.Closed}
+
+        acceptButtonLabel=''
+        onAcceptButtonClick={(_) => {}}
+        shouldDisplayAcceptButton={(_) => false}
+
+        closeButtonLabel=''
+        onCloseButtonClick={(_) => {}}
+        shouldDisplayCloseButton={(_) => false}
+      />
+      <OpinionPopup opinion={rating} open={open} userType={UserType.Client} cancelDialog={() => setOpen(false)} />
+      <RateOrder order={order} userType={UserType.Client} open={ratingOpen} closeDialog={() => setRatingOpen(false)} />
     </div>
   );
 };
