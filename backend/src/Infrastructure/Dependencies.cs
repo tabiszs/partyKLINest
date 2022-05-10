@@ -20,16 +20,29 @@ namespace PartyKlinest.Infrastructure
                 );
 
             // Add Azure AD B2C authentication to the ASP.NET Core pipeline
-            services
-                .AddMicrosoftIdentityWebApiAuthentication(configuration, "AzureAdB2C")
-                .EnableTokenAcquisitionToCallDownstreamApi(options =>
-                {
-                    configuration.Bind("AzureAdB2C", options);
-                })
-                .AddMicrosoftGraph(defaultScopes: "User.ReadWrite.All")
-                .AddInMemoryTokenCaches();
+            services.AddSingleton<IAuthenticationProvider>(o =>
+            {
+                var confidentialClientApplication = ConfidentialClientApplicationBuilder
+                    .Create(configuration.GetSection("AzureAdB2C")["ClientId"])
+                    .WithTenantId(configuration.GetSection("AzureAdB2C")["TenantId"])
+                    .WithClientSecret(configuration[configuration.GetSection("AzureAdB2C")["ClientSecret"]])
+                    .Build();
 
-            JwtSecurityTokenHandler.DefaultMapInboundClaims = false;
+                return new ClientCredentialProvider(confidentialClientApplication);
+            });
+
+            services.AddSingleton(conf => new GraphServiceClient(conf.GetService<IAuthenticationProvider>()));
+
+            services
+                .AddMicrosoftIdentityWebApiAuthentication(configuration, "AzureAdB2C");
+            //    .EnableTokenAcquisitionToCallDownstreamApi(options =>
+            //    {
+            //        configuration.Bind("AzureAdB2C", options);
+            //    })
+            //    .AddMicrosoftGraph(defaultScopes: "User.ReadWrite.All")
+            //    .AddInMemoryTokenCaches();
+
+            //JwtSecurityTokenHandler.DefaultMapInboundClaims = false;
 
             services.AddAuthorization(options =>
             {
