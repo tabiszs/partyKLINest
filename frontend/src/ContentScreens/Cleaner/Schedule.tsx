@@ -3,7 +3,7 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Heading from '../../Components/Heading';
 import ScheduleEntry from '../../DataClasses/ScheduleEntry';
-import CleanerInfo from '../../DataClasses/CleanerInfo';
+import CleanerInfo, { defaultCleanerInfo } from '../../DataClasses/CleanerInfo';
 import MessLevel from '../../DataClasses/MessLevel';
 import {dayOfWeekGetFromStr, dayOfWeektoStr} from '../../DataClasses/DayOfWeek';
 import Typography from '@mui/material/Typography';
@@ -92,24 +92,16 @@ interface AvailabilityTableProps {
 
 const AvailabilityTable = (props: AvailabilityTableProps) => {
 
-  const defaultCleanerInfo = {
-    scheduleEntries: [],
-    maxMess: MessLevel.Disaster,
-    minClientRating: 5,
-    minPrice: 0.0,
-    maxLocationRange: 100000,
-  };
-
-  const [cleanerInfo, setCleanerInfo] = useState<CleanerInfo>(defaultCleanerInfo);
+  const [cleanerInfo, setCleanerInfo] = useState<CleanerInfo>(defaultCleanerInfo());
 
   useEffect(() => {
     getCleanerInfo(props.token.oid)
     .then(setCleanerInfo)
     .catch((err) => {
       console.log(err);
-      setCleanerInfo(defaultCleanerInfo);
+      setCleanerInfo(defaultCleanerInfo());
     });
-  }, [])
+  }, [props.token.oid])
 
   const [scheduleText, setScheduleText] = useState<string>(generateScheduleText(cleanerInfo.scheduleEntries));
   const [schedule, setSchedule] = useState<ScheduleEntry[] | null>(cleanerInfo.scheduleEntries);
