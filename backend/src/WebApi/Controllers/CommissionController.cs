@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PartyKlinest.ApplicationCore.Interfaces;
-using PartyKlinest.WebApi.Extensions;
 using PartyKlinest.WebApi.Models;
 
 

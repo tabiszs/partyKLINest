@@ -4,7 +4,6 @@ using PartyKlinest.ApplicationCore.Entities.Orders;
 using PartyKlinest.ApplicationCore.Entities.Users.Cleaners;
 using PartyKlinest.ApplicationCore.Exceptions;
 using PartyKlinest.ApplicationCore.Services;
-using PartyKlinest.WebApi.Extensions;
 using PartyKlinest.WebApi.Models;
 
 namespace PartyKlinest.WebApi.Controllers
