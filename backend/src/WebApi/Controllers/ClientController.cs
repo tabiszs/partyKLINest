@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using PartyKlinest.ApplicationCore.Exceptions;
 using PartyKlinest.ApplicationCore.Services;
-using PartyKlinest.WebApi.Extensions;
 
 namespace PartyKlinest.WebApi.Controllers
 {
@@ -34,26 +33,19 @@ namespace PartyKlinest.WebApi.Controllers
         public async Task<IActionResult> DeleteClient(string clientId)
         {
             _logger.LogInformation($"Delete client {clientId}");
-            if (User.IsCleaner())
+            try
             {
-                try
-                {
-                    await _clientFacade.DeleteClientAsync(clientId);
-                    return Ok();
-                }
-                catch (ClientNotFoundException)
-                {
-                    return NotFound();
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogWarning(ex, "Delete client {clientId} failed", clientId);
-                    return BadRequest();
-                }
+                await _clientFacade.DeleteClientAsync(clientId);
+                return Ok();
             }
-            else
+            catch (ClientNotFoundException)
             {
-                return Forbid();
+                return NotFound();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning(ex, "Delete client {clientId} failed", clientId);
+                return BadRequest();
             }
         }
     }
