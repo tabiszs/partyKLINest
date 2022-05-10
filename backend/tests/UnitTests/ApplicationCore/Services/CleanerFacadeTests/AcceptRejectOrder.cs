@@ -1,5 +1,6 @@
 ﻿using Moq;
 using PartyKlinest.ApplicationCore.Entities.Orders;
+using PartyKlinest.ApplicationCore.Entities.Users;
 using PartyKlinest.ApplicationCore.Entities.Users.Cleaners;
 using PartyKlinest.ApplicationCore.Exceptions;
 using PartyKlinest.ApplicationCore.Interfaces;
@@ -14,6 +15,8 @@ namespace UnitTests.ApplicationCore.Services.CleanerFacadeTests
     {
         private readonly Mock<IRepository<Order>> _mockOrderRepo = new();
         private readonly Mock<IRepository<Cleaner>> _mockCleanerRepo = new();
+        private readonly Mock<IRepository<Client>> _mockClientRepo = new();
+        private readonly Mock<IClientService> _mockClientService = new();
 
         [Theory(DisplayName = "Accept Order")]
         [InlineData("localCleanerId22", OrderStatus.Active, "localCleanerId22", OrderStatus.InProgress, "localCleanerId22")]
@@ -152,8 +155,8 @@ namespace UnitTests.ApplicationCore.Services.CleanerFacadeTests
                 .Setup(x => x.GetByIdAsync(It.IsAny<long>(), default))
                 .ReturnsAsync(expected);
 
-            OrderFacade orderFacade = new(_mockOrderRepo.Object);
-            return new CleanerFacade(_mockCleanerRepo.Object, orderFacade);
+            OrderFacade orderFacade = new(_mockOrderRepo.Object, _mockClientRepo.Object);
+            return new CleanerFacade(_mockCleanerRepo.Object, orderFacade, _mockClientService.Object);
         }
     }
 }

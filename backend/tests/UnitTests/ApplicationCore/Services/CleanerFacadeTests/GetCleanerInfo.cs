@@ -1,5 +1,6 @@
 ﻿using Moq;
 using PartyKlinest.ApplicationCore.Entities.Orders;
+using PartyKlinest.ApplicationCore.Entities.Users;
 using PartyKlinest.ApplicationCore.Entities.Users.Cleaners;
 using PartyKlinest.ApplicationCore.Exceptions;
 using PartyKlinest.ApplicationCore.Interfaces;
@@ -14,6 +15,8 @@ namespace UnitTests.ApplicationCore.Services.CleanerFacadeTests
     {
         private readonly Mock<IRepository<Order>> _mockOrderRepo = new();
         private readonly Mock<IRepository<Cleaner>> _mockCleanerRepo = new();
+        private readonly Mock<IRepository<Client>> _mockClientRepo = new();
+        private readonly Mock<IClientService> _mockClientService = new();
 
         [Fact]
         public async Task ThrowsCleanerNotFoundExceptionWhenThereIsNoCleanerWithGivenId()
@@ -23,8 +26,8 @@ namespace UnitTests.ApplicationCore.Services.CleanerFacadeTests
             _mockCleanerRepo
                 .Setup(x => x.GetByIdAsync(It.IsAny<string>(), default))
                 .ReturnsAsync(returnedCleaner);
-            OrderFacade orderFacade = new(_mockOrderRepo.Object);
-            var cleanerFacade = new CleanerFacade(_mockCleanerRepo.Object, orderFacade);
+            OrderFacade orderFacade = new(_mockOrderRepo.Object, _mockClientRepo.Object);
+            var cleanerFacade = new CleanerFacade(_mockCleanerRepo.Object, orderFacade, _mockClientService.Object);
 
             // Act & Assert
             await Assert.ThrowsAsync<CleanerNotFoundException>(
@@ -40,8 +43,8 @@ namespace UnitTests.ApplicationCore.Services.CleanerFacadeTests
             _mockCleanerRepo
                 .Setup(x => x.GetByIdAsync(It.IsAny<string>(), default))
                 .ReturnsAsync(expectedCleaner);
-            OrderFacade orderFacade = new(_mockOrderRepo.Object);
-            var cleanerFacade = new CleanerFacade(_mockCleanerRepo.Object, orderFacade);
+            OrderFacade orderFacade = new(_mockOrderRepo.Object, _mockClientRepo.Object);
+            var cleanerFacade = new CleanerFacade(_mockCleanerRepo.Object, orderFacade, _mockClientService.Object);
 
             // Act
             var returnedCleaner = await cleanerFacade.GetCleanerInfo(expectedCleaner.CleanerId);

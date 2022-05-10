@@ -1,0 +1,13 @@
+.rateorder-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.field-container {
+    padding: 1em 0;
+    margin: 0;
+}
+
+.full-width {
+    width: 100%;
+}

@@ -1,6 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using PartyKlinest.WebApi.Models;
 
 namespace PartyKlinest.WebApi.Controllers
 {
@@ -16,22 +15,6 @@ namespace PartyKlinest.WebApi.Controllers
         }
 
         /// <summary>
-        /// Rate client/cleaner by opposite side (in connection to execution of an order)
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="addRating"></param>
-        /// <returns></returns>
-        [HttpPost("{id}/Rate")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public IActionResult Rate(int id, [FromBody]AddRatingDTO addRating)
-        {
-            return Ok();
-        }
-
-        /// <summary>
         /// Ban client/cleaner.
         /// </summary>
         /// <param name="id"></param>
@@ -40,6 +23,7 @@ namespace PartyKlinest.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Authorize(Policy = "AdminOnly")]
         public IActionResult Ban(int id)
         {
             return Ok();

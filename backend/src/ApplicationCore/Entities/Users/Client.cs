@@ -1,6 +1,8 @@
-﻿namespace PartyKlinest.ApplicationCore.Entities.Users
+﻿using PartyKlinest.ApplicationCore.Interfaces;
+
+namespace PartyKlinest.ApplicationCore.Entities.Users
 {
-    public class Client
+    public class Client : IAggregateRoot
     {
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         private Client()

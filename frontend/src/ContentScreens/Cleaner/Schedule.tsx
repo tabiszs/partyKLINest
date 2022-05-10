@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Heading from '../../Components/Heading';
@@ -6,8 +6,12 @@ import ScheduleEntry from '../../DataClasses/ScheduleEntry';
 import CleanerInfo from '../../DataClasses/CleanerInfo';
 import MessLevel from '../../DataClasses/MessLevel';
 import DayOfWeek, {dayOfWeekGetFromStr, dayOfWeektoStr} from '../../DataClasses/DayOfWeek';
+import Typography from '@mui/material/Typography';
+import Rating from '@mui/material/Rating';
 import {getCleanerInfo, postCleanerInfo} from '../../Api/endpoints';
+import MessSelector from '../../Components/MessSelector';
 import './Schedule.css';
+import Token from '../../DataClasses/Token';
 
 const scheduleRegEx = /^(...) (\d\d):(\d\d)-(\d\d):(\d\d)$/;
 
@@ -82,39 +86,43 @@ const generateScheduleText = (schedule: ScheduleEntry[]) => {
   return text;
 }
 
-const AvailabilityTable = () => {
-  // TODO: gdy będzie API to podmienić
-  // const cleanerInfo = getCleanerInfo(/* Jakoś dostać swoje ID */);
-  // Mock
-  let cleanerInfo: CleanerInfo | null = {
-    scheduleEntries: [
-      {dayOfWeek: DayOfWeek.Monday, start: '21:00', end: '22:35'},
-      {dayOfWeek: DayOfWeek.Tuesday, start: '08:00', end: '12:35'},
-      {dayOfWeek: DayOfWeek.Tuesday, start: '21:00', end: '22:35'},
-      {dayOfWeek: DayOfWeek.Wednesday, start: '07:00', end: '15:00'}
-    ],
+interface AvailabilityTableProps {
+  token: Token;
+}
+
+const AvailabilityTable = (props: AvailabilityTableProps) => {
+
+  const defaultCleanerInfo = {
+    scheduleEntries: [],
     maxMess: MessLevel.Disaster,
-    minClientRating: 0,
-    minPrice: 0,
-    maxLocationRange: 100,
+    minClientRating: 5,
+    minPrice: 0.0,
+    maxLocationRange: 100000,
   };
 
-  if(cleanerInfo === null) {
-    cleanerInfo = {
-      scheduleEntries: [],
-      maxMess: MessLevel.Disaster,
-      minClientRating: 0,
-      minPrice: 0,
-      maxLocationRange: 100000,
-    };
-  }
+  const [cleanerInfo, setCleanerInfo] = useState<CleanerInfo>(defaultCleanerInfo);
+
+  useEffect(() => {
+    getCleanerInfo(props.token.oid)
+    .then(setCleanerInfo)
+    .catch((err) => {
+      console.log(err);
+      setCleanerInfo(defaultCleanerInfo);
+    });
+  })
 
   const [scheduleText, setScheduleText] = useState<string>(generateScheduleText(cleanerInfo.scheduleEntries));
   const [schedule, setSchedule] = useState<ScheduleEntry[] | null>(cleanerInfo.scheduleEntries);
+  const [messLevel, setMessLevel] = useState<MessLevel>(cleanerInfo.maxMess);
+  const [minClientRating, setMinClientRating] = useState<number>(cleanerInfo.minClientRating);
+  const [minPriceText, setMinPriceText] = useState<string>(cleanerInfo.minPrice.toString());
+  const [minPrice, setMinPrice] = useState<number | null>(cleanerInfo.minPrice);
+  const [maxLocationRangeText, setMaxLocationRangeText] = useState<string>(cleanerInfo.maxLocationRange.toString());
+  const [maxLocationRange, setMaxLocationRange] = useState<number | null>(cleanerInfo.maxLocationRange);
 
   return (
     <div className='schedule-container'>
-      <Heading content='Twoja dostępność' />
+      <Heading content='Twoje szczegóły' />
       <div className='schedule-instructions'>
         Format grafiku dostępności jest postaci linii zawierających znaki "DT HH:MM-HH:MM",
         gdzie DT to dzień tygodnia (PON, WTO, SRO, CZW, PIA, SOB, NIE),
@@ -133,20 +141,89 @@ const AvailabilityTable = () => {
           }}
         />
       </div>
-      <Button
-        variant='contained'
-        onClick={() => {
-          if (schedule === null) {
-            return;
-          }
+      <MessSelector
+        label='Maksymalny poziom bałaganu'
+        value={messLevel}
+        onChange={(level: MessLevel) => setMessLevel(level)}
+      />
+      <div className='field-container'>
+        <Typography component='legend'>Minimalna ocena klienta</Typography>
+        <Rating
+          value={minClientRating / 2}
+          onChange={(_event, newRating) => newRating != null && setMinClientRating(newRating * 2)}
+          precision={0.5}
+        />
+      </div>
+      <div className='field-container'>
+        <TextField
+          label='Minimalna cena usługi (zł)'
+          error={minPrice === null}
+          value={minPriceText}
+          onChange={(event: any) => {
+            const val = event.target.value;
+            setMinPriceText(val);
+            if (val === '') {
+              setMinPrice(0);
+              return;
+            }
 
-          cleanerInfo!.scheduleEntries = schedule;
-          console.log(cleanerInfo);
-          postCleanerInfo('moje ID', cleanerInfo!) // TODO: Jakoś dostać swoje ID
-        }}
-      >
-        Zatwierdź
-      </Button>
+            if (/^\d+([,.]\d\d)?$/.test(val)) {
+              const priceString = val.replace(',', '.');
+              setMinPrice(parseFloat(priceString) * 100);
+            }
+            else {
+              setMinPrice(null);
+            }
+          }}
+        />
+      </div>
+      <div className='field-container'>
+        <TextField
+          label='Maksymalna odległość (w łokciach)'
+          value={maxLocationRangeText}
+          error={maxLocationRange === null}
+          onChange={(event: any) => {
+            const val = event.target.value;
+            setMaxLocationRangeText(val);
+            const numberString = val.replace(',', '.');
+
+            try {
+              const range = parseFloat(numberString);
+              if (isNaN(range)) {
+                setMaxLocationRange(null);
+              }
+              else {
+                setMaxLocationRange(range);
+              }
+            }
+            catch {
+              setMaxLocationRange(null);
+            }
+          }}
+        />
+      </div>
+      <div className='field-container'>
+        <Button
+          variant='contained'
+          onClick={() => {
+            if (schedule === null || minPrice === null || maxLocationRange === null) {
+              return;
+            }
+
+            const newCleanerInfo = {
+              scheduleEntries: schedule,
+              maxMess: messLevel,
+              maxLocationRange: maxLocationRange,
+              minPrice: minPrice,
+              minClientRating: minClientRating
+            }
+            console.log(newCleanerInfo);
+            postCleanerInfo(props.token.oid, newCleanerInfo);
+          }}
+        >
+          Zatwierdź
+        </Button>
+      </div>
     </div>
   );
 }
