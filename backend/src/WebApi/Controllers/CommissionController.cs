@@ -27,22 +27,15 @@ namespace PartyKlinest.WebApi.Controllers
         [Authorize(Policy = "AdminOnly")]
         public async Task<ActionResult<SetCommissionDTO>> GetCommissionAsync()
         {
-            if (User.IsAdmin())
+            try
             {
-                try
-                {
-                    decimal commissionValue = await _commissionService.GetCommissionAsync();
-                    return new SetCommissionDTO(commissionValue);
-                }
-                catch (Exception e)
-                {
-                    _logger.LogWarning(e, "Get commission failed");
-                    return BadRequest();
-                }
+                decimal commissionValue = await _commissionService.GetCommissionAsync();
+                return new SetCommissionDTO(commissionValue);
             }
-            else
+            catch (Exception e)
             {
-                return Forbid();
+                _logger.LogWarning(e, "Get commission failed");
+                return BadRequest();
             }
         }
 
@@ -53,22 +46,15 @@ namespace PartyKlinest.WebApi.Controllers
         [Authorize(Policy = "AdminOnly")]
         public async Task<IActionResult> SetCommissionAsync([FromBody] SetCommissionDTO setCommission)
         {
-            if (User.IsAdmin())
+            try
             {
-                try
-                {
-                    await _commissionService.SetCommissionAsync(setCommission.NewProvision);
-                    return Ok();
-                }
-                catch (Exception e)
-                {
-                    _logger.LogWarning(e, "Get commission failed");
-                    return BadRequest();
-                }
+                await _commissionService.SetCommissionAsync(setCommission.NewProvision);
+                return Ok();
             }
-            else
+            catch (Exception e)
             {
-                return Forbid();
+                _logger.LogWarning(e, "Get commission failed");
+                return BadRequest();
             }
         }
     }
