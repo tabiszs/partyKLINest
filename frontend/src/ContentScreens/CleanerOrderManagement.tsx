@@ -37,7 +37,7 @@ const OrderManagement = () => {
       console.log(err);
       setOrders([]);
     })
-  });
+  }, []);
 
   return (
     <div className='order-management-screen'>
