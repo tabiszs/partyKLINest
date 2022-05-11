@@ -36,6 +36,7 @@ const ComissionForm = () => {
           onClick={async () => {
             if (comission !== null) {
               await postCommission(comission);
+              document.location.reload();
             }
           }}
         >

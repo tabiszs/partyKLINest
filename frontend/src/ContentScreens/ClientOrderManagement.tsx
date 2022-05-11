@@ -32,11 +32,11 @@ const OrderManagement = () => {
 
   useEffect(() => {
     getClientOrders()
-    .then(setOrders)
-    .catch((err) => {
-      console.log(err);
-      setOrders([]);
-    });
+      .then(setOrders)
+      .catch((err) => {
+        console.log(err);
+        setOrders([]);
+      });
   });
 
   return (
@@ -46,7 +46,10 @@ const OrderManagement = () => {
         orders={orders}
 
         deleteButtonLabel='Anuluj'
-        onDeleteButtonClick={async (order: Order) => {await deleteOrder(order.id)}}
+        onDeleteButtonClick={async (order: Order) => {
+          await deleteOrder(order.id);
+          document.location.reload();
+        }}
         shouldDisplayDeleteButton={(order: Order) => order.status === OrderStatus.Active}
 
         showRatingPopup={showRatingPopup}
