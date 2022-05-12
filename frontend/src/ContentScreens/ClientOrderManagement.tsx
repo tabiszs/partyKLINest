@@ -32,21 +32,12 @@ const OrderManagement = () => {
 
   useEffect(() => {
     getClientOrders()
-<<<<<<< HEAD
-      .then(setOrders)
-      .catch((err) => {
-        console.log(err);
-        setOrders([]);
-      });
-  });
-=======
     .then(setOrders)
     .catch((err) => {
       console.log(err);
       setOrders([]);
     });
-  }, []);
->>>>>>> dev
+    }, []);
 
   return (
     <div className='order-management-screen'>
