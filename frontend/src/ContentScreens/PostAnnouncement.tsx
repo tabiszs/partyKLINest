@@ -11,7 +11,6 @@ import MessLevelE from '../DataClasses/MessLevel';
 import MessSelector from '../Components/MessSelector';
 import './PostAnnouncement.css';
 import Token from '../DataClasses/Token';
-import { tokenToString } from 'typescript';
 
 const fieldWidth = '16em';
 
