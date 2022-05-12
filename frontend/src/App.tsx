@@ -72,7 +72,7 @@ const App = () => {
             <Route path="/" element={<ClientLayout headerHeight={headerHeight} logout={logout} />}>
               <Route index element={<ClientDashboard token={token!} />} />
               <Route path="/settings" element={<ClientSettings token={token!} editProfile={editProfile} deleteProfile={deleteAccount} />} />
-              <Route path="/postAnnouncement" element={<PostAnnouncement />} />
+              <Route path="/postAnnouncement" element={<PostAnnouncement token={token!}/>} />
             </Route> : ''
           }
           {!token?.isBanned && token?.userType === UserType.Cleaner ?

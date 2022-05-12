@@ -10,6 +10,8 @@ import Address, {isAddressCorrect, emptyAddress} from '../DataClasses/Address';
 import MessLevelE from '../DataClasses/MessLevel';
 import MessSelector from '../Components/MessSelector';
 import './PostAnnouncement.css';
+import Token from '../DataClasses/Token';
+import { tokenToString } from 'typescript';
 
 const fieldWidth = '16em';
 
@@ -126,7 +128,11 @@ const getDefaultDate = () => {
   return defaultDate;
 }
 
-const PostAnnouncement = () => {
+interface PostAnnouncementProps {
+  token: Token;
+}
+
+const PostAnnouncement = (props: PostAnnouncementProps) => {
   const [address, setAddress] = useState<Address>(emptyAddress());
   const [description, setDescription] = useState<string>('');
   const [cleaningTime, setCleaningTime] = useState<Date>(getDefaultDate());
@@ -201,7 +207,7 @@ const PostAnnouncement = () => {
             }
 
             const newOrder = {
-              clientId: 'placeholder',
+              clientId: props.token.oid,
               maxPrice: maxPrice!,
               minRating: minRating,
               messLevel: messLevel,
