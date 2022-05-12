@@ -29,7 +29,7 @@ namespace PartyKlinest.ApplicationCore.Entities.Users.Cleaners
         public CleanerStatus Status { get; private set; }
 
         public OrderFilter OrderFilter { get; private set; }
-        
+
         public void SetCleanerStatus(CleanerStatus status)
         {
             Status = status;

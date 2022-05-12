@@ -1,13 +1,12 @@
-﻿using System;
-using PartyKlinest.ApplicationCore.Entities.Orders;
+﻿using PartyKlinest.ApplicationCore.Entities.Orders;
 using PartyKlinest.ApplicationCore.Entities.Orders.Opinions;
 using PartyKlinest.ApplicationCore.Entities.Users.Cleaners;
 using PartyKlinest.ApplicationCore.Exceptions;
 using PartyKlinest.ApplicationCore.Interfaces;
+using PartyKlinest.ApplicationCore.Specifications;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using PartyKlinest.ApplicationCore.Specifications;
 
 namespace PartyKlinest.ApplicationCore.Services
 {
@@ -24,7 +23,7 @@ namespace PartyKlinest.ApplicationCore.Services
         private readonly IRepository<Cleaner> _cleanerRepository;
         private readonly OrderFacade _orderFacade;
         private readonly IClientService _clientService;
-        
+
         public async Task<List<Order>> GetAssignedOrdersAsync(string cleanerId)
         {
             var cleaner = await GetCleanerInfo(cleanerId);
@@ -52,7 +51,7 @@ namespace PartyKlinest.ApplicationCore.Services
             }
 
             order.SetCleanersOpinion(opinion);
-            _orderFacade.CloseOrder(order);            
+            _orderFacade.CloseOrder(order);
         }
         private bool CleanerWithoutPrivileges(Cleaner cleaner, Order order)
         {
@@ -177,9 +176,9 @@ namespace PartyKlinest.ApplicationCore.Services
             var order = await _orderFacade.GetOrderAsync(orderId);
 
             double? clientRating = await _clientService.GetAverageClientRatingAsync(order.ClientId);
-            
+
             var date = order.Date;
-            var spec = new CleanersMatchingOrderSpecification(date, order.MessLevel, order.MaxPrice, 
+            var spec = new CleanersMatchingOrderSpecification(date, order.MessLevel, order.MaxPrice,
                 clientRating);
 
             return await _cleanerRepository.ListAsync(spec);
