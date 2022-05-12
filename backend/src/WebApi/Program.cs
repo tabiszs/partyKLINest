@@ -1,6 +1,7 @@
 using Microsoft.OpenApi.Models;
 using PartyKlinest.Infrastructure;
 using PartyKlinest.WebApi.Extensions;
+using PartyKlinest.WebApi.Middleware;
 using System.Reflection;
 using System.Text.Json.Serialization;
 
@@ -99,6 +100,8 @@ else
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseBanBlockade();
 
 app.MapControllers();
 

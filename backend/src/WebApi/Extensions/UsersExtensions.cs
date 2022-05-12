@@ -66,6 +66,10 @@ namespace PartyKlinest.WebApi.Extensions
         {
             return user.Claims.Where(c => c.Type == "oid").First().Value;
         }
+
+        public static bool IsBanned(this ClaimsPrincipal user)
+        {
+            return user.Claims.Where(c => c.Type == "isBanned").First().Value == "true";
+        }
     }
 }
-
