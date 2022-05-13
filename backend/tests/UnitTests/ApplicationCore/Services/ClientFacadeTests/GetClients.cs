@@ -1,5 +1,4 @@
-﻿using Ardalis.Specification;
-using Moq;
+﻿using Moq;
 using PartyKlinest.ApplicationCore.Entities.Orders;
 using PartyKlinest.ApplicationCore.Entities.Users;
 using PartyKlinest.ApplicationCore.Interfaces;

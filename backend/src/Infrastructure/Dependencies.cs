@@ -20,6 +20,7 @@ namespace PartyKlinest.Infrastructure
                 );
 
             // Add Azure AD B2C authentication to the ASP.NET Core pipeline
+            configuration["AzureAdB2C:AllowWebApiToBeAuthorizedByACL"] = "true";
             services
                 .AddMicrosoftIdentityWebApiAuthentication(configuration, "AzureAdB2C");
 

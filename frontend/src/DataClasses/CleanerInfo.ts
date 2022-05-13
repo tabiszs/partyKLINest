@@ -9,4 +9,12 @@ interface CleanerInfo {
     maxLocationRange: number;
 }
 
+export const defaultCleanerInfo = () : CleanerInfo => ({
+    scheduleEntries: [],
+    maxMess: MessLevel.Disaster,
+    minClientRating: 5,
+    minPrice: 0.0,
+    maxLocationRange: 100000
+});
+
 export default CleanerInfo;

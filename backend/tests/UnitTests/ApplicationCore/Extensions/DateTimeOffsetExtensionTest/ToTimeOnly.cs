@@ -1,5 +1,5 @@
-using System;
 using PartyKlinest.ApplicationCore.Extensions;
+using System;
 using Xunit;
 
 namespace UnitTests.ApplicationCore.Extensions.DateTimeOffsetExtensionTest;
@@ -13,7 +13,7 @@ public class ToTimeOnly
         var expected = new TimeOnly(16, 22, 15);
 
         var actual = dateTimeOffset.ToTimeOnly();
-        
+
         Assert.Equal(expected, actual);
     }
 }

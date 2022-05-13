@@ -37,7 +37,7 @@ const OrderManagement = () => {
       console.log(err);
       setOrders([]);
     });
-  });
+    }, []);
 
   return (
     <div className='order-management-screen'>
@@ -46,7 +46,10 @@ const OrderManagement = () => {
         orders={orders}
 
         deleteButtonLabel='Anuluj'
-        onDeleteButtonClick={async (order: Order) => {await deleteOrder(order.id)}}
+        onDeleteButtonClick={async (order: Order) => {
+          await deleteOrder(order.id);
+          document.location.reload();
+        }}
         shouldDisplayDeleteButton={(order: Order) => order.status === OrderStatus.Active}
 
         showRatingPopup={showRatingPopup}

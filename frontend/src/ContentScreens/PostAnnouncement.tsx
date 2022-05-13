@@ -194,7 +194,7 @@ const PostAnnouncement = () => {
       <div className='announcement-form-field'>
         <Button
           variant='contained'
-          onClick={() => {
+          onClick={async () => {
             if (!isFormFilledCorrectly(address, maxPrice)) {
               alert('Formularz nie został wypełniony poprawnie!');
               return;
@@ -209,8 +209,8 @@ const PostAnnouncement = () => {
               address: address
             };
 
-            postNewOrder(newOrder);
-            console.log(newOrder);
+            await postNewOrder(newOrder);
+            document.location.reload();
           }}
         >
           Zatwierdź
