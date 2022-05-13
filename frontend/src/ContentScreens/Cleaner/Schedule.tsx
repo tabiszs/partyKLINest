@@ -1,11 +1,11 @@
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Heading from '../../Components/Heading';
 import ScheduleEntry from '../../DataClasses/ScheduleEntry';
-import CleanerInfo from '../../DataClasses/CleanerInfo';
+import CleanerInfo, { defaultCleanerInfo } from '../../DataClasses/CleanerInfo';
 import MessLevel from '../../DataClasses/MessLevel';
-import DayOfWeek, {dayOfWeekGetFromStr, dayOfWeektoStr} from '../../DataClasses/DayOfWeek';
+import {dayOfWeekGetFromStr, dayOfWeektoStr} from '../../DataClasses/DayOfWeek';
 import Typography from '@mui/material/Typography';
 import Rating from '@mui/material/Rating';
 import {getCleanerInfo, postCleanerInfo} from '../../Api/endpoints';
@@ -91,31 +91,17 @@ interface AvailabilityTableProps {
 }
 
 const AvailabilityTable = (props: AvailabilityTableProps) => {
-  // TODO: gdy będzie API to podmienić
-  // const cleanerInfo = getCleanerInfo(props.token.oid);
-  // Mock
-  let cleanerInfo: CleanerInfo | null = {
-    scheduleEntries: [
-      {dayOfWeek: DayOfWeek.Monday, start: '21:00', end: '22:35'},
-      {dayOfWeek: DayOfWeek.Tuesday, start: '08:00', end: '12:35'},
-      {dayOfWeek: DayOfWeek.Tuesday, start: '21:00', end: '22:35'},
-      {dayOfWeek: DayOfWeek.Wednesday, start: '07:00', end: '15:00'}
-    ],
-    maxMess: MessLevel.Disaster,
-    minClientRating: 5,
-    minPrice: 0.0,
-    maxLocationRange: 100,
-  };
 
-  if (cleanerInfo === null) {
-    cleanerInfo = {
-      scheduleEntries: [],
-      maxMess: MessLevel.Disaster,
-      minClientRating: 5,
-      minPrice: 0.0,
-      maxLocationRange: 100000,
-    };
-  }
+  const [cleanerInfo, setCleanerInfo] = useState<CleanerInfo>(defaultCleanerInfo());
+
+  useEffect(() => {
+    getCleanerInfo(props.token.oid)
+    .then(setCleanerInfo)
+    .catch((err) => {
+      console.log(err);
+      setCleanerInfo(defaultCleanerInfo());
+    });
+  }, [props.token.oid])
 
   const [scheduleText, setScheduleText] = useState<string>(generateScheduleText(cleanerInfo.scheduleEntries));
   const [schedule, setSchedule] = useState<ScheduleEntry[] | null>(cleanerInfo.scheduleEntries);
@@ -211,20 +197,21 @@ const AvailabilityTable = (props: AvailabilityTableProps) => {
       <div className='field-container'>
         <Button
           variant='contained'
-          onClick={() => {
+          onClick={async () => {
             if (schedule === null || minPrice === null || maxLocationRange === null) {
               return;
             }
 
-            cleanerInfo = {
+            const newCleanerInfo = {
               scheduleEntries: schedule,
               maxMess: messLevel,
               maxLocationRange: maxLocationRange,
               minPrice: minPrice,
               minClientRating: minClientRating
             }
-            console.log(cleanerInfo);
-            postCleanerInfo('moje ID', cleanerInfo!) // TODO: Jakoś dostać swoje ID -> props.token.oid
+            console.log(newCleanerInfo);
+            await postCleanerInfo(props.token.oid, newCleanerInfo);
+            document.location.reload();
           }}
         >
           Zatwierdź
