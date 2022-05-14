@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace PartyKlinest.ApplicationCore.Handlers
 {
-    public class AssignOrder
+    public class AssignOrderFacade
     {
-        public AssignOrder(
+        public AssignOrderFacade(
             IRepository<Cleaner> cleanerRepository,
             IRepository<Client> clientRepository,
             IRepository<Order> orderRepository)

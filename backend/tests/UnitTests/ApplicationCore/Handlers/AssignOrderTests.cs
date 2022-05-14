@@ -17,7 +17,7 @@ namespace UnitTests.ApplicationCore.Handlers
         private readonly Mock<IRepository<Order>> _mockOrderRepo = new();
         private readonly Mock<IRepository<Cleaner>> _mockCleanerRepo = new();
         private readonly Mock<IRepository<Client>> _mockClientRepo = new();
-        private readonly Mock<AssignOrder> _mockAssignOrderHandler = new();
+        private readonly Mock<AssignOrderFacade> _mockAssignOrderHandler = new();
 
         [Fact]
         public async Task ThrowsCleanerNotFoundExceptionWhenThereIsNoCleanerWithGivenId()
@@ -30,7 +30,7 @@ namespace UnitTests.ApplicationCore.Handlers
             Order? returnedOrder = null;
             _mockOrderRepo.Setup(x => x.GetByIdAsync(It.IsAny<long>(), default)).ReturnsAsync(returnedOrder);
 
-            var assignHandler = new AssignOrder(
+            var assignHandler = new AssignOrderFacade(
                 _mockCleanerRepo.Object,
                 _mockClientRepo.Object,
                 _mockOrderRepo.Object);
@@ -52,7 +52,7 @@ namespace UnitTests.ApplicationCore.Handlers
             Order? returnedOrder = null;
             _mockOrderRepo.Setup(x => x.GetByIdAsync(It.IsAny<long>(), default)).ReturnsAsync(returnedOrder);
 
-            var assignHandler = new AssignOrder(
+            var assignHandler = new AssignOrderFacade(
                 _mockCleanerRepo.Object,
                 _mockClientRepo.Object,
                 _mockOrderRepo.Object);
@@ -79,7 +79,7 @@ namespace UnitTests.ApplicationCore.Handlers
             Order returnedOrder = orderBuilder.Build();
             _mockOrderRepo.Setup(x => x.GetByIdAsync(It.IsAny<long>(), default)).ReturnsAsync(returnedOrder);
 
-            var assignHandler = new AssignOrder(
+            var assignHandler = new AssignOrderFacade(
                 _mockCleanerRepo.Object,
                 _mockClientRepo.Object,
                 _mockOrderRepo.Object);
@@ -105,7 +105,7 @@ namespace UnitTests.ApplicationCore.Handlers
             Order? returnedOrder = orderBuilder.Build();
             _mockOrderRepo.Setup(x => x.GetByIdAsync(It.IsAny<long>(), default)).ReturnsAsync(returnedOrder);
 
-            AssignOrder assignOrder = new(_mockCleanerRepo.Object, _mockClientRepo.Object, _mockOrderRepo.Object);
+            AssignOrderFacade assignOrder = new(_mockCleanerRepo.Object, _mockClientRepo.Object, _mockOrderRepo.Object);
 
             await assignOrder.AssignOrderToCleaner(returnedOrder.OrderId, returnedCleaner.CleanerId);
 

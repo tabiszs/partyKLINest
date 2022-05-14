@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using PartyKlinest.ApplicationCore.Handlers;
 using PartyKlinest.ApplicationCore.Interfaces;
 using PartyKlinest.ApplicationCore.Services;
 using PartyKlinest.Infrastructure.Data;
@@ -21,6 +22,7 @@ namespace PartyKlinest.Infrastructure
             services.AddScoped(typeof(IReadRepository<>), typeof(EfRepository<>));
             services.AddScoped<OrderFacade>();
             services.AddScoped<CleanerFacade>();
+            services.AddScoped<AssignOrderFacade>();
             services.AddScoped<ICommissionService, CommissionService>();
             services.AddScoped<IClientService, ClientService>();
         }
