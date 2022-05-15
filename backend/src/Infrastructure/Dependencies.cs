@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Graph;
+using Microsoft.Identity.Client;
 using Microsoft.Identity.Web;
 using PartyKlinest.ApplicationCore.Interfaces;
 using PartyKlinest.ApplicationCore.Services;
@@ -20,11 +22,23 @@ namespace PartyKlinest.Infrastructure
                 );
 
             // Add Azure AD B2C authentication to the ASP.NET Core pipeline
-            configuration["AzureAdB2C:AllowWebApiToBeAuthorizedByACL"] = "true";
-            services
-                .AddMicrosoftIdentityWebApiAuthentication(configuration, "AzureAdB2C");
+            services.AddSingleton<IAuthenticationProvider>(o =>
+            {
+                var confidentialClientApplication = ConfidentialClientApplicationBuilder
+                    .Create(configuration.GetSection("AzureAdB2C")["ClientId"])
+                    .WithTenantId(configuration.GetSection("AzureAdB2C")["TenantId"])
+                    .WithClientSecret(configuration.GetSection("AzureAdB2C")["ClientSecret"])
+                    .Build();
 
-            JwtSecurityTokenHandler.DefaultMapInboundClaims = false;
+                return new Microsoft.Graph.Auth.ClientCredentialProvider(confidentialClientApplication);
+            });
+
+            services.AddSingleton(conf => new GraphServiceClient(conf.GetService<IAuthenticationProvider>()));
+
+            services.AddSingleton(o => new ExtensionPropertyNameBuilder(configuration.GetSection("AzureAdB2C")["ExtensionAppId"]));
+            
+            configuration["AzureAdB2C:AllowWebApiToBeAuthorizedByACL"] = "true";
+            services.AddMicrosoftIdentityWebApiAuthentication(configuration, "AzureAdB2C");
 
             services.AddAuthorization(options =>
             {
