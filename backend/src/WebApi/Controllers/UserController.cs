@@ -2,6 +2,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Graph;
 using PartyKlinest.Infrastructure;
+using PartyKlinest.WebApi.Extensions;
+using PartyKlinest.WebApi.Models;
+using System.Net;
 
 namespace PartyKlinest.WebApi.Controllers
 {
@@ -20,6 +23,50 @@ namespace PartyKlinest.WebApi.Controllers
             _nameBuilder = nameBuilder;
         }
         
+        /// <summary>
+        /// Get users.
+        /// </summary>
+        /// <returns>List of registered users.</returns>
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [Authorize(Policy = "AdminOnly")]
+        public async Task<IEnumerable<UserInfoDTO>> GetUsers()
+        {
+            _logger.LogInformation("Get all users");
+            var users = await _graphClient.Users
+                .Request()
+                .Select($"id,givenName,surname,identities,{_nameBuilder.GetExtensionName("AccountType")},{_nameBuilder.GetExtensionName("isBanned")}")
+                .GetAsync();
+            return from user in users
+                   select new UserInfoDTO
+                   {
+                       Oid = user.Id,
+                       Name = user.GivenName,
+                       Surname = user.Surname,
+                       Email = user.GetEmail(),
+                       AccountType = user.GetUserTypeFromProperty(_nameBuilder.GetExtensionName("AccountType")),
+                       IsBanned = user.GetIsBannedFromProperty(_nameBuilder.GetExtensionName("isBanned"))
+                   };
+        }
+
+        /// <summary>
+        /// Delete user account.
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        [HttpDelete("{userId}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Authorize(Policy = "AdminOnly")]
+        public async Task<IActionResult> DeleteUser(string userId)
+        {
+            _logger.LogInformation("Delete user");
+            await _graphClient.Users[userId].Request().DeleteAsync();
+            return Ok();
+        }
+
         /// <summary>
         /// Ban client/cleaner.
         /// </summary>
