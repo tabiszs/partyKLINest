@@ -51,7 +51,7 @@ namespace PartyKlinest.ApplicationCore.Services
             }
 
             order.SetCleanersOpinion(opinion);
-            await _orderFacade.CloseOrderAsync(order);
+            _orderFacade.CloseOrder(order);
         }
         private bool CleanerWithoutPrivileges(Cleaner cleaner, Order order)
         {
@@ -191,24 +191,6 @@ namespace PartyKlinest.ApplicationCore.Services
                 clientRating);
 
             return await _cleanerRepository.ListAsync(spec);
-        }
-
-        public async Task BanAsync(string cleanerId)
-        {
-            var cleaner = await GetCleanerInfo(cleanerId);
-            cleaner.SetCleanerStatus(CleanerStatus.Banned);
-            await _cleanerRepository.UpdateAsync(cleaner);
-        }
-
-        public async Task UnbanAsync(string cleanerId)
-        {
-            var cleaner = await GetCleanerInfo(cleanerId);
-            if (cleaner.Status != CleanerStatus.Banned)
-            {
-                throw new CleanerIsNotBannedException(cleaner);
-            }
-            cleaner.SetCleanerStatus(CleanerStatus.Registered);
-            await _cleanerRepository.UpdateAsync(cleaner);
         }
     }
 }
