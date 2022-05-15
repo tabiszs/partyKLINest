@@ -136,6 +136,7 @@ namespace PartyKlinest.ApplicationCore.Services
             {
                 throw new NotCorrectOrderStatusException(order.Status, OrderStatus.Cancelled);
             }
+        }
         public async Task<List<Order>> GetOrdersCreatedByAsync(string clientId)
         {
             var spec = new Specifications.OrdersCreatedBySpecification(clientId);
