@@ -36,7 +36,8 @@ namespace PartyKlinest.Infrastructure
             services.AddSingleton(conf => new GraphServiceClient(conf.GetService<IAuthenticationProvider>()));
 
             services.AddSingleton(o => new ExtensionPropertyNameBuilder(configuration.GetSection("AzureAdB2C")["ExtensionAppId"]));
-
+            
+            configuration["AzureAdB2C:AllowWebApiToBeAuthorizedByACL"] = "true";
             services.AddMicrosoftIdentityWebApiAuthentication(configuration, "AzureAdB2C");
 
             services.AddAuthorization(options =>

@@ -22,10 +22,11 @@ const OrderDeletion = () => {
     setOpen(false);
     setCurrentOrder(null);
   }
-  const confirmAssignDialog = (order: Order, cleanerId: string) => {
-    postOrder(order.id, { ...order, cleanerId: cleanerId });
+  const confirmAssignDialog = async (order: Order, cleanerId: string) => {
+    await postOrder(order.id, { ...order, cleanerId: cleanerId });
     setOpen(false);
     setCurrentOrder(null);
+    document.location.reload();
   }
 
   useEffect(() => {
@@ -55,7 +56,10 @@ const OrderDeletion = () => {
       <OrderList
         orders={orders}
         deleteButtonLabel='Usuń'
-        onDeleteButtonClick={async (order: Order) => { await deleteOrder(order.id) }}
+        onDeleteButtonClick={async (order: Order) => {
+          await deleteOrder(order.id);
+          document.location.reload();
+        }}
         assignButtonLabel='Przyporządkuj'
         onAssignButtonClick={openAssignDialog}
       />

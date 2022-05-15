@@ -197,7 +197,7 @@ const AvailabilityTable = (props: AvailabilityTableProps) => {
       <div className='field-container'>
         <Button
           variant='contained'
-          onClick={() => {
+          onClick={async () => {
             if (schedule === null || minPrice === null || maxLocationRange === null) {
               return;
             }
@@ -210,7 +210,8 @@ const AvailabilityTable = (props: AvailabilityTableProps) => {
               minClientRating: minClientRating
             }
             console.log(newCleanerInfo);
-            postCleanerInfo(props.token.oid, newCleanerInfo);
+            await postCleanerInfo(props.token.oid, newCleanerInfo);
+            document.location.reload();
           }}
         >
           Zatwierdź

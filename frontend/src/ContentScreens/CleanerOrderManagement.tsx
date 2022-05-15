@@ -50,6 +50,7 @@ const OrderManagement = () => {
           const newOrder = {...order};
           newOrder.cleanerId = undefined;
           await postOrder(order.id, newOrder);
+          document.location.reload();
         }}
         shouldDisplayDeleteButton={(order: Order) => order.status === OrderStatus.Active}
 
@@ -58,6 +59,7 @@ const OrderManagement = () => {
           const newOrder = {...order};
           newOrder.status = OrderStatus.InProgress;
           await postOrder(order.id, newOrder);
+          document.location.reload();
         }}
         shouldDisplayAcceptButton={(order: Order) => order.status === OrderStatus.Active}
 
@@ -72,6 +74,7 @@ const OrderManagement = () => {
           const newOrder = {...order};
           newOrder.status = OrderStatus.Closed;
           await postOrder(order.id, newOrder);
+          document.location.reload();
         }}
         shouldDisplayCloseButton={(order: Order) => order.status === OrderStatus.InProgress}
       />
