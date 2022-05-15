@@ -148,3 +148,5 @@ namespace PartyKlinest.ApplicationCore.Services
         }
     }
 }
+
+    
