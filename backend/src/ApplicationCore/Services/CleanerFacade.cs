@@ -96,24 +96,33 @@ namespace PartyKlinest.ApplicationCore.Services
 
         public async Task UpdateCleanerAsync(Cleaner updateCleaner)
         {
-            var cleaner = await GetCleanerInfo(updateCleaner.CleanerId);
-
-            if (NeedUpdateStatus(cleaner, updateCleaner))
+            var oid = updateCleaner.CleanerId;
+            bool clientExists = await _cleanerRepository.GetByIdAsync(oid) != null;
+            if(!clientExists)
             {
-                await UpdateStatus(cleaner, updateCleaner);
+                await _cleanerRepository.AddAsync(updateCleaner);
             }
-
-            if (NeedUpdateOrderFilter(cleaner, updateCleaner))
+            else
             {
-                await UpdateOrderFilter(cleaner, updateCleaner);
-            }
+                var cleaner = await GetCleanerInfo(updateCleaner.CleanerId);
 
-            if (NeedUpdateSchedule(cleaner, updateCleaner))
-            {
-                await UpdateSchedule(cleaner, updateCleaner);
-            }
+                if (NeedUpdateStatus(cleaner, updateCleaner))
+                {
+                    await UpdateStatus(cleaner, updateCleaner);
+                }
 
-            // TODO -> update rest of cleaner info via azure.
+                if (NeedUpdateOrderFilter(cleaner, updateCleaner))
+                {
+                    await UpdateOrderFilter(cleaner, updateCleaner);
+                }
+
+                if (NeedUpdateSchedule(cleaner, updateCleaner))
+                {
+                    await UpdateSchedule(cleaner, updateCleaner);
+                }
+
+                // TODO -> update rest of cleaner info via azure.
+            }
         }
         private async Task UpdateStatus(Cleaner localCleaner, Cleaner updateCleaner)
         {
