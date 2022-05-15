@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PartyKlinest.ApplicationCore.Entities.Orders;
 using PartyKlinest.ApplicationCore.Entities.Orders.Opinions;
@@ -18,12 +19,14 @@ namespace PartyKlinest.WebApi.Controllers
         private readonly ILogger<OrdersController> _logger;
         private readonly OrderFacade _orderFacade;
         private readonly CleanerFacade _cleanerFacade;
+        private readonly IMapper _mapper;
 
-        public OrdersController(ILogger<OrdersController> logger, OrderFacade orderFacade, CleanerFacade cleanerFacade)
+        public OrdersController(ILogger<OrdersController> logger, OrderFacade orderFacade, CleanerFacade cleanerFacade, IMapper mapper)
         {
             _logger = logger;
             _orderFacade = orderFacade;
             _cleanerFacade = cleanerFacade;
+            _mapper = mapper;
         }
 
         /// <summary>
@@ -35,11 +38,12 @@ namespace PartyKlinest.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [Authorize]
-        public async Task<List<Order>> GetOrdersAsync()
+        public async Task<List<OrderDTO>> GetOrdersAsync()
         {
             _logger.LogInformation("Getting orders");
+            var orders = await _orderFacade.ListOrdersAsync();
 
-            return await _orderFacade.ListOrdersAsync();
+            return _mapper.Map<List<OrderDTO>>(orders);
         }
 
         /// <summary>
@@ -51,12 +55,13 @@ namespace PartyKlinest.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [Authorize(Policy = "CleanerOnly")]
-        public async Task<List<Order>> GetAssignedOrdersAsync()
+        public async Task<List<OrderDTO>> GetAssignedOrdersAsync()
         {
             var cleanerId = User.GetOid();
             _logger.LogInformation("Getting assigned orders for cleaner {cleanerId}", cleanerId);
+            var orders = await _orderFacade.ListAssignedOrdersToAsync(cleanerId);
 
-            return await _orderFacade.ListAssignedOrdersToAsync(cleanerId);
+            return _mapper.Map<List<OrderDTO>>(orders);
         }
 
         /// <summary>
@@ -68,12 +73,13 @@ namespace PartyKlinest.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [Authorize(Policy = "ClientOnly")]
-        public async Task<List<Order>> GetCreatedOrdersAsync()
+        public async Task<List<OrderDTO>> GetCreatedOrdersAsync()
         {
             var clientId = User.GetOid();
             _logger.LogInformation("Getting orders for client {clientId}", clientId);
+            var orders = await _orderFacade.ListCreatedOrdersByAsync(clientId);
 
-            return await _orderFacade.ListCreatedOrdersByAsync(clientId);
+            return _mapper.Map<List<OrderDTO>>(orders);
         }
 
         /// <summary>
@@ -175,12 +181,12 @@ namespace PartyKlinest.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Authorize]
-        public async Task<ActionResult<Order>> GetOrderInfoAsync(long orderId)
+        public async Task<ActionResult<OrderDTO>> GetOrderInfoAsync(long orderId)
         {
             try
             {
                 var order = await _orderFacade.GetOrderAsync(orderId);
-                return order;
+                return _mapper.Map<OrderDTO>(order);
             }
             catch (OrderNotFoundException)
             {
@@ -192,7 +198,7 @@ namespace PartyKlinest.WebApi.Controllers
         /// Modify order.
         /// </summary>
         /// <param name="orderId"></param>
-        /// <param name="order"></param>
+        /// <param name="orderDTO"></param>
         /// <returns></returns>
         [HttpPost("{orderId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -201,10 +207,11 @@ namespace PartyKlinest.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Authorize]
-        public async Task<IActionResult> ModifyOrderInfoAsync(long orderId, [FromBody] Order order)
+        public async Task<IActionResult> ModifyOrderInfoAsync(long orderId, [FromBody] OrderDTO orderDTO)
         {
             try
             {
+                var order = _mapper.Map<Order>(orderDTO);
                 await _orderFacade.ModifyOrderAsync(orderId, order.ClientId, order.CleanerId,
                     order.Status, order.MaxPrice, order.MinCleanerRating, order.Date,
                     order.Address, order.MessLevel);
