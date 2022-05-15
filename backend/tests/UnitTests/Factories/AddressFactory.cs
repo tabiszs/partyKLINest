@@ -9,7 +9,7 @@ namespace UnitTests.Factories
         public string TestPostalCode => "00-662";
         public string TestStreet => "Koszykowa";
         public string TestBuildingNumber => "75";
-        public string? TestFlatNumber => "107";
+        public int? TestFlatNumber => 107;
 
         public Address CreateWithDefaultValues()
         {

@@ -1,5 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
 using PartyKlinest.WebApi.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace PartyKlinest.WebApi.Controllers
 {
@@ -39,6 +40,7 @@ namespace PartyKlinest.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Authorize(Policy = "AdminOnly")]
         public IActionResult Ban(int id)
         {
             return Ok();

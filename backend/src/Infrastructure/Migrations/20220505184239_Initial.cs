@@ -5,7 +5,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace PartyKlinest.Infrastructure.Migrations
 {
-    public partial class Intitial : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -13,11 +13,11 @@ namespace PartyKlinest.Infrastructure.Migrations
                 name: "cleaners",
                 columns: table => new
                 {
-                    cleaner_id = table.Column<string>(type: "text", nullable: false),
+                    cleaner_id = table.Column<string>(type: "character varying(40)", maxLength: 40, nullable: false),
                     status = table.Column<int>(type: "integer", nullable: false),
-                    max_mess_level = table.Column<int>(type: "integer", nullable: false),
-                    min_price = table.Column<decimal>(type: "money", nullable: false),
-                    min_client_rating = table.Column<int>(type: "integer", nullable: false)
+                    order_filter_max_mess_level = table.Column<int>(type: "integer", nullable: false),
+                    order_filter_min_client_rating = table.Column<int>(type: "integer", nullable: false),
+                    order_filter_min_price = table.Column<decimal>(type: "money", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -28,11 +28,23 @@ namespace PartyKlinest.Infrastructure.Migrations
                 name: "clients",
                 columns: table => new
                 {
-                    client_id = table.Column<string>(type: "text", nullable: false)
+                    client_id = table.Column<string>(type: "character varying(40)", maxLength: 40, nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("pk_clients", x => x.client_id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "decimal_key_value_pairs",
+                columns: table => new
+                {
+                    id = table.Column<string>(type: "text", nullable: false),
+                    value = table.Column<decimal>(type: "numeric", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_decimal_key_value_pairs", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
@@ -44,7 +56,7 @@ namespace PartyKlinest.Infrastructure.Migrations
                     start = table.Column<TimeOnly>(type: "time without time zone", nullable: false),
                     end = table.Column<TimeOnly>(type: "time without time zone", nullable: false),
                     day_of_week = table.Column<int>(type: "integer", nullable: false),
-                    cleaner_id = table.Column<string>(type: "text", nullable: true)
+                    cleaner_id = table.Column<string>(type: "character varying(40)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -67,18 +79,18 @@ namespace PartyKlinest.Infrastructure.Migrations
                     mess_level = table.Column<int>(type: "integer", nullable: false),
                     status = table.Column<int>(type: "integer", nullable: false),
                     date = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
-                    client_id = table.Column<string>(type: "text", nullable: false),
-                    cleaner_id = table.Column<string>(type: "text", nullable: true),
+                    client_id = table.Column<string>(type: "character varying(40)", maxLength: 40, nullable: false),
+                    cleaner_id = table.Column<string>(type: "character varying(40)", maxLength: 40, nullable: true),
                     address_street = table.Column<string>(type: "character varying(180)", maxLength: 180, nullable: false),
                     address_building_number = table.Column<string>(type: "character varying(10)", maxLength: 10, nullable: false),
-                    address_flat_number = table.Column<string>(type: "text", nullable: true),
+                    address_flat_number = table.Column<int>(type: "integer", nullable: true),
                     address_city = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     address_postal_code = table.Column<string>(type: "character varying(18)", maxLength: 18, nullable: false),
                     address_country = table.Column<string>(type: "character varying(90)", maxLength: 90, nullable: false),
                     clients_opinion_rating = table.Column<int>(type: "integer", nullable: true),
-                    clients_opinion_additional_info = table.Column<string>(type: "character varying(4096)", maxLength: 4096, nullable: true),
+                    clients_opinion_additional_info = table.Column<string>(type: "text", nullable: true),
                     cleaners_opinion_rating = table.Column<int>(type: "integer", nullable: true),
-                    cleaners_opinion_additional_info = table.Column<string>(type: "character varying(4096)", maxLength: 4096, nullable: true)
+                    cleaners_opinion_additional_info = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -114,6 +126,9 @@ namespace PartyKlinest.Infrastructure.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "decimal_key_value_pairs");
+
             migrationBuilder.DropTable(
                 name: "orders");
 
