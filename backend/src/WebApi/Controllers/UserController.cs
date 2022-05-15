@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+using PartyKlinest.WebApi.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace PartyKlinest.WebApi.Controllers
@@ -12,6 +13,22 @@ namespace PartyKlinest.WebApi.Controllers
         public UserController(ILogger<UserController> logger)
         {
             _logger = logger;
+        }
+
+        /// <summary>
+        /// Rate client/cleaner by opposite side (in connection to execution of an order)
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="addRating"></param>
+        /// <returns></returns>
+        [HttpPost("{id}/Rate")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public IActionResult Rate(int id, [FromBody] AddRatingDTO addRating)
+        {
+            return Ok();
         }
 
         /// <summary>
