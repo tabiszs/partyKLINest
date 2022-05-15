@@ -22,6 +22,7 @@ namespace PartyKlinest.ApplicationCore.Services
         private readonly IRepository<Client> _clientRepository;
 
         private const OrderStatus closedOrder = OrderStatus.Closed;
+        private const OrderStatus cancelledOrder = OrderStatus.Cancelled;
 
         public async Task<Order> GetOrderAsync(long orderId)
         {
