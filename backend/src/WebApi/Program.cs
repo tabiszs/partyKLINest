@@ -1,6 +1,7 @@
 using Microsoft.OpenApi.Models;
 using PartyKlinest.Infrastructure;
 using PartyKlinest.WebApi.Extensions;
+using PartyKlinest.WebApi.Middleware;
 using System.Reflection;
 using System.Text.Json.Serialization;
 
@@ -39,6 +40,7 @@ builder.Services.AddControllers()
         j.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
     });
 
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -99,6 +101,8 @@ else
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseBanBlockade();
 
 app.MapControllers();
 
