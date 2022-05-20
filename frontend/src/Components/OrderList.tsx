@@ -46,7 +46,7 @@ interface OrderCardProps {
 const OrderCard = (props: OrderCardProps) => {
 
   const getOpinionSummary = (userType: UserType, opinion?: Rating) => {
-    if (opinion === undefined) return <>Nie wystawiono</>;
+    if (opinion === null || opinion === undefined) return <>Nie wystawiono</>;
 
     return (
       <>
