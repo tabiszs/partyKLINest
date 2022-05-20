@@ -47,29 +47,19 @@ namespace PartyKlinest.WebApi.Extensions
             return user.GetUserType() == UserType.Client;
         }
 
-        public static string GetName(this ClaimsPrincipal user)
-        {
-            return user.Claims.Where(c => c.Type == "given_name").First().Value;
-        }
-
-        public static string GetSurname(this ClaimsPrincipal user)
-        {
-            return user.Claims.Where(c => c.Type == "family_name").First().Value;
-        }
-
-        public static string GetEmail(this ClaimsPrincipal user)
-        {
-            return user.Claims.Where(c => c.Type == "email").First().Value;
-        }
-
         public static string GetOid(this ClaimsPrincipal user)
         {
-            return user.Claims.Where(c => c.Type == "oid").First().Value;
+            return user.Claims.Where(c => c.Type == "oid" || c.Type == @"http://schemas.microsoft.com/identity/claims/objectidentifier").First().Value;
         }
 
         public static bool IsBanned(this ClaimsPrincipal user)
         {
-            return user.Claims.Where(c => c.Type == "extension_isBanned").First().Value == "true";
+            var isBannedClaims = user.Claims.Where(c => c.Type == "extension_isBanned" || c.Type == @"http://schemas.microsoft.com/identity/claims/isbanned" || c.Type == "isBanned");
+            if (isBannedClaims.Count() == 1 && isBannedClaims.First().Value == "true")
+            {
+                return true;
+            }
+            return false;
         }
     }
 }
