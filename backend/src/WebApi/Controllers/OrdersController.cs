@@ -3,10 +3,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PartyKlinest.ApplicationCore.Entities.Orders;
 using PartyKlinest.ApplicationCore.Entities.Orders.Opinions;
-using PartyKlinest.ApplicationCore.Entities.Users.Cleaners;
 using PartyKlinest.ApplicationCore.Exceptions;
 using PartyKlinest.ApplicationCore.Services;
 using PartyKlinest.WebApi.Extensions;
+using PartyKlinest.WebApi.Mapper;
 using PartyKlinest.WebApi.Models;
 
 namespace PartyKlinest.WebApi.Controllers
@@ -268,18 +268,18 @@ namespace PartyKlinest.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Authorize]
-        public async Task<ActionResult<List<Cleaner>>> ListCleanersMatchingOrder(long orderId)
+        public async Task<ActionResult<List<CleanerInfoDTO>>> ListCleanersMatchingOrder(long orderId)
         {
             try
             {
                 var cleaners = await _cleanerFacade.ListCleanersMatchingOrderAsync(orderId);
-                return cleaners;
+
+                return CleanerMapper.GetCleanerInfoDTOs(cleaners);
             }
             catch (OrderNotFoundException)
             {
                 return NotFound("Order with given id not found");
             }
         }
-
     }
 }
