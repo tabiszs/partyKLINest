@@ -1,9 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using PartyKlinest.ApplicationCore.Entities.Orders;
-using PartyKlinest.ApplicationCore.Entities.Users.Cleaners;
 using PartyKlinest.ApplicationCore.Exceptions;
 using PartyKlinest.ApplicationCore.Services;
+using PartyKlinest.WebApi.Mapper;
 using PartyKlinest.WebApi.Models;
 
 namespace PartyKlinest.WebApi.Controllers
@@ -37,23 +36,9 @@ namespace PartyKlinest.WebApi.Controllers
             try
             {
                 var cleaner = await _cleanerFacade.GetCleanerInfo(cleanerId);
-                List<ScheduleEntryDTO> schedulesDTO = new();
-                foreach (var entry in cleaner.ScheduleEntries)
-                {
-                    schedulesDTO.Add(
-                        new ScheduleEntryDTO(
-                            entry.DayOfWeek,
-                            entry.Start.ToShortTimeString(),
-                            entry.End.ToShortTimeString()));
-                }
 
-                var cleanerDTO = new CleanerInfoDTO(
-                    schedulesDTO.ToArray(),
-                    cleaner.OrderFilter.MaxMessLevel,
-                    cleaner.OrderFilter.MinClientRating,
-                    cleaner.OrderFilter.MinPrice,
-                    0,
-                    cleaner.Status);
+                var cleanerDTO = CleanerMapper.GetCleanerInfoDTO(cleaner);
+
                 return cleanerDTO;
             }
             catch (CleanerNotFoundException)
@@ -84,16 +69,7 @@ namespace PartyKlinest.WebApi.Controllers
             _logger.LogInformation("Update cleaner info. CleanerId: {cleanerId}", cleanerId);
             try
             {
-                List<ScheduleEntry> scheduleEntries = new();
-                foreach (var entry in cleanerInfo.ScheduleEntries)
-                {
-                    var ts = TimeOnly.Parse(entry.Start);
-                    var te = TimeOnly.Parse(entry.End);
-                    scheduleEntries.Add(new ScheduleEntry(ts, te, entry.DayOfWeek));
-                }
-                var filter = new OrderFilter(cleanerInfo.MaxMess, cleanerInfo.MinClientRating, cleanerInfo.MinPrice);
-                var status = cleanerInfo.Status;
-                var cleaner = new Cleaner(cleanerId, status, scheduleEntries, filter);
+                var cleaner = CleanerMapper.GetCleaner(cleanerId, cleanerInfo);
                 await _cleanerFacade.UpdateCleanerAsync(cleaner);
             }
             catch (Exception e)
@@ -103,34 +79,6 @@ namespace PartyKlinest.WebApi.Controllers
             }
 
             return Ok();
-        }
-
-        /// <summary>
-        /// Gets list of <see cref="Order"/> assigned to cleaner with id <paramref name="cleanerId"/>.
-        /// </summary>
-        /// <param name="cleanerId"></param>
-        /// <returns></returns>
-        [HttpGet("{cleanerId}/Orders")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [Authorize(Policy = "CleanerOnly")]
-        public async Task<ActionResult<IEnumerable<Order>>> GetAssignedOrders(string cleanerId)
-        {
-            _logger.LogInformation("Update cleaner info. CleanerId: {cleanerId}", cleanerId);
-            try
-            {
-                return await _cleanerFacade.GetAssignedOrdersAsync(cleanerId);
-            }
-            catch (CleanerNotFoundException)
-            {
-                return NotFound();
-            }
-            catch (Exception e)
-            {
-                _logger.LogWarning(e, "Getting assigned orders to {cleanerId} failed", cleanerId);
-                return BadRequest();
-            }
         }
     }
 }
