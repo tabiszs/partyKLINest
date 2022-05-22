@@ -1,5 +1,4 @@
 ﻿using PartyKlinest.ApplicationCore.Entities;
-using PartyKlinest.ApplicationCore.Entities.Orders;
 
 namespace PartyKlinest.WebApi.Models
 {
@@ -10,7 +9,7 @@ namespace PartyKlinest.WebApi.Models
             MessLevel messLevel,
             DateTimeOffset date,
             string clientId,
-            Address address)
+            AddressDTO address)
         {
             MaxPrice = maxPrice;
             MinRating = minRating;
@@ -31,6 +30,6 @@ namespace PartyKlinest.WebApi.Models
 
         public string ClientId { get; init; }
 
-        public Address Address { get; init; }
+        public AddressDTO Address { get; init; }
     }
 }

@@ -2,26 +2,9 @@
 
 namespace PartyKlinest.WebApi.Models
 {
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
     public record AddressDTO
     {
-        public AddressDTO(
-            string street,
-            string buildingNo,
-            string city,
-            string postalCode,
-            string country,
-            int? flatNo = null
-        )
-        {
-            Street = street;
-            BuildingNo = buildingNo;
-            FlatNo = flatNo;
-            City = city;
-            PostalCode = postalCode;
-            Country = country;
-        }
-
-
         [Required]
         public string Street { get; init; }
 
@@ -39,4 +22,5 @@ namespace PartyKlinest.WebApi.Models
         [Required]
         public string Country { get; init; }
     }
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 }
