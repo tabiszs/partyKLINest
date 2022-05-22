@@ -168,7 +168,7 @@ const PostAnnouncement = (props: PostAnnouncementProps) => {
 
           if (/^\d+([,.]\d\d)?$/.test(val)) {
             const priceString = val.replace(',', '.');
-            setMaxPrice(parseFloat(priceString) * 100);
+            setMaxPrice(parseFloat(priceString));
           }
           else {
             setMaxPrice(null);
