@@ -86,7 +86,7 @@ namespace PartyKlinest.WebApi.Controllers
         /// Rate order.
         /// </summary>
         /// <param name="orderId"></param>
-        /// <param name="opinion"></param>
+        /// <param name="opinionDto"></param>
         /// <returns></returns>
         [HttpPost("{orderId:long}/Rate")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -94,8 +94,10 @@ namespace PartyKlinest.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [Authorize(Policy = "ClientOrCleaner")]
-        public async Task<IActionResult> RateOrderAsync(long orderId, [FromBody] Opinion opinion)
+        public async Task<IActionResult> RateOrderAsync(long orderId, [FromBody] OpinionDTO opinionDto)
         {
+            var opinion = _mapper.Map<Opinion>(opinionDto);
+
             if (User.IsCleaner())
             {
                 _logger.LogInformation("Rating order {orderId}. Cleaner's opinion {opinion}", orderId, opinion);
@@ -153,8 +155,10 @@ namespace PartyKlinest.WebApi.Controllers
         {
             _logger.LogInformation("Adding new order {newOrder}", newOrder);
 
+            var address = _mapper.Map<Address>(newOrder.Address);
+
             var orderToBeCreated = new Order(newOrder.MaxPrice, newOrder.MinRating,
-                newOrder.MessLevel, newOrder.Date, newOrder.ClientId, newOrder.Address);
+                newOrder.MessLevel, newOrder.Date, newOrder.ClientId, address);
 
             try
             {
