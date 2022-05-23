@@ -10,7 +10,10 @@ import * as api from './urlProvider';
 const get = <T>(address: string) => {
   return GetRequestHeaders()
     .then((headers) => fetch(address, {headers}))
-    .then((response) => response.json())
+    .then((response) => {
+      if (response.ok) return response.json();
+      else throw response;
+    })
     .then((data) => data as T);
 }
 
@@ -20,7 +23,11 @@ const post = (address: string, data?: any) => {
       method: "POST",
       body: JSON.stringify(data),
       headers
-    }));
+    }))
+    .then((response) => {
+      if (!response.ok) throw response;
+      return response;
+    });
 }
 
 const del = (address: string) => {
@@ -28,7 +35,11 @@ const del = (address: string) => {
     .then((headers) => fetch(address, {
       method: "DELETE",
       headers
-    }));
+    }))
+    .then((response) => {
+      if (!response.ok) throw response;
+      return response;
+    });
 }
 
 export const getAllOrders = () => get<Order[]>(api.getOrdersUrl());
