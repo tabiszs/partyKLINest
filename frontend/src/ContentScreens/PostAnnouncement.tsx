@@ -136,7 +136,7 @@ const PostAnnouncement = (props: PostAnnouncementProps) => {
   const [description, setDescription] = useState<string>('');
   const [cleaningTime, setCleaningTime] = useState<Date>(getDefaultDate());
   const [messLevel, setMessLevel] = useState<MessLevelE>(MessLevelE.Low);
-  const [minRating, setMinRating] = useState<number>(0.5);
+  const [minRating, setMinRating] = useState<number>(1);
   const [maxPrice, setMaxPrice] = useState<number | null>(Infinity);
 
   return (
