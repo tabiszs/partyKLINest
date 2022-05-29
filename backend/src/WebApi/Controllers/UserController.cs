@@ -4,7 +4,6 @@ using Microsoft.Graph;
 using PartyKlinest.Infrastructure;
 using PartyKlinest.WebApi.Extensions;
 using PartyKlinest.WebApi.Models;
-using System.Net;
 
 namespace PartyKlinest.WebApi.Controllers
 {
@@ -22,7 +21,7 @@ namespace PartyKlinest.WebApi.Controllers
             _logger = logger;
             _nameBuilder = nameBuilder;
         }
-        
+
         /// <summary>
         /// Get users.
         /// </summary>
@@ -51,7 +50,7 @@ namespace PartyKlinest.WebApi.Controllers
         }
 
         /// <summary>
-        /// Delete user account.
+        /// Delete your own account.
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
@@ -59,10 +58,18 @@ namespace PartyKlinest.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [Authorize(Policy = "AdminOnly")]
+        [Authorize]
         public async Task<IActionResult> DeleteUser(string userId)
         {
-            _logger.LogInformation("Delete user");
+            bool isDeletingOwnAccount = userId == User.GetOid();
+
+            if (!isDeletingOwnAccount)
+            {
+                _logger.LogWarning("User {userId} is trying to delete another user {userId}", User.GetOid(), userId);
+                return Forbid();
+            }
+
+            _logger.LogInformation("Delete user {userId}", userId);
             await _graphClient.Users[userId].Request().DeleteAsync();
             return Ok();
         }
