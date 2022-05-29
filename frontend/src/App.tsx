@@ -17,6 +17,7 @@ import Schedule from './ContentScreens/Cleaner/Schedule';
 import AdminDashboard from './ContentScreens/Admin/AdminDashboard';
 import CleanerDashboard from './ContentScreens/Cleaner/CleanerDashboard';
 import BanScreen from './ContentScreens/BanScreen';
+import { deleteUser } from './Api/endpoints';
 
 const headerHeight = '6em';
 
@@ -51,7 +52,7 @@ const App = () => {
   }
 
   const deleteAccount = () => {
-    B2CDeleteAccount().then(() => {
+    deleteUser(token!.oid).then(() => {
       setToken(null);
     }).catch((error) => console.log(error));
   }
