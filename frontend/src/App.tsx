@@ -1,6 +1,6 @@
 import './App.css';
 import {useEffect, useState} from 'react';
-import {B2CDeleteAccount, B2CEditProfile, B2CLogin, B2CLogout, RetrieveToken} from './Authentication/MsalService';
+import {B2CEditProfile, B2CLogin, B2CLogout, RetrieveToken} from './Authentication/MsalService';
 import {BrowserRouter, Routes, Route} from 'react-router-dom';
 import PostAnnouncement from './ContentScreens/PostAnnouncement';
 import Header from './Header';
