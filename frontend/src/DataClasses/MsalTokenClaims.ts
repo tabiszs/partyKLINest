@@ -1,4 +1,4 @@
-import AccountType from "./AccountType";
+import UserType from "./UserType";
 
 interface MsalTokenClaims {
     oid: string;
@@ -9,7 +9,7 @@ interface MsalTokenClaims {
     given_name: string;
     postalCode: string;
     streetAddress: string;
-    extension_AccountType: AccountType;
+    extension_AccountType: UserType;
     extension_isBanned: boolean;
 }
 
