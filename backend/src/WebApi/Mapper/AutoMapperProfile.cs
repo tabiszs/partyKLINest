@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using PartyKlinest.ApplicationCore.Entities.Orders;
 using PartyKlinest.ApplicationCore.Entities.Orders.Opinions;
+using PartyKlinest.ApplicationCore.Models;
 using PartyKlinest.WebApi.Models;
 
 namespace PartyKlinest.WebApi.Mapper
@@ -22,6 +23,9 @@ namespace PartyKlinest.WebApi.Mapper
 
             CreateMap<Opinion, OpinionDTO>()
                 .ForMember(dest => dest.Comment, opt => opt.MapFrom(src => src.AdditionalInfo))
+                .ReverseMap();
+
+            CreateMap<UserInfo, UserInfoDTO>()
                 .ReverseMap();
         }
     }
