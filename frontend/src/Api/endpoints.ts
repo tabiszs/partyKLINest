@@ -50,7 +50,7 @@ export const deleteOrder = (orderId: number) => del(api.getOrderUrl(orderId));
 export const getCleanerOrders = () => get<Order[]>(api.getCleanerOrdersUrl());
 export const getClientOrders = () => get<Order[]>(api.getClientOrdersUrl());
 export const postOrderRate = (orderId: number, rating: Rating) => post(api.getOrderRateUrl(orderId), rating);
-export const getMatchingCleanerIdsForOrder = (orderId: number) => get<string[]>(api.getOrderMatchingUrl(orderId));
+export const getMatchingCleanerIdsForOrder = (orderId: number) => get<UserInfo[]>(api.getOrderMatchingUrl(orderId));
 
 export const getCleanerInfo = (cleanerId: string) => get<CleanerInfo>(api.getCleanerAddress(cleanerId));
 export const postCleanerInfo = (cleanerId: string, cleanerInfo: CleanerInfo) => post(api.getCleanerAddress(cleanerId), cleanerInfo);
