@@ -1,6 +1,6 @@
 import Address from "./Address";
 import MsalTokenClaims from "./MsalTokenClaims";
-import UserType, { getUserTypeFromAccountType } from "./UserType";
+import UserType from "./UserType";
 
 // needs to integrate with another branch
 interface Token {
@@ -15,7 +15,7 @@ interface Token {
 
 export const getTokenFromMsalClaims = (claims: MsalTokenClaims): Token => ({
     oid: claims.oid,
-    userType: getUserTypeFromAccountType(claims.extension_AccountType),
+    userType: claims.extension_AccountType,
     email: claims.emails[0],
     name: claims.given_name,
     surname: claims.family_name,
