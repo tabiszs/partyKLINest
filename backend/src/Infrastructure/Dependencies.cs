@@ -8,7 +8,6 @@ using PartyKlinest.ApplicationCore.Interfaces;
 using PartyKlinest.ApplicationCore.Services;
 using PartyKlinest.Infrastructure.Data;
 using PartyKlinest.Infrastructure.Services;
-using System.IdentityModel.Tokens.Jwt;
 
 namespace PartyKlinest.Infrastructure
 {
@@ -36,16 +35,16 @@ namespace PartyKlinest.Infrastructure
             services.AddSingleton(conf => new GraphServiceClient(conf.GetService<IAuthenticationProvider>()));
 
             services.AddSingleton(o => new ExtensionPropertyNameBuilder(configuration.GetSection("AzureAdB2C")["ExtensionAppId"]));
-            
+
             configuration["AzureAdB2C:AllowWebApiToBeAuthorizedByACL"] = "true";
             services.AddMicrosoftIdentityWebApiAuthentication(configuration, "AzureAdB2C");
 
             services.AddAuthorization(options =>
             {
-                options.AddPolicy("ClientOnly", policy => policy.RequireClaim("extension_AccountType", "0"));
-                options.AddPolicy("CleanerOnly", policy => policy.RequireClaim("extension_AccountType", "1"));
-                options.AddPolicy("ClientOrCleaner", policy => policy.RequireClaim("extension_AccountType", "0", "1"));
-                options.AddPolicy("AdminOnly", policy => policy.RequireClaim("extension_AccountType", "2"));
+                options.AddPolicy("ClientOnly", policy => policy.RequireClaim("extension_AccountType", "Client"));
+                options.AddPolicy("CleanerOnly", policy => policy.RequireClaim("extension_AccountType", "Cleaner"));
+                options.AddPolicy("ClientOrCleaner", policy => policy.RequireClaim("extension_AccountType", "Client", "Cleaner"));
+                options.AddPolicy("AdminOnly", policy => policy.RequireClaim("extension_AccountType", "Administrator"));
             });
 
             services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));

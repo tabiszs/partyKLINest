@@ -20,9 +20,9 @@ namespace PartyKlinest.WebApi.Extensions
 
                 return claim.Value switch
                 {
-                    "0" => UserType.Client,
-                    "1" => UserType.Cleaner,
-                    "2" => UserType.Admin,
+                    "Client" => UserType.Client,
+                    "Cleaner" => UserType.Cleaner,
+                    "Administrator" => UserType.Admin,
                     _ => UserType.Unknown
                 };
             }
