@@ -1,6 +1,6 @@
 import Address from "./Address";
 import MsalTokenClaims from "./MsalTokenClaims";
-import UserType, { getUserTypeFromAccountType } from "./UserType";
+import UserType from "./UserType";
 
 // needs to integrate with another branch
 interface Token {
