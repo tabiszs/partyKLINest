@@ -6,13 +6,14 @@ import './OrderDeletion.css';
 import Dialog from '@mui/material/Dialog';
 import { useEffect, useState } from 'react';
 import { DialogTitle, List, ListItem, ListItemText } from '@mui/material';
+import UserInfo from '../../DataClasses/UserInfo';
 
 const OrderDeletion = () => {
 
   const [open, setOpen] = useState(false);
   const [currentOrder, setCurrentOrder] = useState<Order | null>(null);
   const [orders, setOrders] = useState<Order[]>([]);
-  const [matching, setMatching] = useState<string[]>([]);
+  const [matching, setMatching] = useState<UserInfo[]>([]);
   
   const openAssignDialog = (order: Order) => {
     setOpen(true);
@@ -66,9 +67,9 @@ const OrderDeletion = () => {
       <Dialog open={open} onClose={cancelAssignDialog}>
         <DialogTitle>Wybierz osobę sprzątającą do zamówienia</DialogTitle>
         <List>
-          {matching.map((cleanerId) => (
-            <ListItem button onClick={() => confirmAssignDialog(currentOrder!, cleanerId)} key={cleanerId}>
-              <ListItemText primary={cleanerId} />
+          {matching.map((cleanerUserInfo) => (
+            <ListItem button onClick={() => confirmAssignDialog(currentOrder!, cleanerUserInfo.oid)} key={cleanerUserInfo.oid}>
+              <ListItemText primary={cleanerUserInfo.name + " " + cleanerUserInfo.surname} secondary={"email: " + cleanerUserInfo.email} />
             </ListItem>
           ))}
         </List>

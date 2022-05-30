@@ -16,8 +16,8 @@ namespace UnitTests.ApplicationCore.Services.CleanerFacadeTests
         private readonly Mock<IRepository<Order>> _mockOrderRepo = new();
         private readonly Mock<IRepository<Cleaner>> _mockCleanerRepo = new();
         private readonly Mock<IRepository<Client>> _mockClientRepo = new();
-
         private readonly Mock<IClientService> _mockClientService = new();
+        private readonly Mock<IGraphClient> _mockGraphClient = new();
 
         [Theory(DisplayName = "Cleaner cannot change status from banned to ")]
         [InlineData(CleanerStatus.Active)]
@@ -40,7 +40,7 @@ namespace UnitTests.ApplicationCore.Services.CleanerFacadeTests
                 .ReturnsAsync(localCleaner);
             OrderFacade orderFacade = new(_mockOrderRepo.Object, _mockClientRepo.Object);
 
-            var cleanerFacade = new CleanerFacade(_mockCleanerRepo.Object, orderFacade, _mockClientService.Object);
+            var cleanerFacade = new CleanerFacade(_mockCleanerRepo.Object, orderFacade, _mockClientService.Object, _mockGraphClient.Object);
 
             // Act & Assert
             await Assert.ThrowsAsync<CleanerCannotChangeBannedStatusException>(
@@ -68,7 +68,7 @@ namespace UnitTests.ApplicationCore.Services.CleanerFacadeTests
                 .ReturnsAsync(localCleaner);
             OrderFacade orderFacade = new(_mockOrderRepo.Object, _mockClientRepo.Object);
 
-            var cleanerFacade = new CleanerFacade(_mockCleanerRepo.Object, orderFacade, _mockClientService.Object);
+            var cleanerFacade = new CleanerFacade(_mockCleanerRepo.Object, orderFacade, _mockClientService.Object, _mockGraphClient.Object);
 
             // Act & Assert
             await Assert.ThrowsAsync<CleanerCannotChangeBannedStatusException>(
@@ -94,7 +94,7 @@ namespace UnitTests.ApplicationCore.Services.CleanerFacadeTests
                 .ReturnsAsync(localCleaner);
             OrderFacade orderFacade = new(_mockOrderRepo.Object, _mockClientRepo.Object);
 
-            var cleanerFacade = new CleanerFacade(_mockCleanerRepo.Object, orderFacade, _mockClientService.Object);
+            var cleanerFacade = new CleanerFacade(_mockCleanerRepo.Object, orderFacade, _mockClientService.Object, _mockGraphClient.Object);
 
             // Act
             await cleanerFacade.UpdateCleanerAsync(sentCleaner);

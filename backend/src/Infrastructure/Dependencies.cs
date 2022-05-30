@@ -24,7 +24,7 @@ namespace PartyKlinest.Infrastructure
             services.AddSingleton<IAuthenticationProvider>(o =>
             {
                 var confidentialClientApplication = ConfidentialClientApplicationBuilder
-                    .Create(configuration.GetSection("AzureAdB2C")["ClientId"])
+                    .Create(configuration.GetSection("AzureAdB2C")["GraphClientId"])
                     .WithTenantId(configuration.GetSection("AzureAdB2C")["TenantId"])
                     .WithClientSecret(configuration.GetSection("AzureAdB2C")["ClientSecret"])
                     .Build();
@@ -53,6 +53,7 @@ namespace PartyKlinest.Infrastructure
             services.AddScoped<CleanerFacade>();
             services.AddScoped<ICommissionService, CommissionService>();
             services.AddScoped<IClientService, ClientService>();
+            services.AddScoped<IGraphClient, GraphClient>();
         }
     }
 }

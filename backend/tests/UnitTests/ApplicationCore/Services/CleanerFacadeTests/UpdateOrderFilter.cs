@@ -18,7 +18,7 @@ namespace UnitTests.ApplicationCore.Services.CleanerFacadeTests
         private readonly Mock<IRepository<Cleaner>> _mockCleanerRepo = new();
         private readonly Mock<IClientService> _mockClientService = new();
         private readonly Mock<IRepository<Client>> _mockClientRepo = new();
-
+        private readonly Mock<IGraphClient> _mockGraphClient = new();
 
         [Theory]
         [InlineData(CleanerStatus.Active, CleanerStatus.Registered)]
@@ -43,7 +43,7 @@ namespace UnitTests.ApplicationCore.Services.CleanerFacadeTests
                 .ReturnsAsync(localCleaner);
             OrderFacade orderFacade = new(_mockOrderRepo.Object, _mockClientRepo.Object);
 
-            var cleanerFacade = new CleanerFacade(_mockCleanerRepo.Object, orderFacade, _mockClientService.Object);
+            var cleanerFacade = new CleanerFacade(_mockCleanerRepo.Object, orderFacade, _mockClientService.Object, _mockGraphClient.Object);
 
             // Act & Assert
             await Assert.ThrowsAsync<UserNotActiveException>(
@@ -72,7 +72,7 @@ namespace UnitTests.ApplicationCore.Services.CleanerFacadeTests
                 .ReturnsAsync(localCleaner);
             OrderFacade orderFacade = new(_mockOrderRepo.Object, _mockClientRepo.Object);
 
-            var cleanerFacade = new CleanerFacade(_mockCleanerRepo.Object, orderFacade, _mockClientService.Object);
+            var cleanerFacade = new CleanerFacade(_mockCleanerRepo.Object, orderFacade, _mockClientService.Object, _mockGraphClient.Object);
 
             // Act
             await cleanerFacade.UpdateCleanerAsync(sentCleaner);
@@ -103,7 +103,7 @@ namespace UnitTests.ApplicationCore.Services.CleanerFacadeTests
                 .ReturnsAsync(localCleaner);
             OrderFacade orderFacade = new(_mockOrderRepo.Object, _mockClientRepo.Object);
 
-            var cleanerFacade = new CleanerFacade(_mockCleanerRepo.Object, orderFacade, _mockClientService.Object);
+            var cleanerFacade = new CleanerFacade(_mockCleanerRepo.Object, orderFacade, _mockClientService.Object, _mockGraphClient.Object);
 
             // Act
             await cleanerFacade.UpdateCleanerAsync(sentCleaner);
