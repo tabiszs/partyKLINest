@@ -6,7 +6,6 @@ using PartyKlinest.ApplicationCore.Entities.Orders.Opinions;
 using PartyKlinest.ApplicationCore.Exceptions;
 using PartyKlinest.ApplicationCore.Services;
 using PartyKlinest.WebApi.Extensions;
-using PartyKlinest.WebApi.Mapper;
 using PartyKlinest.WebApi.Models;
 
 namespace PartyKlinest.WebApi.Controllers
@@ -268,13 +267,13 @@ namespace PartyKlinest.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Authorize]
-        public async Task<ActionResult<List<CleanerInfoDTO>>> ListCleanersMatchingOrder(long orderId)
+        public async Task<ActionResult<List<UserInfoDTO>>> ListCleanersMatchingOrder(long orderId)
         {
             try
             {
-                var cleaners = await _cleanerFacade.ListCleanersMatchingOrderAsync(orderId);
+                var cleaners = await _cleanerFacade.ListCleanersMatchingOrderAsUsersAsync(orderId);
 
-                return CleanerMapper.GetCleanerInfoDTOs(cleaners);
+                return _mapper.Map<List<UserInfoDTO>>(cleaners);
             }
             catch (OrderNotFoundException)
             {

@@ -3,6 +3,7 @@ using PartyKlinest.ApplicationCore.Entities.Orders.Opinions;
 using PartyKlinest.ApplicationCore.Entities.Users.Cleaners;
 using PartyKlinest.ApplicationCore.Exceptions;
 using PartyKlinest.ApplicationCore.Interfaces;
+using PartyKlinest.ApplicationCore.Models;
 using PartyKlinest.ApplicationCore.Specifications;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,16 +14,18 @@ namespace PartyKlinest.ApplicationCore.Services
     public class CleanerFacade
     {
         public CleanerFacade(IRepository<Cleaner> cleanerRepository, OrderFacade orderFacade,
-            IClientService clientService)
+            IClientService clientService, IGraphClient graphClient)
         {
             _cleanerRepository = cleanerRepository;
             _orderFacade = orderFacade;
             _clientService = clientService;
+            _graphClient = graphClient;
         }
 
         private readonly IRepository<Cleaner> _cleanerRepository;
         private readonly OrderFacade _orderFacade;
         private readonly IClientService _clientService;
+        private readonly IGraphClient _graphClient;
 
         public async Task<List<Order>> GetAssignedOrdersAsync(string cleanerId)
         {
@@ -98,7 +101,7 @@ namespace PartyKlinest.ApplicationCore.Services
         {
             var oid = updateCleaner.CleanerId;
             bool clientExists = await _cleanerRepository.GetByIdAsync(oid) != null;
-            if(!clientExists)
+            if (!clientExists)
             {
                 await _cleanerRepository.AddAsync(updateCleaner);
             }
@@ -191,6 +194,13 @@ namespace PartyKlinest.ApplicationCore.Services
                 clientRating);
 
             return await _cleanerRepository.ListAsync(spec);
+        }
+
+        public async Task<List<UserInfo>> ListCleanersMatchingOrderAsUsersAsync(long orderId)
+        {
+            var cleaners = await ListCleanersMatchingOrderAsync(orderId);
+            var ids = cleaners.Select(c => c.CleanerId).ToList();
+            return await _graphClient.GetUserInfoAsync(ids);
         }
     }
 }

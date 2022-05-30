@@ -18,6 +18,7 @@ public class ListCleanersMatchingOrder
     private readonly Mock<IRepository<Cleaner>> _mockCleanerRepo = new();
     private readonly Mock<IRepository<Client>> _mockClientRepo = new();
     private readonly Mock<IClientService> _mockClientService = new();
+    private readonly Mock<IGraphClient> _mockGraphClient = new();
     private readonly OrderBuilder _orderBuilder = new();
 
     [Fact]
@@ -30,7 +31,7 @@ public class ListCleanersMatchingOrder
             .Setup(x => x.GetByIdAsync(It.IsAny<long>(), default))
             .ReturnsAsync(returnedOrder);
         OrderFacade orderFacade = new(_mockOrderRepo.Object, _mockClientRepo.Object);
-        var cleanerFacade = new CleanerFacade(_mockCleanerRepo.Object, orderFacade, _mockClientService.Object);
+        var cleanerFacade = new CleanerFacade(_mockCleanerRepo.Object, orderFacade, _mockClientService.Object, _mockGraphClient.Object);
 
         // Act & Assert
         await Assert.ThrowsAsync<OrderNotFoundException>(
@@ -49,7 +50,7 @@ public class ListCleanersMatchingOrder
             .ReturnsAsync(order);
 
         OrderFacade orderFacade = new(_mockOrderRepo.Object, _mockClientRepo.Object);
-        var cleanerFacade = new CleanerFacade(_mockCleanerRepo.Object, orderFacade, _mockClientService.Object);
+        var cleanerFacade = new CleanerFacade(_mockCleanerRepo.Object, orderFacade, _mockClientService.Object, _mockGraphClient.Object);
 
         // Act 
         await cleanerFacade.ListCleanersMatchingOrderAsync(12);
@@ -70,7 +71,7 @@ public class ListCleanersMatchingOrder
             .ReturnsAsync(order);
 
         OrderFacade orderFacade = new(_mockOrderRepo.Object, _mockClientRepo.Object);
-        var cleanerFacade = new CleanerFacade(_mockCleanerRepo.Object, orderFacade, _mockClientService.Object);
+        var cleanerFacade = new CleanerFacade(_mockCleanerRepo.Object, orderFacade, _mockClientService.Object, _mockGraphClient.Object);
 
         // Act 
         await cleanerFacade.ListCleanersMatchingOrderAsync(12);

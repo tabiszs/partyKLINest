@@ -53,6 +53,7 @@ namespace PartyKlinest.Infrastructure
             services.AddScoped<CleanerFacade>();
             services.AddScoped<ICommissionService, CommissionService>();
             services.AddScoped<IClientService, ClientService>();
+            services.AddScoped<IGraphClient, GraphClient>();
         }
     }
 }
