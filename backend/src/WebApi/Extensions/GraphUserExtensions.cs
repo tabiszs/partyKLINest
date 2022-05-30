@@ -9,13 +9,13 @@ namespace PartyKlinest.WebApi.Extensions
 
         public static UserType GetUserTypeFromProperty(this User user, string propertyName)
         {
-            if (user.AdditionalData == null 
+            if (user.AdditionalData == null
                 || !user.AdditionalData.TryGetValue(propertyName, out var graphAccountTypeObject)) return UserType.Client;
             return graphAccountTypeObject.ToString() switch
             {
-                "0" => UserType.Client,
-                "1" => UserType.Cleaner,
-                "2" => UserType.Administrator,
+                "Client" => UserType.Client,
+                "Cleaner" => UserType.Cleaner,
+                "Administrator" => UserType.Administrator,
                 _ => UserType.Client
             };
         }

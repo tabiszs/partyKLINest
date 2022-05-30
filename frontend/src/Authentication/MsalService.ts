@@ -7,7 +7,6 @@ const msalConfig = {
         clientId: process.env.REACT_APP_CLIENT_ID!,
         authority: process.env.REACT_APP_DEFAULT_USER_FLOW!,
         knownAuthorities: [process.env.REACT_APP_KNOWN_AUTHORITY!],
-        redirectUri: process.env.REACT_APP_REDIRECT_URI!
     }
 };
 
