@@ -12,12 +12,14 @@ const msalConfig = {
 
 const msalInstance = new msal.PublicClientApplication(msalConfig);
 
+const request = { scopes: [process.env.REACT_APP_B2C_SCOPE!] };
+
 const toToken = (response: msal.AuthenticationResult) => {
     return getTokenFromMsalClaims(response.account?.idTokenClaims as MsalTokenClaims);
 }
 
 export const RetrieveToken = () => {
-    return msalInstance.acquireTokenSilent({scopes:[]}).then((tokenResponse) => {
+    return msalInstance.acquireTokenSilent(request).then((tokenResponse) => {
         if (tokenResponse === null) return null;
         msalInstance.setActiveAccount(tokenResponse.account);
         return toToken(tokenResponse);
@@ -29,7 +31,7 @@ export const RetrieveToken = () => {
 
 export const B2CLogin = async () => {
     try {
-        const loginResponse = await msalInstance.loginPopup({scopes:[]});
+        const loginResponse = await msalInstance.loginPopup(request);
         if (loginResponse === null) return null;
         msalInstance.setActiveAccount(loginResponse.account);
         return toToken(loginResponse);
@@ -45,7 +47,7 @@ export const B2CLogout = () => msalInstance.logoutPopup();
 export const B2CEditProfile = async () => {
     try {
         const loginResponse = await msalInstance.loginPopup({
-            scopes: [], 
+            ...request, 
             authority: process.env.REACT_APP_EDIT_PROFILE_USER_FLOW!
         });
         if (loginResponse === null) return null;
@@ -57,7 +59,7 @@ export const B2CEditProfile = async () => {
 }
 
 export const B2CDeleteAccount = async () => msalInstance.loginPopup({
-    scopes:[],
+    ...request,
     authority: process.env.REACT_APP_DELETE_ACCOUNT_USER_FLOW!
 });
 
@@ -70,10 +72,10 @@ export const GetActiveAccountToken = () => {
 }
 
 export const GetRequestHeaders = () => {
-    return msalInstance.acquireTokenSilent({scopes:[]})
+    return msalInstance.acquireTokenSilent(request)
            .then((tokenResponse) => {
                return { 
-                   'Authorization': 'Bearer ' + tokenResponse?.idToken,
+                   'Authorization': 'Bearer ' + tokenResponse?.accessToken,
                    'Content-Type': 'application/json'
                 };
            });
