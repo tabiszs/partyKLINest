@@ -87,14 +87,7 @@ app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 
-if (app.Environment.IsDevelopment())
-{
-    app.UseCors(CORS_POLICY_DEV);
-}
-else
-{
-    app.UseCors(CORS_POLICY_PROD);
-}
+app.UseCors(CORS_POLICY_DEV);
 
 app.UseAuthentication();
 app.UseAuthorization();
