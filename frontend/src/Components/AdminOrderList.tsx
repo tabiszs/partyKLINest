@@ -52,7 +52,7 @@ const OrderCard = (props: OrderCardProps) => {
           <div className='card-column'>
             <CardButton label={props.deleteButtonLabel} onClick={props.onDeleteButtonClick} color="error" />
             {
-              (props.order.cleanerId === undefined || props.order.cleanerId === null) && props.order.status === OrderStatus.Active
+              (props.order.cleanerId === undefined || props.order.cleanerId === null || props.order.cleanerId === "") && props.order.status === OrderStatus.Active
                 ? <CardButton label={props.assignButtonLabel} onClick={props.onAssignButtonClick} color="primary" />
                 : null
             }
