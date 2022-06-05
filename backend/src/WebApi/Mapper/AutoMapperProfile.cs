@@ -12,6 +12,7 @@ namespace PartyKlinest.WebApi.Mapper
         {
             CreateMap<Order, OrderDTO>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.OrderId))
+                .ForMember(dest => dest.MinRating, opt => opt.MapFrom(src => src.MinCleanerRating))
                 .ForMember(dest => dest.OpinionFromCleaner, opt => opt.MapFrom(src => src.CleanersOpinion))
                 .ForMember(dest => dest.OpinionFromClient, opt => opt.MapFrom(src => src.ClientsOpinion))
                 .ReverseMap();
