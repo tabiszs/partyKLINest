@@ -21,9 +21,9 @@ namespace UnitTests.ApplicationCore.Services.CleanerFacadeTests
         private readonly Mock<IGraphClient> _mockGraphClient = new();
 
         [Theory]
-        [InlineData(CleanerStatus.Active, CleanerStatus.Registered)]
-        [InlineData(CleanerStatus.Registered, CleanerStatus.Registered)]
-        public async Task ThrowsUserNotActiveExceptionn(CleanerStatus localStatus, CleanerStatus sentStatus)
+        [InlineData(CleanerStatus.Active, CleanerStatus.Banned)]
+        [InlineData(CleanerStatus.Banned, CleanerStatus.Banned)]
+        public async Task BannedCleanerCannotAddNewEntry(CleanerStatus localStatus, CleanerStatus sentStatus)
         {
             // Arrange
             var orderFilter = new OrderFilter(MessLevel.Moderate, 1, 10);
@@ -46,8 +46,39 @@ namespace UnitTests.ApplicationCore.Services.CleanerFacadeTests
             var cleanerFacade = new CleanerFacade(_mockCleanerRepo.Object, orderFacade, _mockClientService.Object, _mockGraphClient.Object);
 
             // Act & Assert
-            await Assert.ThrowsAsync<UserNotActiveException>(
+            await Assert.ThrowsAsync<CleanerCannotChangeBannedStatusException>(
                 () => cleanerFacade.UpdateCleanerAsync(sentCleaner));
+        }
+
+        [Theory(DisplayName = "When new entry is sent. Registered Status is changed in Active")]
+        [InlineData(CleanerStatus.Registered, CleanerStatus.Registered)]
+        public async Task AddNewUpdateChangeAutomaticalyInActiveStatus(CleanerStatus localStatus, CleanerStatus sentStatus)
+        {
+            // Arrange
+            var orderFilter = new OrderFilter(MessLevel.Moderate, 1, 10);
+            var cleanerBuilder = new CleanerBuilder();
+            cleanerBuilder.WithStatus(localStatus);
+            cleanerBuilder.WithOrderFilter(orderFilter);
+            Cleaner localCleaner = cleanerBuilder.Build();
+
+            orderFilter = new OrderFilter(MessLevel.Huge, 4, 100);
+            cleanerBuilder = new CleanerBuilder();
+            cleanerBuilder.WithStatus(sentStatus);
+            cleanerBuilder.WithOrderFilter(orderFilter);
+            Cleaner sentCleaner = cleanerBuilder.Build();
+
+            _mockCleanerRepo
+                .Setup(x => x.GetByIdAsync(It.IsAny<string>(), default))
+                .ReturnsAsync(localCleaner);
+            OrderFacade orderFacade = new(_mockOrderRepo.Object, _mockClientRepo.Object);
+
+            var cleanerFacade = new CleanerFacade(_mockCleanerRepo.Object, orderFacade, _mockClientService.Object, _mockGraphClient.Object);
+
+            // Act
+            await cleanerFacade.UpdateCleanerAsync(sentCleaner);
+
+            // Assert
+            _mockCleanerRepo.Verify(x => x.UpdateAsync(It.IsAny<Cleaner>(), default), Times.Exactly(2));
         }
 
         [Theory(DisplayName = "Make 1 Update: orderFilter")]
