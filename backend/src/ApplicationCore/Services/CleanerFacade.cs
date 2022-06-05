@@ -123,8 +123,6 @@ namespace PartyKlinest.ApplicationCore.Services
                 {
                     await UpdateSchedule(cleaner, updateCleaner);
                 }
-
-                // TODO -> update rest of cleaner info via azure.
             }
         }
         private async Task UpdateStatus(Cleaner localCleaner, Cleaner updateCleaner)
@@ -132,8 +130,17 @@ namespace PartyKlinest.ApplicationCore.Services
             localCleaner.SetCleanerStatus(updateCleaner.Status);
             await _cleanerRepository.UpdateAsync(localCleaner);
         }
+        private async Task ActivateCleaner(Cleaner localCleaner)
+        {
+            localCleaner.SetCleanerStatus(CleanerStatus.Active);
+            await _cleanerRepository.UpdateAsync(localCleaner);
+        }
         private async Task UpdateOrderFilter(Cleaner localCleaner, Cleaner updateCleaner)
         {
+            if(localCleaner.Status == CleanerStatus.Registered)
+            {
+                await ActivateCleaner(localCleaner);
+            }            
             if (localCleaner.Status == CleanerStatus.Active)
             {
                 localCleaner.UpdateOrderFilter(updateCleaner.OrderFilter);
@@ -146,6 +153,10 @@ namespace PartyKlinest.ApplicationCore.Services
         }
         private async Task UpdateSchedule(Cleaner localCleaner, Cleaner updateCleaner)
         {
+            if (localCleaner.Status == CleanerStatus.Registered)
+            {
+                await ActivateCleaner(localCleaner);
+            }
             if (localCleaner.Status == CleanerStatus.Active)
             {
                 localCleaner.UpdateSchedule(updateCleaner.ScheduleEntries);
