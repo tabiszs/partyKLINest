@@ -35,12 +35,13 @@ namespace PartyKlinest.ApplicationCore.Services
 
         public async Task<Cleaner> GetCleanerInfo(string cleanerId)
         {
-            var cleaner = await _cleanerRepository.GetByIdAsync(cleanerId);
-            if (cleaner is null)
+            var spec = new CleanerWithSchedule(cleanerId);
+            var cleaners = await _cleanerRepository.ListAsync(spec);
+            if (cleaners is null || cleaners.Count == 0)
             {
                 throw new CleanerNotFoundException(cleanerId);
             }
-            return cleaner;
+            return cleaners[0];
         }
 
         public async Task ConfirmOrderCompleted(string cleanerId, long orderId, Opinion opinion)
@@ -100,7 +101,16 @@ namespace PartyKlinest.ApplicationCore.Services
         public async Task UpdateCleanerAsync(Cleaner updateCleaner)
         {
             var oid = updateCleaner.CleanerId;
-            bool clientExists = await _cleanerRepository.GetByIdAsync(oid) != null;
+            bool clientExists = true;
+            try
+            {
+                await GetCleanerInfo(oid);
+            }
+            catch (CleanerNotFoundException)
+            {
+                clientExists = false;
+            }
+
             if (!clientExists)
             {
                 await _cleanerRepository.AddAsync(updateCleaner);
@@ -137,10 +147,10 @@ namespace PartyKlinest.ApplicationCore.Services
         }
         private async Task UpdateOrderFilter(Cleaner localCleaner, Cleaner updateCleaner)
         {
-            if(localCleaner.Status == CleanerStatus.Registered)
+            if (localCleaner.Status == CleanerStatus.Registered)
             {
                 await ActivateCleaner(localCleaner);
-            }            
+            }
             if (localCleaner.Status == CleanerStatus.Active)
             {
                 localCleaner.UpdateOrderFilter(updateCleaner.OrderFilter);
