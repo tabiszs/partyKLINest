@@ -56,7 +56,7 @@ const OrderManagement = () => {
 
         opinionButtonLabel='Oceń'
         onOpinionButtonClick={showRateOrder}
-        shouldDisplayOpinionButton={(order: Order) => order.opinionFromClient === undefined && order.status === OrderStatus.Closed}
+        shouldDisplayOpinionButton={(order: Order) => (order.opinionFromClient === undefined || order.opinionFromClient === null) && order.status === OrderStatus.Closed}
 
         acceptButtonLabel=''
         onAcceptButtonClick={(_) => {}}
