@@ -4,6 +4,7 @@ using PartyKlinest.ApplicationCore.Entities.Users;
 using PartyKlinest.ApplicationCore.Entities.Users.Cleaners;
 using PartyKlinest.ApplicationCore.Interfaces;
 using PartyKlinest.ApplicationCore.Services;
+using PartyKlinest.ApplicationCore.Specifications;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -41,8 +42,8 @@ namespace UnitTests.ApplicationCore.Services.CleanerFacadeTests
             Cleaner sentCleaner = cleanerBuilder.Build();
 
             _mockCleanerRepo
-                .Setup(x => x.GetByIdAsync(It.IsAny<string>(), default))
-                .ReturnsAsync(localCleaner);
+                .Setup(x => x.ListAsync(It.IsAny<CleanerWithSchedule>(), default))
+                .ReturnsAsync(new List<Cleaner> { localCleaner });
             OrderFacade orderFacade = new(_mockOrderRepo.Object, _mockClientRepo.Object);
             var cleanerFacade = new CleanerFacade(_mockCleanerRepo.Object, orderFacade, _mockClientService.Object, _mockGraphClient.Object);
 

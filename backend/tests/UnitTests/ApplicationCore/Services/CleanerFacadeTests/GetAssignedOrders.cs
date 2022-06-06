@@ -6,6 +6,7 @@ using PartyKlinest.ApplicationCore.Entities.Users.Cleaners;
 using PartyKlinest.ApplicationCore.Exceptions;
 using PartyKlinest.ApplicationCore.Interfaces;
 using PartyKlinest.ApplicationCore.Services;
+using PartyKlinest.ApplicationCore.Specifications;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnitTests.Factories;
@@ -47,6 +48,9 @@ namespace UnitTests.ApplicationCore.Services.CleanerFacadeTests
             _mockCleanerRepo
                 .Setup(x => x.GetByIdAsync(It.IsAny<string>(), default))
                 .ReturnsAsync(returnedCleaner);
+            _mockCleanerRepo
+                .Setup(x => x.ListAsync(It.IsAny<CleanerWithSchedule>(), default))
+                .ReturnsAsync(new List<Cleaner> { returnedCleaner });
 
             var ordersBuilder = new OrderBuilder();
             List<Order> expected = ordersBuilder.GenerateOrdersWith(3, cleanerId);
