@@ -67,7 +67,7 @@ const OrderManagement = () => {
 
         opinionButtonLabel='Oceń'
         onOpinionButtonClick={showRateOrder}
-        shouldDisplayOpinionButton={(order: Order) => order.opinionFromCleaner === undefined && order.status === OrderStatus.Closed}
+        shouldDisplayOpinionButton={(order: Order) => (order.opinionFromCleaner === undefined || order.opinionFromCleaner === null) && order.status === OrderStatus.Closed}
 
         closeButtonLabel='Wykonane'
         onCloseButtonClick={async (order: Order) => {
