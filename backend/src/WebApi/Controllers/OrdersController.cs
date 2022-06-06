@@ -215,7 +215,8 @@ namespace PartyKlinest.WebApi.Controllers
             try
             {
                 var order = _mapper.Map<Order>(orderDTO);
-                await _orderFacade.ModifyOrderAsync(orderId, order.ClientId, order.CleanerId,
+                string? cleanerId = string.IsNullOrEmpty(orderDTO.CleanerId) ? null : orderDTO.CleanerId;
+                await _orderFacade.ModifyOrderAsync(orderId, order.ClientId, cleanerId,
                     order.Status, order.MaxPrice, order.MinCleanerRating, order.Date,
                     order.Address, order.MessLevel);
             }
